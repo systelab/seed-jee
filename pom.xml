@@ -9,6 +9,31 @@
 	<version>1.0</version>
 	<name>seed</name>
 
+	<properties>
+		<jboss.version>1.1.0.Final</jboss.version>
+		<h2.version>1.4.192</h2.version>
+		<owasp.version>3.0.1</owasp.version>
+		<junit.version>4.11</junit.version>
+		<jjwt.version>0.7.0</jjwt.version>
+		<swagger.version>1.5.16</swagger.version>
+		<rest-assured.version>3.0.7</rest-assured.version>
+		<resteasy.version>3.0.18.Final</resteasy.version>
+		<jersey.version>2.23.1</jersey.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<allure.version>1.5.4</allure.version>
+		<aspectj.version>1.8.9</aspectj.version>
+		<cargo.wildfly.port>13080</cargo.wildfly.port>
+		<webapp.laboratoryInformationSystemUrl>http://localhost:8080/modulab/rest</webapp.laboratoryInformationSystemUrl>
+
+		<!-- The port to use when the debugger is enabled. -->
+		<cargo.container.debug.port>8000</cargo.container.debug.port>
+		<!-- The suspend setting to use when the debugger is enabled. -->
+		<cargo.container.debug.suspend>n</cargo.container.debug.suspend>
+		<!-- The debug arguments used to enable debugging on the forked JVM. -->
+		<cargo.container.debug.jvmargs>-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=${cargo.container.debug.suspend},address=${cargo.container.debug.port} -Xnoagent -Djava.compiler=NONE</cargo.container.debug.jvmargs>
+
+	</properties>
+
 	<build>
 		<finalName>seed</finalName>
 
@@ -268,24 +293,6 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.glassfish.jersey.containers</groupId>
-			<artifactId>jersey-container-servlet-core</artifactId>
-			<version>${jersey.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.glassfish.jersey.media</groupId>
-			<artifactId>jersey-media-moxy</artifactId>
-			<version>${jersey.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt</artifactId>
 			<version>${jjwt.version}</version>
@@ -302,53 +309,49 @@
 			<artifactId>swagger-jaxrs</artifactId>
 			<version>${swagger.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>io.rest-assured</groupId>
-			<artifactId>rest-assured</artifactId>
-			<version>${rest-assured.version}</version>
-			<scope>test</scope>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${h2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.owasp</groupId>
+            <artifactId>dependency-check-maven</artifactId>
+            <version>${owasp.version}</version>
+        </dependency>
 
-		</dependency>
+        <!--#### TEST DEPENDENCIES ####-->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.containers</groupId>
+            <artifactId>jersey-container-servlet-core</artifactId>
+            <version>${jersey.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-moxy</artifactId>
+            <version>${jersey.version}</version>
+            <scope>test</scope>
+        </dependency>
 		<dependency>
 			<groupId>ru.yandex.qatools.allure</groupId>
 			<artifactId>allure-junit-adaptor</artifactId>
 			<version>${allure.version}</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<version>${h2.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.owasp</groupId>
-			<artifactId>dependency-check-maven</artifactId>
-			<version>${owasp.version}</version>
-		</dependency>
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <version>${rest-assured.version}</version>
+            <scope>test</scope>
+        </dependency>
+
 	</dependencies>
 
-	<properties>
-		<jboss.version>1.1.0.Final</jboss.version>
-		<h2.version>1.4.192</h2.version>
-		<owasp.version>3.0.1</owasp.version>
-		<junit.version>4.11</junit.version>
-		<jjwt.version>0.7.0</jjwt.version>
-		<swagger.version>1.5.16</swagger.version>
-		<rest-assured.version>3.0.5</rest-assured.version>
-		<resteasy.version>3.0.18.Final</resteasy.version>
-		<jersey.version>2.23.1</jersey.version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<allure.version>1.5.4</allure.version>
-		<aspectj.version>1.8.9</aspectj.version>
-		<cargo.wildfly.port>13080</cargo.wildfly.port>
-		<webapp.laboratoryInformationSystemUrl>http://localhost:8080/modulab/rest</webapp.laboratoryInformationSystemUrl>
-		
-	    <!-- The port to use when the debugger is enabled. -->
-	    <cargo.container.debug.port>8000</cargo.container.debug.port>
-	    <!-- The suspend setting to use when the debugger is enabled. -->
-	    <cargo.container.debug.suspend>n</cargo.container.debug.suspend>
-	    <!-- The debug arguments used to enable debugging on the forked JVM. -->
-	    <cargo.container.debug.jvmargs>-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=${cargo.container.debug.suspend},address=${cargo.container.debug.port} -Xnoagent -Djava.compiler=NONE</cargo.container.debug.jvmargs>
-
-	</properties>
 </project>

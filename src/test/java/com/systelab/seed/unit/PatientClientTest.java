@@ -24,12 +24,6 @@ import ru.yandex.qatools.allure.annotations.Title;
 import ru.yandex.qatools.allure.model.DescriptionType;
 import ru.yandex.qatools.allure.model.SeverityLevel;
 
-import org.hamcrest.Matchers;
-
-import javax.validation.constraints.AssertTrue;
-
-import static io.restassured.RestAssured.get;
-
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Title("Patients Test Suite")
 public class PatientClientTest extends BaseClientTest {
