@@ -13,12 +13,10 @@ import javax.ejb.EJB;
 import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.core.UriInfo;
 
 import com.systelab.seed.util.exceptions.PatientNotFoundException;
 import io.swagger.annotations.Api;
