@@ -28,6 +28,7 @@ public class SwaggerApiDefinition implements ReaderListener
   @Override
   public void beforeScan(Reader reader, Swagger swagger)
   {
+    // Not used
   }
 
   @Override

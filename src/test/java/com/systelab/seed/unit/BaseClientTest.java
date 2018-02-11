@@ -15,8 +15,8 @@ import io.jsonwebtoken.Jwts;
 
 public class BaseClientTest {
 
-    static String testUserName = "quentinada";
-    static String testPassword = "quentinada";
+    private static String testUserName = "quentinada";
+    private static String testPassword = "quentinada";
 
     public static void login(BaseClient baseClient) throws RequestException {
 

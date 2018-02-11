@@ -29,7 +29,7 @@ import ru.yandex.qatools.allure.model.SeverityLevel;
 public class PatientClientTest extends BaseClientTest {
     private static final Logger logger = Logger.getLogger(PatientClientTest.class.getName());
 
-    static PatientClient clientForPatient;
+    public static PatientClient clientForPatient;
 
     @BeforeClass
     public static void init() throws RequestException {
@@ -97,7 +97,7 @@ public class PatientClientTest extends BaseClientTest {
         patient.setAddress(address);
         Exception caughtException = null;
         try {
-            Patient patient2 = createPatient(patient);
+            createPatient(patient);
         } catch (Exception ex) {
             caughtException = ex;
         }

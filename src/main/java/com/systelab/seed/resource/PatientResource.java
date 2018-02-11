@@ -43,8 +43,9 @@ public class PatientResource
   @EJB
   private PatientService patientService;
 
-  @Context
-  private UriInfo uriInfo;
+  // If you need the context.
+  // @Context
+  // private UriInfo uriInfo;
   // uriInfo.getAbsolutePath().toASCIIString() is the entry point
 
   @Inject

@@ -69,7 +69,7 @@ public class User {
 
 
     @PrePersist
-    private void digestPassword() {
+    public void digestPassword() {
         password = passwordDigest.digest(password);
     }
 

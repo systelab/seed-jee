@@ -8,12 +8,17 @@ import java.io.IOException;
 @WebFilter("/*")
 public class XFrameOptionsFilter implements Filter {
 
+    @Override
     public void init(FilterConfig fConfig) throws ServletException {
+        // Not used
     }
 
+    @Override
     public void destroy() {
+        // Not used
     }
 
+    @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         if (response instanceof HttpServletResponse) {
             HttpServletResponse httpResponse = (HttpServletResponse) response;
