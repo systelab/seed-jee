@@ -1,7 +1,7 @@
 package com.systelab.seed.client;
 
 public class RequestException extends Exception {
-    int errorCode = 0;
+    private int errorCode = 0;
 
     public RequestException(int errorCode) {
         super("HTTP Request Exception");

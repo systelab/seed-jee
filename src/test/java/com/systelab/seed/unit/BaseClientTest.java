@@ -1,7 +1,5 @@
 package com.systelab.seed.unit;
 
-import static org.junit.Assert.assertEquals;
-
 import com.systelab.seed.client.BaseClient;
 import com.systelab.seed.client.RequestException;
 import com.systelab.seed.util.security.implementation.JWTAuthenticationTokenGenerator;
@@ -17,14 +15,14 @@ import io.jsonwebtoken.Jwts;
 
 public class BaseClientTest {
 
-    static String testUserName = "quentinada";
-    static String testPassword = "quentinada";
+    private static String testUserName = "quentinada";
+    private static String testPassword = "quentinada";
 
     public static void login(BaseClient baseClient) throws RequestException {
 
         Response response = baseClient.login(testUserName, testPassword);
 
-        assertEquals(200, response.getStatus());
+        Assert.assertEquals(200, response.getStatus());
         Assert.assertNotNull(response.getHeaderString(HttpHeaders.AUTHORIZATION));
         String token = response.getHeaderString(HttpHeaders.AUTHORIZATION);
 

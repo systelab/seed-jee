@@ -8,7 +8,6 @@ import com.systelab.seed.model.patient.Patient;
 import java.util.List;
 import java.util.logging.Logger;
 
-
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
@@ -29,7 +28,7 @@ import ru.yandex.qatools.allure.model.SeverityLevel;
 public class PatientClientTest extends BaseClientTest {
     private static final Logger logger = Logger.getLogger(PatientClientTest.class.getName());
 
-    static PatientClient clientForPatient;
+    public static PatientClient clientForPatient;
 
     @BeforeClass
     public static void init() throws RequestException {
@@ -37,12 +36,10 @@ public class PatientClientTest extends BaseClientTest {
         login(clientForPatient);
     }
 
-
     @Step("Create the patient {0}")
     public Patient createPatient(Patient patient) throws RequestException {
         Patient patient2 = clientForPatient.create(patient);
         return patient2;
-
     }
 
     @Step("Delete the patient {0}")
@@ -55,7 +52,6 @@ public class PatientClientTest extends BaseClientTest {
         Assert.assertTrue(b);
     }
 
-
     @TestCaseId("SEED-SCC-1")
     @Description(value = "Test that is possible to create a Patient.\n\nPrerequisites:\n\n" + "- Prerequisite 1\n" + "- Prerequisite 2\n" + "- Prerequisite 3\n", type = DescriptionType.MARKDOWN)
     @Features("Patient")
@@ -66,7 +62,6 @@ public class PatientClientTest extends BaseClientTest {
         patient.setName("Ralph");
         patient.setSurname("Burrows");
         patient.setEmail("rburrows@gmail.com");
-
 
         Address address = new Address();
         address.setStreet("E-Street, 90");
@@ -97,13 +92,12 @@ public class PatientClientTest extends BaseClientTest {
         patient.setAddress(address);
         Exception caughtException = null;
         try {
-            Patient patient2 = createPatient(patient);
+            createPatient(patient);
         } catch (Exception ex) {
             caughtException = ex;
         }
 
         Assert.assertEquals("Invalid error code exception", 400, ((RequestException) caughtException).getErrorCode());
-
     }
 
     @TestCaseId("SEED-SCC-3")

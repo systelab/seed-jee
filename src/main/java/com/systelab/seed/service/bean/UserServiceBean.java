@@ -26,12 +26,12 @@ public class UserServiceBean implements UserService {
     private PasswordDigest passwordDigest;
 
     @Inject
-    void setAuthenticationTokenGenerator(AuthenticationTokenGenerator tokenGenerator) {
+    public void setAuthenticationTokenGenerator(AuthenticationTokenGenerator tokenGenerator) {
         this.tokenGenerator = tokenGenerator;
     }
 
     @Inject
-    void setPasswordDigest(PasswordDigest passwordDigest) {
+    public void setPasswordDigest(PasswordDigest passwordDigest) {
         this.passwordDigest = passwordDigest;
     }
 

@@ -16,8 +16,6 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-import io.swagger.annotations.ApiModelProperty;
-
 @XmlRootElement
 @XmlType(propOrder = {"id", "name", "surname", "email", "dob", "address"})
 
@@ -38,12 +36,12 @@ public class Patient implements Serializable {
     private String name;
 
     @Email
-    String email;
+    private String email;
 
-    Date dob;
+    private Date dob;
 
     @Embedded
-    Address address;
+    private Address address;
 
     public Long getId() {
         return id;

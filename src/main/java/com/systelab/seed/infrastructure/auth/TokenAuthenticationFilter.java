@@ -40,12 +40,12 @@ public class TokenAuthenticationFilter implements ContainerRequestFilter {
     private ResourceInfo resourceInfo;
 
     @Inject
-    void setLogger(Logger logger) {
+    public void setLogger(Logger logger) {
         this.logger = logger;
     }
 
     @Inject
-    void setAuthenticationTokenGenerator(AuthenticationTokenGenerator tokenGenerator) {
+    public void setAuthenticationTokenGenerator(AuthenticationTokenGenerator tokenGenerator) {
         this.tokenGenerator = tokenGenerator;
     }
 

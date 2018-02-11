@@ -7,10 +7,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Embeddable
 public class Address {
 
-    String coordinates;
-    String street;
-    String city;
-    String zip;
+    private String coordinates;
+    private String street;
+    private String city;
+    private String zip;
 
     public String getCoordinates() {
         return coordinates;
