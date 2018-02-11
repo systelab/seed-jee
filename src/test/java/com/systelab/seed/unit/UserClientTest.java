@@ -22,7 +22,7 @@ import ru.yandex.qatools.allure.model.SeverityLevel;
 public class UserClientTest extends BaseClientTest {
     private static final Logger logger = Logger.getLogger(UserClientTest.class.getName());
 
-    static UserClient clientForUser;
+    private static UserClient clientForUser;
 
     @BeforeClass
     public static void init() throws RequestException {

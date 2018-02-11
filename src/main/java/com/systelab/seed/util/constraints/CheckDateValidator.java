@@ -7,7 +7,8 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 public class CheckDateValidator implements ConstraintValidator<CheckDate, String> {
-    String dateFormat = "";
+
+    private String dateFormat = "";
 
     @Override
     public void initialize(CheckDate constraintAnnotation) {

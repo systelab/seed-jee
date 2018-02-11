@@ -6,7 +6,6 @@ import static javax.ws.rs.core.Response.Status.UNAUTHORIZED;
 
 import com.systelab.seed.infrastructure.auth.AuthenticationTokenNeeded;
 import com.systelab.seed.model.user.User;
-import com.systelab.seed.model.user.UserRole;
 import com.systelab.seed.service.UserService;
 import com.systelab.seed.util.exceptions.UserNotFoundException;
 
@@ -59,7 +58,7 @@ public class UserResource
   private UserService userService;
 
   @Inject
-  void setLogger(Logger logger)
+  public void setLogger(Logger logger)
   {
     this.logger = logger;
   }

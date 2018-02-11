@@ -8,9 +8,6 @@ import java.io.IOException;
 @WebFilter("/*")
 public class XFrameOptionsFilter implements Filter {
 
-    public XFrameOptionsFilter() {
-    }
-
     public void init(FilterConfig fConfig) throws ServletException {
     }
 

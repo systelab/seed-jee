@@ -44,11 +44,11 @@ public class PatientResource
   private PatientService patientService;
 
   @Context
-  UriInfo uriInfo;
+  private UriInfo uriInfo;
   // uriInfo.getAbsolutePath().toASCIIString() is the entry point
 
   @Inject
-  void setLogger(Logger logger)
+  public void setLogger(Logger logger)
   {
     this.logger = logger;
   }

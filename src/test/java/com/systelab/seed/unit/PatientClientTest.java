@@ -8,7 +8,6 @@ import com.systelab.seed.model.patient.Patient;
 import java.util.List;
 import java.util.logging.Logger;
 
-
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
@@ -24,11 +23,6 @@ import ru.yandex.qatools.allure.annotations.Title;
 import ru.yandex.qatools.allure.model.DescriptionType;
 import ru.yandex.qatools.allure.model.SeverityLevel;
 
-import org.hamcrest.Matchers;
-
-import javax.validation.constraints.AssertTrue;
-
-import static io.restassured.RestAssured.get;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Title("Patients Test Suite")

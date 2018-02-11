@@ -30,7 +30,7 @@ public class RealtimePatientTracking {
     private final Set<Session> sessions = new HashSet<>();
 
     @Inject
-    void setLogger(Logger logger) {
+    public void setLogger(Logger logger) {
         this.logger = logger;
     }
 
@@ -68,7 +68,7 @@ public class RealtimePatientTracking {
         Writer writer = new StringWriter();
 
         try (JsonGenerator generator = Json.createGenerator(writer)) {
-            generator.writeStartObject().write("patientid", "23233").write("patientname", patient.getName()).writeEnd();
+            generator.writeStartObject().write("patientid", patient.getId()).write("patientname", patient.getName()).writeEnd();
         }
 
         String jsonValue = writer.toString();

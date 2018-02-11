@@ -29,7 +29,7 @@ public class DeleteOldPatientsTimerBean {
     private Logger logger;
 
     @Inject
-    void setLogger(Logger logger) {
+    public void setLogger(Logger logger) {
         this.logger = logger;
     }
 
