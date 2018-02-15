@@ -11,7 +11,7 @@ import java.util.Properties;
 
 import static io.restassured.RestAssured.given;
 
-@DisplayName("Base Test to load that the nested tests needs")
+@DisplayName("Base Test to load all the things that the nested tests needs")
 public class FunctionalTest {
 
     @Test
@@ -39,7 +39,7 @@ public class FunctionalTest {
             baseHost = "http://localhost";
         RestAssured.baseURI = baseHost;
 
-        System.out.println("");
+        System.out.println(RestAssured.baseURI + ":" + RestAssured.port + RestAssured.basePath);
     }
 
     private static String getPort() {

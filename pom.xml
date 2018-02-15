@@ -24,7 +24,9 @@
 		<webapp.laboratoryInformationSystemUrl>http://localhost:8080/modulab/rest</webapp.laboratoryInformationSystemUrl>
 
 		<!--#### TEST PROPERTIES ####-->
-        <junit.version>4.11</junit.version>
+        <junit.version>4.12</junit.version>
+        <junit.jupiter.version>5.0.3</junit.jupiter.version>
+        <junit.jupiter.vintage>${junit.version}.3</junit.jupiter.vintage>
         <hamcrest.version>1.3</hamcrest.version>
         <cargo.wildfly.port>13080</cargo.wildfly.port>
 
@@ -51,7 +53,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.5.1</version>
+				<version>3.7.0</version>
 				<inherited>true</inherited>
 				<configuration>
 					<source>1.8</source>
@@ -141,15 +143,26 @@
 						<artifactId>aspectjweaver</artifactId>
 						<version>${aspectj.version}</version>
 					</dependency>
+                    <dependency>
+                        <groupId>org.junit.platform</groupId>
+                        <artifactId>junit-platform-surefire-provider</artifactId>
+                        <version>1.0.3</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.junit.jupiter</groupId>
+                        <artifactId>junit-jupiter-engine</artifactId>
+                        <version>${junit.jupiter.version}</version>
+                    </dependency>
 				</dependencies>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-failsafe-plugin</artifactId> 
+				<artifactId>maven-failsafe-plugin</artifactId>
 				<version>2.19.1</version>
 				<configuration>
 					<includes>
-						<include>com.systelab.seed.unit.*</include>
+                        <include>com.systelab.seed.unit.*</include>
+						<include>com.systelab.seed.rest.*</include>
 					</includes>
 					<testFailureIgnore>false</testFailureIgnore>
 					<argLine>
@@ -169,6 +182,16 @@
 						<artifactId>aspectjweaver</artifactId>
 						<version>${aspectj.version}</version>
 					</dependency>
+                    <dependency>
+                        <groupId>org.junit.platform</groupId>
+                        <artifactId>junit-platform-surefire-provider</artifactId>
+                        <version>1.0.3</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.junit.jupiter</groupId>
+                        <artifactId>junit-jupiter-engine</artifactId>
+                        <version>${junit.jupiter.version}</version>
+                    </dependency>
 				</dependencies>
 				<executions>
 					<execution>
@@ -195,13 +218,13 @@
 						</dependencies>
 						<systemProperties>
 						    <jboss.shutdown.forceHalt>false</jboss.shutdown.forceHalt>
-  					    </systemProperties>						
+  					    </systemProperties>
 					</container>
 					<configuration>
 						<properties>
 							<cargo.jvmargs>${cargo.container.debug.jvmargs} ${jacoco.cmdline},includes=*,excludes=org.jboss.as.test.*,append=true,output=file</cargo.jvmargs>
-						    
-							<!-- We apply a 5000 offset manually because setting cargo.port.offset 
+
+							<!-- We apply a 5000 offset manually because setting cargo.port.offset
 								does not seem to work -->
 							<cargo.servlet.port>${cargo.wildfly.port}</cargo.servlet.port>
 							<cargo.jboss.ajp.port>13009</cargo.jboss.ajp.port>
@@ -314,6 +337,12 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit.jupiter.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
