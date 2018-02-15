@@ -61,15 +61,18 @@ To generate the reports including the test report, you must run:
 ```bash
 mvn site
 ```
+
+### Run
+
 In order to run the application, you must install a WildFly and deploy the generated war file. 
 
-Another option could be to change the pom.xml file and remove the jacoco from the <cargo.jvmargs>:
+Another option could be to change the pom.xml file and remove the jacoco from the <cargo.jvmargs>. 
 
 ```
 <cargo.jvmargs>${cargo.container.debug.jvmargs}</cargo.jvmargs>
 ```
 
-And after that run:
+After the update type the following command:
 
 ```bash
 mvn clean package cargo:run
@@ -81,7 +84,34 @@ Use 'quentinada' as username and password.
 
 Note: If you are using the angular seed, remember to set the API_BASE_PATH in the environment to match the same port.
 
+## Docker
+
+### Build docker image
+
+There is an Automated Build Task in Docker Cloud in order to build the Docker Image. 
+This task, triggers a new build with every git push to your source code repository to create a 'latest' image.
+There is another build rule to trigger a new tag and create a 'version-x.y.z' image
+
+You can always manually create the image with the following command:
+
+```bash
+docker build -t systelab/seed-jee . 
+```
+
+The image created, will contain a [wildfly server][wildfly] with the application war deployed.
+
+### Run the container
+
+```bash
+docker run -e MYSQL_HOST=ip -e MYSQL_PORT=port -e MYSQL_DATABASE=database -e MYSQL_USER=user -e MYSQL_PASSWORD=password -p 8080:8080 systelab/seed-jee
+```
+The app will be available at http://localhost:8080
+
+In the repository folder, you will information on how to use Docker container, a tool for defining and running multi-container Docker applications. You will also find also a docker-compose.yml file with a configuration defined.
+
+
 [git]: https://git-scm.com/
 [maven]: https://maven.apache.org/download.cgi
 [jdk-download]: http://www.oracle.com/technetwork/java/javase/downloads
 [JEE]: http://www.oracle.com/technetwork/java/javaee/tech/index.html
+[wildfly]: http://wildfly.org
