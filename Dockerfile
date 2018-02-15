@@ -19,7 +19,7 @@ RUN mvn package
 
 FROM jboss/wildfly:latest
 
-ADD customization /opt/jboss/wildfly/customization/
+ADD docker/customization /opt/jboss/wildfly/customization/
 COPY --from=builder /seed-jee/target/seed.war /opt/jboss/wildfly/customization/
 
 USER root
