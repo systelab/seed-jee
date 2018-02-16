@@ -7,10 +7,9 @@ import com.systelab.seed.model.user.User;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import ru.yandex.qatools.allure.annotations.Description;
 import ru.yandex.qatools.allure.annotations.Features;
 import ru.yandex.qatools.allure.annotations.Severity;
@@ -24,7 +23,7 @@ public class UserClientTest extends BaseClientTest {
 
     public static UserClient clientForUser;
 
-    @BeforeClass
+    @BeforeAll
     public static void init() throws RequestException {
         clientForUser = new UserClient();
         login(clientForUser);
@@ -44,7 +43,7 @@ public class UserClientTest extends BaseClientTest {
             logger.info(users.get(i).getSurname());
         }
 
-        Assert.assertNotNull(users);
+        Assertions.assertNotNull(users);
     }
 
 }

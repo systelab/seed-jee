@@ -9,9 +9,8 @@ import java.security.Key;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 
-import org.junit.Assert;
-
 import io.jsonwebtoken.Jwts;
+import org.junit.jupiter.api.Assertions;
 
 public class BaseClientTest {
 
@@ -22,19 +21,19 @@ public class BaseClientTest {
 
         Response response = baseClient.login(testUserName, testPassword);
 
-        Assert.assertEquals(200, response.getStatus());
-        Assert.assertNotNull(response.getHeaderString(HttpHeaders.AUTHORIZATION));
+        Assertions.assertEquals(200, response.getStatus());
+        Assertions.assertNotNull(response.getHeaderString(HttpHeaders.AUTHORIZATION));
         String token = response.getHeaderString(HttpHeaders.AUTHORIZATION);
 
         String justTheToken = token.substring("Bearer".length()).trim();
         Key key = new JWTAuthenticationTokenGenerator().generateKey();
-        Assert.assertEquals(1, Jwts.parser().setSigningKey(key).parseClaimsJws(justTheToken).getHeader().size());
-        Assert.assertEquals("HS512", Jwts.parser().setSigningKey(key).parseClaimsJws(justTheToken).getHeader().getAlgorithm());
-        Assert.assertEquals(5, Jwts.parser().setSigningKey(key).parseClaimsJws(justTheToken).getBody().size());
-        Assert.assertEquals(testUserName, Jwts.parser().setSigningKey(key).parseClaimsJws(justTheToken).getBody().getSubject());
-        Assert.assertEquals(baseClient.getServerURL().toString().concat("/users/login"), Jwts.parser().setSigningKey(key).parseClaimsJws(justTheToken).getBody().getIssuer());
-        Assert.assertNotNull(Jwts.parser().setSigningKey(key).parseClaimsJws(justTheToken).getBody().getIssuedAt());
-        Assert.assertNotNull(Jwts.parser().setSigningKey(key).parseClaimsJws(justTheToken).getBody().getExpiration());
+        Assertions.assertEquals(1, Jwts.parser().setSigningKey(key).parseClaimsJws(justTheToken).getHeader().size());
+        Assertions.assertEquals("HS512", Jwts.parser().setSigningKey(key).parseClaimsJws(justTheToken).getHeader().getAlgorithm());
+        Assertions.assertEquals(5, Jwts.parser().setSigningKey(key).parseClaimsJws(justTheToken).getBody().size());
+        Assertions.assertEquals(testUserName, Jwts.parser().setSigningKey(key).parseClaimsJws(justTheToken).getBody().getSubject());
+        Assertions.assertEquals(baseClient.getServerURL().toString().concat("/users/login"), Jwts.parser().setSigningKey(key).parseClaimsJws(justTheToken).getBody().getIssuer());
+        Assertions.assertNotNull(Jwts.parser().setSigningKey(key).parseClaimsJws(justTheToken).getBody().getIssuedAt());
+        Assertions.assertNotNull(Jwts.parser().setSigningKey(key).parseClaimsJws(justTheToken).getBody().getExpiration());
 
     }
 }

@@ -24,9 +24,7 @@
 		<webapp.laboratoryInformationSystemUrl>http://localhost:8080/modulab/rest</webapp.laboratoryInformationSystemUrl>
 
 		<!--#### TEST PROPERTIES ####-->
-        <junit.version>4.12</junit.version>
         <junit.jupiter.version>5.0.3</junit.jupiter.version>
-        <junit.jupiter.vintage>${junit.version}.3</junit.jupiter.vintage>
         <hamcrest.version>1.3</hamcrest.version>
         <cargo.wildfly.port>13080</cargo.wildfly.port>
 
@@ -119,6 +117,7 @@
 			</plugin>
 			
 			<plugin>
+				<!-- Don't use {surefire,failsafe} 2.20 because has memory leaks -->
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.19.1</version>
@@ -143,16 +142,6 @@
 						<artifactId>aspectjweaver</artifactId>
 						<version>${aspectj.version}</version>
 					</dependency>
-                    <dependency>
-                        <groupId>org.junit.platform</groupId>
-                        <artifactId>junit-platform-surefire-provider</artifactId>
-                        <version>1.0.3</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.junit.jupiter</groupId>
-                        <artifactId>junit-jupiter-engine</artifactId>
-                        <version>${junit.jupiter.version}</version>
-                    </dependency>
 				</dependencies>
 			</plugin>
 			<plugin>
@@ -333,12 +322,12 @@
         </dependency>
 
         <!--#### TEST DEPENDENCIES ####-->
-        <dependency>
+        <!--dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
             <scope>test</scope>
-        </dependency>
+        </dependency-->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>

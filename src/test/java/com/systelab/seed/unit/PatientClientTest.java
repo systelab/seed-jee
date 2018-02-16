@@ -8,12 +8,15 @@ import com.systelab.seed.model.patient.Patient;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runners.MethodSorters;
+//import org.junit.Assert;
+//import org.junit.BeforeClass;
+//import org.junit.FixMethodOrder;
+//import org.junit.Test;
+//import org.junit.runners.MethodSorters;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import ru.yandex.qatools.allure.annotations.Description;
 import ru.yandex.qatools.allure.annotations.Features;
 import ru.yandex.qatools.allure.annotations.Severity;
@@ -23,14 +26,14 @@ import ru.yandex.qatools.allure.annotations.Title;
 import ru.yandex.qatools.allure.model.DescriptionType;
 import ru.yandex.qatools.allure.model.SeverityLevel;
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+//@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Title("Patients Test Suite")
 public class PatientClientTest extends BaseClientTest {
     private static final Logger logger = Logger.getLogger(PatientClientTest.class.getName());
 
     public static PatientClient clientForPatient;
 
-    @BeforeClass
+    @BeforeAll
     public static void init() throws RequestException {
         clientForPatient = new PatientClient();
         login(clientForPatient);
@@ -49,7 +52,7 @@ public class PatientClientTest extends BaseClientTest {
 
     @Step("Check that the returning value {0} is true")
     public void checkResultIsTrue(boolean b) {
-        Assert.assertTrue(b);
+        Assertions.assertTrue(b);
     }
 
     @TestCaseId("SEED-SCC-1")
@@ -70,7 +73,7 @@ public class PatientClientTest extends BaseClientTest {
         patient.setAddress(address);
         Patient patient2 = createPatient(patient);
 
-        Assert.assertNotNull(patient2);
+        Assertions.assertNotNull(patient2);
     }
 
     @TestCaseId("SEED-SCC-2")
@@ -97,7 +100,7 @@ public class PatientClientTest extends BaseClientTest {
             caughtException = ex;
         }
 
-        Assert.assertEquals("Invalid error code exception", 400, ((RequestException) caughtException).getErrorCode());
+        Assertions.assertEquals(400, ((RequestException) caughtException).getErrorCode(), "Invalid error code exception" );
     }
 
     @TestCaseId("SEED-SCC-3")
@@ -110,7 +113,7 @@ public class PatientClientTest extends BaseClientTest {
         for (int i = 0; i < patients.size(); i++) {
             logger.info(patients.get(i).getName());
         }
-        Assert.assertNotNull(patients);
+        Assertions.assertNotNull(patients);
     }
 
     @TestCaseId("SEED-SCC-4")
@@ -125,7 +128,7 @@ public class PatientClientTest extends BaseClientTest {
             System.out.println("Looking for " + patients.get(i).getId());
             Patient patient = clientForPatient.get(patients.get(i).getId());
             //   get("seed/v1/patients/"+patients.get(i).getId()).then().body("name", Matchers.equalTo("Ralph"));
-            Assert.assertNotNull(patient);
+            Assertions.assertNotNull(patient);
         }
     }
 

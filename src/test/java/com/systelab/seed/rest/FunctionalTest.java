@@ -14,12 +14,6 @@ import static io.restassured.RestAssured.given;
 @DisplayName("Base Test to load all the things that the nested tests needs")
 public class FunctionalTest {
 
-    @Test
-    @Disabled("For learning purposes")
-    public void make_sure_that_google_is_up() {
-        given().when().get("http://www.google.com").then().statusCode(200);
-    }
-
     @BeforeAll
     @DisplayName("Will be executed once before all test methods in the current class")
     public static void setup() {
@@ -40,6 +34,12 @@ public class FunctionalTest {
         RestAssured.baseURI = baseHost;
 
         System.out.println(RestAssured.baseURI + ":" + RestAssured.port + RestAssured.basePath);
+    }
+
+    @Test
+    @Disabled("For learning purposes")
+    public void make_sure_that_google_is_up() {
+        given().when().get("http://www.google.com").then().statusCode(200);
     }
 
     private static String getPort() {
