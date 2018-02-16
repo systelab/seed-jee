@@ -26,7 +26,6 @@ import ru.yandex.qatools.allure.annotations.Title;
 import ru.yandex.qatools.allure.model.DescriptionType;
 import ru.yandex.qatools.allure.model.SeverityLevel;
 
-//@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Title("Patients Test Suite")
 public class PatientClientTest extends BaseClientTest {
     private static final Logger logger = Logger.getLogger(PatientClientTest.class.getName());
