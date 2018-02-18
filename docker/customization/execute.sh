@@ -9,6 +9,8 @@ JBOSS_HOME=/opt/jboss/wildfly
 JBOSS_CLI=$JBOSS_HOME/bin/jboss-cli.sh
 JBOSS_MODE=${1:-"standalone"}
 JBOSS_CONFIG=${2:-"$JBOSS_MODE.xml"}
+LOGSTASH_HOST=logstash
+LOGSTASH_PORT=5000
 
 function wait_for_server() {
   until `$JBOSS_CLI -c ":read-attribute(name=server-state)" 2> /dev/null | grep -q running`; do
@@ -25,15 +27,18 @@ echo "=> Waiting for the server to boot"
 wait_for_server
 
 echo "=> Executing the commands"
-echo "=> MYSQL_HOST (explicit): " $MYSQL_HOST
-echo "=> MYSQL_PORT (explicit): " $MYSQL_PORT
-echo "=> MYSQL (docker host): " $DB_PORT_3306_TCP_ADDR
-echo "=> MYSQL (docker port): " $DB_PORT_3306_TCP_PORT
-echo "=> MYSQL (k8s host): " $MYSQL_SERVICE_SERVICE_HOST
-echo "=> MYSQL (k8s port): " $MYSQL_SERVICE_SERVICE_PORT
-echo "=> MYSQL_URI (docker with networking): " $MYSQL_URI
+echo "=> MYSQL_HOST (mySQL server): " $MYSQL_HOST
+echo "=> MYSQL_PORT (mySQL port): " $MYSQL_PORT
+echo "=> MYSQL_URI (mySQL URI): " $MYSQL_URI
+echo "=> LOGSTASH_HOST (logstash server): " $LOGSTASH_HOST
+echo "=> LOGSTASH_PORT (logstash port): " $LOGSTASH_PORT
 
+
+# Wait for the DB Server
 /opt/jboss/wildfly/customization/wait-for-it.sh $MYSQL_HOST:$MYSQL_PORT -t 0
+
+# Wait for Logstash
+/opt/jboss/wildfly/customization/wait-for-it.sh logstash:5000 -t 0
 
 
 $JBOSS_CLI -c << EOF
@@ -43,7 +48,7 @@ set CONNECTION_URL=jdbc:mysql://$MYSQL_URI/$MYSQL_DATABASE
 echo "Connection URL: " $CONNECTION_URL
 
 # Add MySQL module
-module add --name=com.mysql --resources=/opt/jboss/wildfly/customization/mysql-connector-java-5.1.31-bin.jar --dependencies=javax.api,javax.transaction.api
+module add --name=com.mysql --resources=/opt/jboss/wildfly/customization/mysql-connector-java-5.1.45-bin.jar --dependencies=javax.api,javax.transaction.api
 
 # Add MySQL driver
 /subsystem=datasources/jdbc-driver=mysql:add(driver-name=mysql,driver-module-name=com.mysql,driver-xa-datasource-class-name=com.mysql.jdbc.jdbc2.optional.MysqlXADataSource)
@@ -58,7 +63,7 @@ module add --name=org.jboss.logmanager.ext --dependencies=org.jboss.logmanager,j
 /subsystem=logging/custom-formatter=logstash:add(class=org.jboss.logmanager.ext.formatters.LogstashFormatter,module=org.jboss.logmanager.ext)
 
 # Add a socket-handler using the logstash formatter. Replace the hostname and port to the values needed for your logstash install
-/subsystem=logging/custom-handler=logstash-handler:add(class=org.jboss.logmanager.ext.handlers.SocketHandler,module=org.jboss.logmanager.ext,named-formatter=logstash,properties={hostname=localhost, port=5000})
+/subsystem=logging/custom-handler=logstash-handler:add(class=org.jboss.logmanager.ext.handlers.SocketHandler,module=org.jboss.logmanager.ext,named-formatter=logstash,properties={hostname=$LOGSTASH_HOST, port=$LOGSTASH_PORT})
 
 # Add the new handler to the root-logger
 /subsystem=logging/root-logger=ROOT:add-handler(name=logstash-handler)
