@@ -105,9 +105,10 @@ The image created, will contain a [wildfly server][wildfly] with the application
 ```bash
 docker run -e MYSQL_HOST=ip -e MYSQL_PORT=port -e MYSQL_DATABASE=database -e MYSQL_USER=user -e MYSQL_PASSWORD=password -p 8080:8080 systelab/seed-jee
 ```
+
 The app will be available at http://localhost:8080
 
-In the repository folder, you will information on how to use Docker container, a tool for defining and running multi-container Docker applications. You will also find also a docker-compose.yml file with a configuration defined.
+In the github root folder, you will information on how to use docker-compose, a tool for define and run multi-container Docker applications.
 
 
 [git]: https://git-scm.com/

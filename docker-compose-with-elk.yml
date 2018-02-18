@@ -1,55 +1,3 @@
-# Docker
-
-To create the container, execute the command:
-
-```bash
-docker run -e MYSQL_HOST=ip -e MYSQL_PORT=port -e MYSQL_DATABASE=database -e MYSQL_USER=user -e MYSQL_PASSWORD=password -p 8080:8080 systelab/seed-jee
-```
-
-Usually the mySQL database port is 3306.
-
-You can create both containers with a docker-compose.yml file and the command docker-compose.
-
-Here's a sample docker-compose.yml file:
-
-```yaml
-version: "2"
-services:
-  db:
-    image: mysql:latest
-    ports:
-      - "3307:3306"
-    environment:
-      - MYSQL_ROOT_PASSWORD=supersecret
-      - MYSQL_DATABASE=SEED
-      - MYSQL_USER=SEED
-      - MYSQL_PASSWORD=SEED
-  web:
-    image: systelab/seed-jee:latest
-    depends_on:
-      - db
-    environment:
-      - MYSQL_URI=db:3306
-      - MYSQL_HOST=db
-      - MYSQL_PORT=3306
-      - MYSQL_DATABASE=SEED
-      - MYSQL_USER=SEED
-      - MYSQL_PASSWORD=SEED
-    ports:
-      - "8080:8080"
-```
-
-In order to run this configuration use the command:
-
-```bash
-docker-compose up -d
-```
-
-Once started, browse http://localhost:8080/seed/swagger/ in order to get the API main page
-
-Here's the file docker-compose-with-elk.yml file. In this case, several containers will start, with traefik as a reverse proxy, mysql, two backend servers, seed-angular as frontend in a nginx server and elasticsearch, logstash and kibana:
-
-```yaml
 version: "2"
 services:
   traefik:
@@ -148,12 +96,3 @@ services:
     depends_on:
       - elasticsearch
 
-```
-
-In order to run this configuration use the command:
-
-```bash
-docker-compose -f docker-compose-with-elk.yml up -d
-```
-
-Browse http://localhost to run the application, http://localhost:90/seed/swagger/ in order to get the API main page, http://localhost:8080/ to get traefik  and http://localhost:5601/ to get the Kibana main page. 
