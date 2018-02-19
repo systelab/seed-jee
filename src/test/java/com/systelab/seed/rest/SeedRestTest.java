@@ -1,11 +1,13 @@
 package com.systelab.seed.rest;
 
+import io.restassured.module.jsv.JsonSchemaValidator;
 import io.restassured.response.Response;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.hasItems;
+import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 
 /**
  * Test Class to check Seed REST Api behaviour following a BDD approach (given-when-then)
@@ -34,11 +36,27 @@ public class SeedRestTest extends FunctionalTest {
     }
 
     @Test
-    @DisplayName("Test incorrect input data checking the unexpected behaviour")
-    public void given_patient_request_check_response_test() {
+    @DisplayName("Test to check the expected body response content")
+    public void given_patient_request_check_body_response() {
+        // given-when calling doGetResponse method
         Response response = doGetResponse("/patients");
-        System.out.println("-> patientsResponse: " + response.print());
+        response.then().body(containsString("Worldwide"));
+    }
 
+    @Test
+    @DisplayName("Test to check Json content in an attribute")
+    public void given_Url_whenSuccessOnGetsResponseAndJsonHasRequiredKV_thenCorrect() {
+        given().when().get("patients").then().statusCode(200).assertThat()
+                .body("address.zip", hasItems("08110"));
+    }
+
+    @DisplayName("Test Json Schema Response")
+    @Disabled()
+    @Test
+    public void givenUrl_whenValidatesResponseWithStaticSettings_thenCorrect() {
+        Response response = doGetResponse("/patients");
+        response.then().assertThat().body(matchesJsonSchemaInClasspath
+                ("json-schema.json").using(JsonSchemaValidator.settings.with().checkedValidation(false)));
     }
 
 }
