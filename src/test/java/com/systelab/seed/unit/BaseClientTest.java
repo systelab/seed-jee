@@ -14,8 +14,8 @@ import org.junit.jupiter.api.Assertions;
 
 public class BaseClientTest {
 
-    private static String testUserName = "quentinada";
-    private static String testPassword = "quentinada";
+    private static String testUserName = "Systelab";
+    private static String testPassword = "Systelab";
 
     public static void login(BaseClient baseClient) throws RequestException {
 
