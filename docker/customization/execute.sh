@@ -25,31 +25,42 @@ echo "=> Waiting for the server to boot"
 wait_for_server
 
 echo "=> Executing the commands"
-echo "=> MYSQL_HOST (explicit): " $MYSQL_HOST
-echo "=> MYSQL_PORT (explicit): " $MYSQL_PORT
-echo "=> MYSQL (docker host): " $DB_PORT_3306_TCP_ADDR
-echo "=> MYSQL (docker port): " $DB_PORT_3306_TCP_PORT
-echo "=> MYSQL (k8s host): " $MYSQL_SERVICE_SERVICE_HOST
-echo "=> MYSQL (k8s port): " $MYSQL_SERVICE_SERVICE_PORT
-echo "=> MYSQL_URI (docker with networking): " $MYSQL_URI
+echo "=> MYSQL_HOST (mySQL server): " $MYSQL_HOST
+echo "=> MYSQL_PORT (mySQL port): " $MYSQL_PORT
+echo "=> MYSQL_URI (mySQL URI): " $MYSQL_URI
+echo "=> LOGSTASH_HOST (logstash server): " $LOGSTASH_HOST
+echo "=> LOGSTASH_PORT (logstash port): " $LOGSTASH_PORT
 
+
+# Wait for the DB Server
 /opt/jboss/wildfly/customization/wait-for-it.sh $MYSQL_HOST:$MYSQL_PORT -t 0
-
 
 $JBOSS_CLI -c << EOF
 batch
 
-set CONNECTION_URL=jdbc:mysql://$MYSQL_URI/$MYSQL_DATABASE
-echo "Connection URL: " $CONNECTION_URL
-
 # Add MySQL module
-module add --name=com.mysql --resources=/opt/jboss/wildfly/customization/mysql-connector-java-5.1.31-bin.jar --dependencies=javax.api,javax.transaction.api
+module add --name=com.mysql --resources=/opt/jboss/wildfly/customization/mysql-connector-java-5.1.45-bin.jar --dependencies=javax.api,javax.transaction.api
 
 # Add MySQL driver
 /subsystem=datasources/jdbc-driver=mysql:add(driver-name=mysql,driver-module-name=com.mysql,driver-xa-datasource-class-name=com.mysql.jdbc.jdbc2.optional.MysqlXADataSource)
 
 # Add the datasource
 data-source add --name=SEED --driver-name=mysql --jndi-name=java:/SEED --connection-url=jdbc:mysql://$MYSQL_HOST:$MYSQL_PORT/$MYSQL_DATABASE?useUnicode=true&amp;characterEncoding=UTF-8 --user-name=$MYSQL_USER --password=$MYSQL_PASSWORD --use-ccm=false --max-pool-size=25 --blocking-timeout-wait-millis=5000 --enabled=true
+
+# Execute the batch
+run-batch
+
+EOF
+
+# Setup Logstash
+if [ -z ${LOGSTASH_HOST+x} ]; then
+    echo "LOGSTASH_HOST is unset. No need to wait";
+else
+
+/opt/jboss/wildfly/customization/wait-for-it.sh $LOGSTASH_HOST:$LOGSTASH_PORT -t 0
+
+$JBOSS_CLI -c << EOF
+batch
 
 # Add the module, replace the directory on the resources attribute to the path where you downloaded the jboss-logmanager-ext library
 module add --name=org.jboss.logmanager.ext --dependencies=org.jboss.logmanager,javax.json.api,javax.xml.stream.api --resources=/opt/jboss/wildfly/customization/jboss-logmanager-ext-1.0.0.Alpha3.jar
@@ -58,17 +69,19 @@ module add --name=org.jboss.logmanager.ext --dependencies=org.jboss.logmanager,j
 /subsystem=logging/custom-formatter=logstash:add(class=org.jboss.logmanager.ext.formatters.LogstashFormatter,module=org.jboss.logmanager.ext)
 
 # Add a socket-handler using the logstash formatter. Replace the hostname and port to the values needed for your logstash install
-/subsystem=logging/custom-handler=logstash-handler:add(class=org.jboss.logmanager.ext.handlers.SocketHandler,module=org.jboss.logmanager.ext,named-formatter=logstash,properties={hostname=localhost, port=5000})
+/subsystem=logging/custom-handler=logstash-handler:add(class=org.jboss.logmanager.ext.handlers.SocketHandler,module=org.jboss.logmanager.ext,named-formatter=logstash,properties={hostname=$LOGSTASH_HOST, port=$LOGSTASH_PORT})
 
 # Add the new handler to the root-logger
 /subsystem=logging/root-logger=ROOT:add-handler(name=logstash-handler)
 
-# Reload the server which will boot the server into normal mode as well as write messages to logstash
-:reload
-
 # Execute the batch
 run-batch
+
 EOF
+
+fi
+
+
 
 # Deploy the WAR
 cp /opt/jboss/wildfly/customization/seed.war $JBOSS_HOME/$JBOSS_MODE/deployments/seed.war
