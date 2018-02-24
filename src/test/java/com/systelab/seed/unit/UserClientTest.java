@@ -10,14 +10,10 @@ import java.util.logging.Logger;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import ru.yandex.qatools.allure.annotations.Description;
-import ru.yandex.qatools.allure.annotations.Features;
-import ru.yandex.qatools.allure.annotations.Severity;
-import ru.yandex.qatools.allure.annotations.TestCaseId;
-import ru.yandex.qatools.allure.annotations.Title;
-import ru.yandex.qatools.allure.model.SeverityLevel;
+import io.qameta.allure.*;
 
-@Title("User Test Suite")
+
+@Feature("User Test Suite")
 public class UserClientTest extends BaseClientTest {
     private static final Logger logger = Logger.getLogger(UserClientTest.class.getName());
 
@@ -29,9 +25,8 @@ public class UserClientTest extends BaseClientTest {
         login(clientForUser);
     }
 
-    @TestCaseId("SEED-USR-1")
+    @TmsLink("SEED-USR-1")
     @Description("Test that we can get a List of users.")
-    @Features("User")
     @Severity(SeverityLevel.BLOCKER)
     @Test
     public void testGetUserList() throws RequestException {

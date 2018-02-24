@@ -18,8 +18,7 @@
 		<resteasy.version>3.0.18.Final</resteasy.version>
 		<jersey.version>2.23.1</jersey.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<allure.version>1.5.4</allure.version>
-		<aspectj.version>1.8.9</aspectj.version>
+		<aspectj.version>1.8.10</aspectj.version>
 		<webapp.laboratoryInformationSystemUrl>http://localhost:8080/modulab/rest</webapp.laboratoryInformationSystemUrl>
 
 		<!--#### TEST PROPERTIES ####-->
@@ -121,7 +120,7 @@
 				<!-- Don't use {surefire,failsafe} 2.20 because has memory leaks -->
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.19.1</version>
+				<version>2.20.1</version>
 				<configuration>
 					<excludes>
 						<exclude>**/*.java</exclude>
@@ -130,12 +129,17 @@
 					<argLine>
 						-javaagent:${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar ${jacoco.cmdline}
 					</argLine>
-					<properties>
+
+					<systemProperties>
 						<property>
-							<name>listener</name>
-							<value>ru.yandex.qatools.allure.junit.AllureRunListener</value>
+							<name>junit.jupiter.extensions.autodetection.enabled</name>
+							<value>true</value>
 						</property>
-					</properties>
+						<property>
+							<name>allure.results.directory</name>
+							<value>${project.build.directory}/allure-results</value>
+						</property>
+					</systemProperties>
 				</configuration>
 				<dependencies>
 					<dependency>
@@ -158,13 +162,16 @@
 					<argLine>
 						-javaagent:${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar ${jacoco.cmdline}
 					</argLine>
-
-					<properties>
+					<systemProperties>
 						<property>
-							<name>listener</name>
-							<value>ru.yandex.qatools.allure.junit.AllureRunListener</value>
+							<name>junit.jupiter.extensions.autodetection.enabled</name>
+							<value>true</value>
 						</property>
-					</properties>
+						<property>
+							<name>allure.results.directory</name>
+							<value>${project.build.directory}/allure-results</value>
+						</property>
+					</systemProperties>
 				</configuration>
 				<dependencies>
 					<dependency>
@@ -262,14 +269,11 @@
 		<excludeDefaults>true</excludeDefaults>
 		<plugins>
 			<plugin>
-				<groupId>ru.yandex.qatools.allure</groupId>
-				<artifactId>allure-maven-plugin</artifactId>
-				<version>2.6</version>
+				<groupId>io.qameta.allure</groupId>
+				<artifactId>allure-maven</artifactId>
+				<version>2.9</version>
 				<configuration>
-					<properties>
-						<allure.issues.tracker.pattern>http://seed.systelabsw.com/browse/%s</allure.issues.tracker.pattern>
-						<allure.tests.management.pattern>http://seed.systelabsw.com/browse/%s</allure.tests.management.pattern>
-					</properties>
+					<reportVersion>2.5.0</reportVersion>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -342,9 +346,15 @@
             <scope>test</scope>
         </dependency>
 		<dependency>
-			<groupId>ru.yandex.qatools.allure</groupId>
-			<artifactId>allure-junit-adaptor</artifactId>
-			<version>${allure.version}</version>
+			<groupId>io.qameta.allure</groupId>
+			<artifactId>allure-maven</artifactId>
+			<version>2.9</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.qameta.allure</groupId>
+			<artifactId>allure-junit5</artifactId>
+			<version>LATEST</version>
 			<scope>test</scope>
 		</dependency>
         <dependency>

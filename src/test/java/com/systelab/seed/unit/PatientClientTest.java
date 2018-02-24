@@ -8,19 +8,15 @@ import com.systelab.seed.model.patient.Patient;
 import java.util.List;
 import java.util.logging.Logger;
 
+import io.qameta.allure.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ru.yandex.qatools.allure.annotations.Description;
-import ru.yandex.qatools.allure.annotations.Features;
-import ru.yandex.qatools.allure.annotations.Severity;
-import ru.yandex.qatools.allure.annotations.Step;
-import ru.yandex.qatools.allure.annotations.TestCaseId;
-import ru.yandex.qatools.allure.annotations.Title;
-import ru.yandex.qatools.allure.model.DescriptionType;
-import ru.yandex.qatools.allure.model.SeverityLevel;
 
-@Title("Patients Test Suite")
+
+
+@Feature("Patients Test Suite")
 public class PatientClientTest extends BaseClientTest {
     private static final Logger logger = Logger.getLogger(PatientClientTest.class.getName());
 
@@ -48,9 +44,11 @@ public class PatientClientTest extends BaseClientTest {
         Assertions.assertTrue(b);
     }
 
-    @TestCaseId("SEED-SCC-1")
-    @Description(value = "Test that is possible to create a Patient.\n\nPrerequisites:\n\n" + "- Prerequisite 1\n" + "- Prerequisite 2\n" + "- Prerequisite 3\n", type = DescriptionType.MARKDOWN)
-    @Features("Patient")
+    @TmsLink("SEED-SCC-1")
+    @Issue("ISSUE-1")
+    @Link(value = "REQ-PAT-1", type="requirement")
+    @DisplayName("Test create a Patient.")
+    @Description("Test that is possible to create a Patient.\n\nPrerequisites:\n\n" + "- Prerequisite 1\n" + "- Prerequisite 2\n" + "- Prerequisite 3\n")
     @Severity(SeverityLevel.BLOCKER)
     @Test
     public void testCreatePatient() throws RequestException {
@@ -69,9 +67,9 @@ public class PatientClientTest extends BaseClientTest {
         Assertions.assertNotNull(patient2);
     }
 
-    @TestCaseId("SEED-SCC-2")
+    @TmsLink("SEED-SCC-2")
+    @DisplayName("Test create invalid Patient.")
     @Description("Test that it is not possible to create a Invalid Patient and that we have an exception.")
-    @Features("Patient")
     @Severity(SeverityLevel.BLOCKER)
     @Test
     public void testCreateInvalidPatient() {
@@ -96,9 +94,9 @@ public class PatientClientTest extends BaseClientTest {
         Assertions.assertEquals(400, ((RequestException) caughtException).getErrorCode(), "Invalid error code exception" );
     }
 
-    @TestCaseId("SEED-SCC-3")
+    @TmsLink("SEED-SCC-3")
+    @DisplayName("Test Patient List.")
     @Description("Test that we can get a List of Patients.")
-    @Features("Patient")
     @Severity(SeverityLevel.BLOCKER)
     @Test
     public void testGetPatientList() throws RequestException {
@@ -109,9 +107,9 @@ public class PatientClientTest extends BaseClientTest {
         Assertions.assertNotNull(patients);
     }
 
-    @TestCaseId("SEED-SCC-4")
-    @Description("Test that we can get a Patient.")
-    @Features("Patient")
+    @TmsLink("SEED-SCC-4")
+    @DisplayName("Test get a Patient.")
+    @Description("Test that it is possible to get a patient.")
     @Severity(SeverityLevel.BLOCKER)
     @Test
     public void testGetPatient() throws RequestException {
@@ -125,9 +123,9 @@ public class PatientClientTest extends BaseClientTest {
         }
     }
 
-    @TestCaseId("SEED-SCC-5")
+    @TmsLink("SEED-SCC-5")
+    @DisplayName("Test delete a Patient.")
     @Description("Test that we can delete a Patient.")
-    @Features("Patient")
     @Severity(SeverityLevel.BLOCKER)
     @Test
     public void testDeletePatient() throws RequestException {
