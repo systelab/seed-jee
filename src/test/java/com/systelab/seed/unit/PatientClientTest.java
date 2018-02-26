@@ -106,7 +106,7 @@ public class PatientClientTest extends BaseClientTest {
     }
 
     @Step("Create {0} patients")
-    public void createSomePatiens(int numberOfPatients) throws RequestException {
+    public void createSomePatients(int numberOfPatients) throws RequestException {
         FakeNameGenerator aFakeNameGenerator = new FakeNameGenerator();
         for (int i = 0; i < numberOfPatients; i++) {
             Patient patient = getPatientData(aFakeNameGenerator.generateName(true), aFakeNameGenerator.generateName(true), aFakeNameGenerator.generateName(false) + "@werfen.com");
@@ -124,7 +124,7 @@ public class PatientClientTest extends BaseClientTest {
     @Test
     public void testGetPatientList() throws RequestException {
 
-        createSomePatiens(5);
+        createSomePatients(5);
 
         List<Patient> patientsBefore = clientForPatient.get();
         Assertions.assertNotNull(patientsBefore);
@@ -132,7 +132,7 @@ public class PatientClientTest extends BaseClientTest {
 
         savePatientsDatabase(patientsBefore);
 
-        createSomePatiens(5);
+        createSomePatients(5);
 
         List<Patient> patientsAfter = clientForPatient.get();
         Assertions.assertNotNull(patientsAfter);

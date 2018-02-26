@@ -25,6 +25,7 @@
     	<junit.jupiter.version>5.0.3</junit.jupiter.version>
     	<hamcrest.version>1.3</hamcrest.version>
         <rest-assured.version>3.0.7</rest-assured.version>
+        <cucumber.version>1.2.5</cucumber.version>
 		<slf4j.version>1.7.25</slf4j.version>
     	<cargo.wildfly.port>13080</cargo.wildfly.port>
 
@@ -367,17 +368,32 @@
 			<groupId>io.rest-assured</groupId>
 			<artifactId>json-schema-validator</artifactId>
 			<version>${rest-assured.version}</version>
+            <scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.github.fge</groupId>
 			<artifactId>json-schema-validator</artifactId>
 			<version>2.2.6</version>
+            <scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.github.fge</groupId>
 			<artifactId>json-schema-core</artifactId>
 			<version>1.2.5</version>
+            <scope>test</scope>
 		</dependency>
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-java</artifactId>
+            <version>${cucumber.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-junit</artifactId>
+            <version>${cucumber.version}</version>
+            <scope>test</scope>
+        </dependency>
 		<dependency>
 			<groupId>org.hamcrest</groupId>
 			<artifactId>hamcrest-all</artifactId>
