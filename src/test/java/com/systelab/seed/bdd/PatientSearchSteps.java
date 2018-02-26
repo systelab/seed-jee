@@ -13,12 +13,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Class that defines the expected behavior for BDD Test following Gherkin language
+ */
 public class PatientSearchSteps {
+
 	Hospital hospital = new Hospital();
 	List<Patient> result = new ArrayList<>();
 
 	@Given(".+patient with the name '(.+)', surname '(.+)', born in (.+)")
-	public void addNewBook(final String name, final String surname, @Format("dd MMMMM yyyy") final Date born) {
+	public void addNewPatient(final String name, final String surname, @Format("dd MMMMM yyyy") final Date born) {
 		Patient patient = new Patient();
 		patient.setName(name);
 		patient.setSurname(surname);
