@@ -7,13 +7,12 @@ import com.systelab.seed.model.user.User;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import io.qameta.allure.*;
 
 
 @Feature("User Test Suite")
+@DisplayName("User Test Suite")
 public class UserClientTest extends BaseClientTest {
     private static final Logger logger = Logger.getLogger(UserClientTest.class.getName());
 
@@ -26,7 +25,10 @@ public class UserClientTest extends BaseClientTest {
     }
 
     @TmsLink("SEED-USR-1")
+    @DisplayName("Test User list")
     @Description("Test that we can get a List of users.")
+    @Tag("user")
+
     @Severity(SeverityLevel.BLOCKER)
     @Test
     public void testGetUserList() throws RequestException {

@@ -1,6 +1,7 @@
 package com.systelab.seed.client;
 
 import com.systelab.seed.model.patient.Patient;
+import io.qameta.allure.Step;
 
 import java.util.List;
 
@@ -12,6 +13,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 public class PatientClient extends BaseClient {
+
+    @Step("Create the patient {0}")
     public Patient create(Patient patient) throws RequestException {
         WebTarget target = this.getWebTarget().path("patients/patient");
 
@@ -24,6 +27,7 @@ public class PatientClient extends BaseClient {
         return response.readEntity(Patient.class);
     }
 
+    @Step("Get the patient with id {0}")
     public Patient get(Long id) throws RequestException {
         WebTarget target = this.getWebTarget().path("patients/" + id);
 
@@ -35,6 +39,7 @@ public class PatientClient extends BaseClient {
         return response.readEntity(Patient.class);
     }
 
+    @Step("Get the patient list")
     public List<Patient> get() throws RequestException {
         WebTarget target = this.getWebTarget().path("patients");
 
@@ -48,6 +53,7 @@ public class PatientClient extends BaseClient {
         });
     }
 
+    @Step("Delete the patient {0}")
     public boolean delete(Long id) throws RequestException {
         WebTarget target = this.getWebTarget().path("patients/" + id);
 
