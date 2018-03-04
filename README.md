@@ -10,16 +10,16 @@ framework and a bunch of development and testing tools for instant development g
 
 The app doesn't do much, just shows how to use different JEE standards and other suggested tools together:
 
-* Bean Validation.
-* JAXB
-* CDI
-* JPA
-* EJB
-* JAX-RS
-* JWT
-* CORS
-* Swagger
-* Allure with JUnit
+* [Bean Validation][beanvalidation].
+* [JAXB][jaxb]
+* [CDI][cdi]
+* [JPA][jpa]
+* [EJB][ejb]
+* [JAX-RS][jaxrs]
+* [JWT][jwt]
+* [CORS][cors]
+* [Swagger][swagger]
+* [Allure][allure] with [JUnit][junit]
 
 ## Getting Started
 
@@ -116,3 +116,15 @@ In the github root folder, you will information on how to use docker-compose, a 
 [jdk-download]: http://www.oracle.com/technetwork/java/javase/downloads
 [JEE]: http://www.oracle.com/technetwork/java/javaee/tech/index.html
 [wildfly]: http://wildfly.org
+[beanvalidation]:https://docs.oracle.com/javaee/7/tutorial/bean-validation001.htm
+[jaxb]: https://docs.oracle.com/javaee/7/tutorial/jaxrs-advanced007.htm
+[cdi]: https://docs.oracle.com/javaee/7/tutorial/cdi-basic.htm
+[jpa]: https://docs.oracle.com/javaee/7/tutorial/jaxrs-advanced007.htm
+[ejb]: https://docs.oracle.com/javaee/7/tutorial/partentbeans.htm#BNBLR
+[jaxrs]: https://docs.oracle.com/javaee/7/tutorial/jaxrs.htm#GIEPU
+[jwt]: https://jwt.io/
+[cors]: https://en.wikipedia.org/wiki/Cross-origin_resource_sharing
+[swagger]: https://swagger.io/
+[allure]: https://docs.qameta.io/allure/
+[junit]: https://junit.org/junit5/
+
