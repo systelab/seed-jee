@@ -129,6 +129,7 @@
 					<testFailureIgnore>false</testFailureIgnore>
 					<argLine>
 						-javaagent:${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar ${jacoco.cmdline}
+                        -Dcucumber.options="--plugin io.qameta.allure.cucumberjvm.AllureCucumberJvm"
 					</argLine>
 
 					<systemProperties>
@@ -158,10 +159,12 @@
 					<includes>
                         <include>com.systelab.seed.unit.*</include>
 						<include>com.systelab.seed.rest.*</include>
+                        <include>com.systelab.seed.bdd.*</include>
 					</includes>
 					<testFailureIgnore>false</testFailureIgnore>
 					<argLine>
 						-javaagent:${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar ${jacoco.cmdline}
+                        -Dcucumber.options="--plugin io.qameta.allure.cucumberjvm.AllureCucumberJvm"
 					</argLine>
 					<systemProperties>
 						<property>
@@ -263,6 +266,18 @@
 					</execution>
 				</executions>
 			</plugin>
+            <!--Needed only to show reports locally. Run jetty:run and
+            open localhost:8080 to show the report-->
+            <plugin>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>9.2.10.v20150310</version>
+                <configuration>
+                    <webAppSourceDirectory>${project.build.directory}/site/allure-maven-plugin</webAppSourceDirectory>
+                    <stopKey>stop</stopKey>
+                    <stopPort>1234</stopPort>
+                </configuration>
+            </plugin>
 		</plugins>
 	</build>
 
@@ -358,6 +373,11 @@
 			<version>LATEST</version>
 			<scope>test</scope>
 		</dependency>
+        <dependency>
+            <groupId>ru.yandex.qatools.allure</groupId>
+            <artifactId>allure-cucumber-jvm-adaptor</artifactId>
+            <version>1.6.4</version>
+        </dependency>
         <dependency>
             <groupId>io.rest-assured</groupId>
             <artifactId>rest-assured</artifactId>
