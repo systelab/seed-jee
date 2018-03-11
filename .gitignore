@@ -7,6 +7,11 @@
 # Target and IDE folder
 target/
 .idea/
+.allure/
+allure-results/
+
+# Seed iml file	
+seed.iml
 
 # Package Files #
 *.jar
