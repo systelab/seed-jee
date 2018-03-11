@@ -1,18 +1,6 @@
 package com.systelab.seed.model.user;
 
-import com.systelab.seed.util.security.PasswordDigest;
-
-import javax.inject.Inject;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.PrePersist;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -27,9 +15,6 @@ public class User {
     public static final String FIND_ALL = "User.findAll";
     public static final String COUNT_ALL = "User.countAll";
     public static final String FIND_BY_LOGIN_PASSWORD = "User.findByLoginAndPassword";
-
-    @Inject
-    private transient PasswordDigest passwordDigest;
 
     @Id
     @GeneratedValue
@@ -65,12 +50,6 @@ public class User {
         this.login = login;
         this.password = password;
         this.role = UserRole.USER;
-    }
-
-
-    @PrePersist
-    public void digestPassword() {
-        password = passwordDigest.digest(password);
     }
 
     public Long getId() {

@@ -55,6 +55,7 @@ public class UserServiceBean implements UserService {
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void create(User user) {
+        user.setPassword(passwordDigest.digest(user.getPassword()));
         em.persist(user);
     }
 
