@@ -58,14 +58,8 @@ public class PatientServiceBean implements PatientService {
 
     @Override
     public List<Patient> getAllPatients() {
-        List<Patient> patients = new ArrayList<Patient>();
-
         TypedQuery<Patient> query = em.createNamedQuery(Patient.FIND_ALL, Patient.class);
-        List<Patient> patientList = query.getResultList();
-        for (Patient patient : patientList) {
-            patients.add(patient);
-        }
-        return patients;
+        return query.getResultList();
     }
 
     @Override

@@ -16,6 +16,8 @@ import org.junit.FixMethodOrder;
 import org.junit.jupiter.api.*;
 import org.junit.runners.MethodSorters;
 
+import static java.util.stream.Collectors.joining;
+
 @TmsLink("TC0001_PatientManagement_IntegrationTest")
 @Feature("Patient Test Suite.\n\nGoal:\nThis test case is intended to verify the correct ....\n\nEnvironment:\n...\nPreconditions:\nN/A.")
 @DisplayName("Patients Test Suite")
@@ -97,12 +99,7 @@ public class PatientClientTest extends BaseClientTest {
 
     @Attachment(value = "Patients Database")
     public String savePatientsDatabase(List<Patient> patients) {
-        String patientAsText = "";
-
-        for (Patient patient : patients) {
-            patientAsText += patient.getSurname() + ", " + patient.getName() + "\t" + patient.getEmail() + "\n";
-        }
-        return patientAsText;
+        return patients.stream().map((patient)-> patient.getSurname() + ", " + patient.getName() + "\t" + patient.getEmail()).collect(joining("\n"));
     }
 
     @Step("Create {0} patients")

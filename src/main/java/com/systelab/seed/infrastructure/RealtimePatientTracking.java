@@ -73,12 +73,13 @@ public class RealtimePatientTracking {
 
         String jsonValue = writer.toString();
 
-        for (Session session : sessions) {
+        sessions.forEach((session)-> {
             try {
                 session.getBasicRemote().sendText(jsonValue);
             } catch (IOException ex) {
                 logger.log(Level.WARNING, "Unable to publish WebSocket message", ex);
             }
-        }
+        });
+
     }
 }

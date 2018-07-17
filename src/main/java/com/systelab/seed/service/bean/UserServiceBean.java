@@ -43,14 +43,8 @@ public class UserServiceBean implements UserService {
 
     @Override
     public List<User> getAllUsers() {
-        List<User> users = new ArrayList<User>();
-
         TypedQuery<User> query = em.createNamedQuery(User.FIND_ALL, User.class);
-        List<User> usersList = query.getResultList();
-        for (User user : usersList) {
-            users.add(user);
-        }
-        return users;
+        return  query.getResultList();
     }
 
     @Override

@@ -35,11 +35,7 @@ public class UserClientTest extends BaseClientTest {
         login(clientForUser);
 
         List<User> users = clientForUser.get();
-
-        for (int i = 0; i < users.size(); i++) {
-            logger.info(users.get(i).getSurname());
-        }
-
+        clientForUser.get().stream().forEach((user)->logger.info(user.getSurname()));
         Assertions.assertNotNull(users);
     }
 

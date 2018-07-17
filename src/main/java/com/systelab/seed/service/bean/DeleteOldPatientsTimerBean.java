@@ -35,12 +35,10 @@ public class DeleteOldPatientsTimerBean {
 
     @PostConstruct
     private void init() {
-        Collection<Timer> timers = timerService.getTimers();
-        for (Iterator<Timer> it = timers.iterator(); it.hasNext(); ) {
-            Timer t = it.next();
-            logger.log(Level.INFO, "Found running timer with info: " + t.getInfo() + ", cancelling it");
-            t.cancel();
-        }
+        timerService.getTimers().stream().forEach((timer)-> {
+            logger.log(Level.INFO, "Found running timer with info: " + timer.getInfo() + ", cancelling it");
+            timer.cancel();
+        });
 
         TimerConfig timerConfig = new TimerConfig();
         timerConfig.setInfo("DeleteOldPatientsTimer");
