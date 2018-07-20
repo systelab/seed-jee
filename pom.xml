@@ -338,6 +338,11 @@
             <artifactId>h2</artifactId>
             <version>${h2.version}</version>
         </dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>3.17</version>
+		</dependency>
 
         <!--#### TEST DEPENDENCIES ####-->
         <dependency>
