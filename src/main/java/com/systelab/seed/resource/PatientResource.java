@@ -5,9 +5,6 @@ import com.systelab.seed.model.patient.Patient;
 import com.systelab.seed.service.PatientService;
 import com.systelab.seed.util.exceptions.PatientNotFoundException;
 import io.swagger.annotations.*;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import javax.annotation.security.PermitAll;
@@ -21,6 +18,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.StreamingOutput;
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
@@ -120,30 +118,18 @@ public class PatientResource {
         }
     }
 
+    @ApiOperation(value = "Get Patients as Excel file", notes = "")
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "An Excel file", response = File.class), @ApiResponse(code = 500, message = "Internal Server Error")})
+
+
     @GET
     @Path("/report")
     @PermitAll
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public Response getPatientsExcel() {
-        final XSSFWorkbook wb = new XSSFWorkbook();
+
         String fileName = "patients.xlsx";
-
-        Sheet sheet = wb.createSheet("Patients");
-        List<Patient> patients = patientService.getAllPatients();
-
-        int rowNum = 0;
-
-        for (int i=0;i<patients.size();i++) {
-            Row row = sheet.createRow(rowNum++);
-
-            int colNum = 0;
-            Cell cell1 = row.createCell(colNum++);
-            cell1.setCellValue(patients.get(i).getName());
-            Cell cell2 = row.createCell(colNum++);
-            cell2.setCellValue(patients.get(i).getSurname());
-            Cell cell3 = row.createCell(colNum++);
-            cell3.setCellValue(patients.get(i).getEmail());
-        }
+        final XSSFWorkbook wb = patientService.getPatientsWorkbook();
 
         StreamingOutput stream = new StreamingOutput() {
             @Override

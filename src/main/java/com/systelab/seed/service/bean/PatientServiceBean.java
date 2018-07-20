@@ -4,9 +4,10 @@ import com.systelab.seed.infrastructure.events.cdi.PatientCreated;
 import com.systelab.seed.model.patient.Patient;
 import com.systelab.seed.service.PatientService;
 import com.systelab.seed.util.exceptions.PatientNotFoundException;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -16,6 +17,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import java.util.List;
 
 @Stateless
 public class PatientServiceBean implements PatientService {
@@ -60,6 +62,28 @@ public class PatientServiceBean implements PatientService {
     public List<Patient> getAllPatients() {
         TypedQuery<Patient> query = em.createNamedQuery(Patient.FIND_ALL, Patient.class);
         return query.getResultList();
+    }
+
+    @Override
+    public XSSFWorkbook getPatientsWorkbook() {
+        final XSSFWorkbook wb = new XSSFWorkbook();
+
+        Sheet sheet = wb.createSheet("Patients");
+        List<Patient> patients = getAllPatients();
+
+        int rowNum = 0;
+
+        for (int i = 0; i < patients.size(); i++) {
+            Row row = sheet.createRow(rowNum++);
+            int colNum = 0;
+            Cell cell1 = row.createCell(colNum++);
+            cell1.setCellValue(patients.get(i).getName());
+            Cell cell2 = row.createCell(colNum++);
+            cell2.setCellValue(patients.get(i).getSurname());
+            Cell cell3 = row.createCell(colNum++);
+            cell3.setCellValue(patients.get(i).getEmail());
+        }
+        return wb;
     }
 
     @Override
