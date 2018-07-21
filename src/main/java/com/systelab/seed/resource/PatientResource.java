@@ -18,8 +18,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.StreamingOutput;
-import java.io.File;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.logging.Level;
@@ -118,32 +116,22 @@ public class PatientResource {
         }
     }
 
-    @ApiOperation(value = "Get Patients as Excel file", notes = "")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "An Excel file", response = File.class), @ApiResponse(code = 500, message = "Internal Server Error")})
-
+    @ApiOperation(value = "Get all Patients in an Excel file", notes = "")
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "An Excel file"), @ApiResponse(code = 500, message = "Internal Server Error")})
 
     @GET
     @Path("/report")
     @PermitAll
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public Response getPatientsExcel() {
+    public Response getAllPatientsInExcel() {
 
         String fileName = "patients.xlsx";
         final XSSFWorkbook wb = patientService.getPatientsWorkbook();
 
-        StreamingOutput stream = new StreamingOutput() {
-            @Override
-            public void write(OutputStream output) throws IOException {
-                try {
-                    wb.write(output);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        };
+        StreamingOutput stream = (OutputStream output) -> wb.write(output);
+
         return Response.ok(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
                 .header("content-disposition", "attachment; filename=" + fileName).build();
-
     }
 
     @ApiOperation(value = "Delete a Patient", notes = "", authorizations = {@Authorization(value = "Bearer")})
@@ -164,7 +152,6 @@ public class PatientResource {
             logger.log(Level.SEVERE, PatientResource.INTERNAL_SERVER_ERROR_MESSAGE, ex);
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         }
-
     }
 
 }
