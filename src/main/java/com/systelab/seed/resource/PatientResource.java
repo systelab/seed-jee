@@ -126,12 +126,14 @@ public class PatientResource {
     public Response getAllPatientsInExcel() {
 
         String fileName = "patients.xlsx";
-        final XSSFWorkbook wb = patientService.getPatientsWorkbook();
-
-        StreamingOutput stream = (OutputStream output) -> wb.write(output);
-
-        return Response.ok(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                .header("content-disposition", "attachment; filename=" + fileName).build();
+        try (final XSSFWorkbook wb = patientService.getPatientsWorkbook()) {
+            StreamingOutput stream = (OutputStream output) -> wb.write(output);
+            return Response.ok(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                    .header("content-disposition", "attachment; filename=" + fileName).build();
+        } catch (Exception ex) {
+            logger.log(Level.SEVERE, PatientResource.INTERNAL_SERVER_ERROR_MESSAGE, ex);
+            return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @ApiOperation(value = "Delete a Patient", notes = "", authorizations = {@Authorization(value = "Bearer")})
