@@ -6,7 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
-public class LocalDateAdapter extends XmlAdapter<String, LocalDate> {
+public class JsonLocalDateTypeAdapter extends XmlAdapter<String, LocalDate> {
 
     public static final String JSON_ISO_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 

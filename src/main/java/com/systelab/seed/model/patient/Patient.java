@@ -1,7 +1,7 @@
 package com.systelab.seed.model.patient;
 
 import com.systelab.seed.util.constraints.Email;
-import com.systelab.seed.util.convert.jaxb.LocalDateAdapter;
+import com.systelab.seed.util.convert.jaxb.JsonLocalDateTypeAdapter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -33,7 +33,7 @@ public class Patient implements Serializable {
     @Email
     private String email;
 
-    @XmlJavaTypeAdapter(LocalDateAdapter.class)
+    @XmlJavaTypeAdapter(JsonLocalDateTypeAdapter.class)
     private LocalDate dob;
 
     @Embedded
