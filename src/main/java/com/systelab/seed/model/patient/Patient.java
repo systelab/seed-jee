@@ -1,20 +1,15 @@
 package com.systelab.seed.model.patient;
 
 import com.systelab.seed.util.constraints.Email;
+import com.systelab.seed.util.convert.jaxb.LocalDateAdapter;
 
-import java.io.Serializable;
-import java.util.Date;
-
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.io.Serializable;
+import java.time.LocalDate;
 
 @XmlRootElement
 @XmlType(propOrder = {"id", "name", "surname", "email", "dob", "address"})
@@ -38,7 +33,8 @@ public class Patient implements Serializable {
     @Email
     private String email;
 
-    private Date dob;
+    @XmlJavaTypeAdapter(LocalDateAdapter.class)
+    private LocalDate dob;
 
     @Embedded
     private Address address;
@@ -75,14 +71,13 @@ public class Patient implements Serializable {
         this.email = email;
     }
 
-    public Date getDob() {
+    public LocalDate getDob() {
         return dob;
     }
 
-    public void setDob(Date dob) {
+    public void setDob(LocalDate dob) {
         this.dob = dob;
     }
-
 
     public Address getAddress() {
         return address;
@@ -119,7 +114,7 @@ public class Patient implements Serializable {
 
     @Override
     public String toString() {
-        if (id!=null)
+        if (id != null)
             return surname + ", " + name + " (#" + id + ")";
         else
             return surname + ", " + name;

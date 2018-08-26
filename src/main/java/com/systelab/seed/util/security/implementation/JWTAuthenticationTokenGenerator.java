@@ -1,18 +1,16 @@
 package com.systelab.seed.util.security.implementation;
 
 import com.systelab.seed.util.security.AuthenticationTokenGenerator;
-
-import java.security.Key;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
-
-import javax.crypto.spec.SecretKeySpec;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+
+import javax.crypto.spec.SecretKeySpec;
+import java.security.Key;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 
 public class JWTAuthenticationTokenGenerator implements AuthenticationTokenGenerator {
 
@@ -23,7 +21,9 @@ public class JWTAuthenticationTokenGenerator implements AuthenticationTokenGener
         Claims customClaims = Jwts.claims();
         customClaims.put("role", role);
 
-        return Jwts.builder().setClaims(customClaims).setSubject(username).setIssuer(uri).setIssuedAt(new Date()).setExpiration(toDate(LocalDateTime.now().plusMinutes(15L))).signWith(SignatureAlgorithm.HS512, key).compact();
+        return Jwts.builder().setClaims(customClaims).setSubject(username).setIssuer(uri).
+                setIssuedAt(getIssuedAt()).setExpiration(getExpirationAt()).
+                signWith(SignatureAlgorithm.HS512, key).compact();
     }
 
     @Override
@@ -40,7 +40,12 @@ public class JWTAuthenticationTokenGenerator implements AuthenticationTokenGener
         return new SecretKeySpec(keyString.getBytes(), 0, keyString.getBytes().length, "DES");
     }
 
-    private Date toDate(LocalDateTime localDateTime) {
+    private Date getIssuedAt() {
+        return new Date();
+    }
+
+    private Date getExpirationAt() {
+        LocalDateTime localDateTime = LocalDateTime.now().plusMinutes(15L);
         return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
     }
 

@@ -2,7 +2,10 @@ package com.systelab.seed.bdd;
 
 import com.systelab.seed.model.patient.Patient;
 
-import java.util.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -10,20 +13,16 @@ import java.util.stream.Collectors;
  */
 public class Hospital {
 
-	private List<Patient> patients = new ArrayList<>();
+    private List<Patient> patients = new ArrayList<>();
 
-	public void addPatient(Patient patient) {
-		patients.add(patient);
-	}
+    public void addPatient(Patient patient) {
+        patients.add(patient);
+    }
 
-	public List<Patient> findPatients(final Date from, final Date to) {
-		Calendar end = Calendar.getInstance();
-		end.setTime(to);
-		end.roll(Calendar.YEAR, 1);
-
-		return patients.stream().filter(patient -> {
-			return from.before(patient.getDob()) && end.getTime().after(patient.getDob());})
-				.sorted(Comparator.comparing(Patient::getDob).reversed())
-				.collect(Collectors.toList());
-	}
+    public List<Patient> findPatients(final LocalDate from, final LocalDate to) {
+        return patients.stream()
+                .filter(patient -> patient.getDob().isAfter(from) && patient.getDob().isBefore(to))
+                .sorted(Comparator.comparing(Patient::getDob).reversed())
+                .collect(Collectors.toList());
+    }
 }
