@@ -245,6 +245,7 @@
 							<artifactId>${project.artifactId}</artifactId>
 							<type>war</type>
 							<pingURL>http://localhost:${cargo.wildfly.port}/seed/swagger/index.html</pingURL>
+							<pingTimeout>60000</pingTimeout>
 						</deployable>
 					</deployables>
 				</configuration>
