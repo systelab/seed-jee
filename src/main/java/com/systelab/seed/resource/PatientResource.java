@@ -3,6 +3,7 @@ package com.systelab.seed.resource;
 import com.systelab.seed.infrastructure.auth.AuthenticationTokenNeeded;
 import com.systelab.seed.model.patient.Patient;
 import com.systelab.seed.model.patient.PatientsPage;
+import com.systelab.seed.service.MedicalRecordNumberService;
 import com.systelab.seed.service.PatientService;
 import com.systelab.seed.util.exceptions.PatientNotFoundException;
 import com.systelab.seed.util.pagination.Page;
@@ -40,6 +41,9 @@ public class PatientResource {
     private static final String INVALID_PATIENT_ERROR_MESSAGE = "Invalid Patient";
 
     private Logger logger;
+
+    @Inject
+    private MedicalRecordNumberService medicalRecordNumberService;
 
     @EJB
     private PatientService patientService;
@@ -79,6 +83,9 @@ public class PatientResource {
             schema = @Schema(implementation = Patient.class))) @Valid Patient patient) {
         try {
             patient.setId(null);
+            if (patient.getMedicalNumber() == null || patient.getMedicalNumber().equals("")) {
+                patient.setMedicalNumber(medicalRecordNumberService.getMedicalRecordNumber());
+            }
             patientService.create(patient);
             return Response.ok().entity(patient).build();
         } catch (Exception ex) {
