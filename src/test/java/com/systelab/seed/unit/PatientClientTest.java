@@ -2,7 +2,6 @@ package com.systelab.seed.unit;
 
 import com.systelab.seed.FakeNameGenerator;
 import com.systelab.seed.TestUtil;
-import com.systelab.seed.client.RequestException;
 import com.systelab.seed.model.patient.Address;
 import com.systelab.seed.model.patient.Patient;
 import com.systelab.seed.rest.FunctionalTest;
@@ -26,7 +25,6 @@ import static java.util.stream.Collectors.joining;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class PatientClientTest extends FunctionalTest {
     private static final Logger logger = Logger.getLogger(PatientClientTest.class.getName());
-
 
     private Patient getPatientData() {
         Patient patient = new Patient();
@@ -56,7 +54,7 @@ public class PatientClientTest extends FunctionalTest {
     @Tag("patient")
     @Severity(SeverityLevel.BLOCKER)
     @Test
-    public void testCreatePatient() throws RequestException {
+    public void testCreatePatient() {
         Patient patient = getPatientData("John", "Burrows", "jburrows@werfen.com");
         Patient patientCreated = given().contentType("application/json").header("Authorization", bearer).body(patient).when().post("/patients/patient").as(Patient.class);
         TestUtil.checkObjectIsNotNull("patient", patientCreated);
@@ -89,7 +87,7 @@ public class PatientClientTest extends FunctionalTest {
     }
 
     @Step("Create {0} patients")
-    public void createSomePatients(int numberOfPatients) throws RequestException {
+    public void createSomePatients(int numberOfPatients) {
         FakeNameGenerator aFakeNameGenerator = new FakeNameGenerator();
         for (int i = 0; i < numberOfPatients; i++) {
             Patient patient = getPatientData(aFakeNameGenerator.generateName(true), aFakeNameGenerator.generateName(true), aFakeNameGenerator.generateName(false) + "@werfen.com");
@@ -104,7 +102,7 @@ public class PatientClientTest extends FunctionalTest {
     @Tag("patient")
     @Severity(SeverityLevel.BLOCKER)
     @Test
-    public void testGetPatientList() throws RequestException {
+    public void testGetPatientList() {
 
         createSomePatients(5);
 
@@ -127,12 +125,12 @@ public class PatientClientTest extends FunctionalTest {
     @Tag("patient")
     @Severity(SeverityLevel.BLOCKER)
     @Test
-    public void testGetPatient() throws RequestException {
+    public void testGetPatient() {
 
         Patient patient = getPatientData("John", "Burrows", "jburrows@werfen.com");
         Patient patientCreated = given().contentType("application/json").header("Authorization", bearer).body(patient).when().post("/patients/patient").as(Patient.class);
         TestUtil.printReturnedId("Patient", patientCreated.getId());
-        Patient patientRetrieved = given().contentType("application/json").header("Authorization", bearer).when().get("/patients/"+patientCreated.getId()).as(Patient.class);
+        Patient patientRetrieved = given().contentType("application/json").header("Authorization", bearer).when().get("/patients/" + patientCreated.getId()).as(Patient.class);
         TestUtil.checkObjectIsNotNull("patient", patientRetrieved);
         TestUtil.checkField("Name", "John", patientRetrieved.getName());
         TestUtil.checkField("Surname", "Burrows", patientRetrieved.getSurname());
@@ -144,8 +142,8 @@ public class PatientClientTest extends FunctionalTest {
     @Tag("patient")
     @Severity(SeverityLevel.BLOCKER)
     @Test
-    public void testGetUnexistingPatient() throws RequestException {
-        given().contentType("application/json").header("Authorization", bearer).when().get("/patients/38400000-8cf0-11bd-b23e-10b96e4ef00d").then().statusCode(400);
+    public void testGetUnexistingPatient() {
+        given().contentType("application/json").header("Authorization", bearer).when().get("/patients/38400000-8cf0-11bd-b23e-10b96e4ef00d").then().statusCode(404);
     }
 
     @DisplayName("Delete a Patient.")
@@ -153,12 +151,12 @@ public class PatientClientTest extends FunctionalTest {
     @Tag("patient")
     @Severity(SeverityLevel.BLOCKER)
     @Test
-    public void testDeletePatient() throws RequestException {
+    public void testDeletePatient() {
         Patient patient = getPatientData("John", "Burrows", "jburrows@werfen.com");
 
         Patient patientCreated = given().contentType("application/json").header("Authorization", bearer).body(patient).when().post("/patients/patient").as(Patient.class);
         TestUtil.checkObjectIsNotNull("patient", patientCreated);
-        given().contentType("application/json").header("Authorization", bearer).when().delete("/patients/patient/"+patientCreated.getId()).then().statusCode(200);
+        given().contentType("application/json").header("Authorization", bearer).when().delete("/patients/" + patientCreated.getId()).then().statusCode(200);
     }
 
     @DisplayName("Delete non-existing Patient.")
@@ -166,7 +164,7 @@ public class PatientClientTest extends FunctionalTest {
     @Tag("patient")
     @Severity(SeverityLevel.BLOCKER)
     @Test
-    public void testDeleteUnexistingPatient() throws RequestException {
-        given().contentType("application/json").header("Authorization", bearer).when().delete("/patients/patient/38400000-8cf0-11bd-b23e-10b96e4ef00d").then().statusCode(404);
+    public void testDeleteUnexistingPatient() {
+        given().contentType("application/json").header("Authorization", bearer).when().delete("/patients/38400000-8cf0-11bd-b23e-10b96e4ef00d").then().statusCode(404);
     }
 }
