@@ -1,7 +1,5 @@
 package com.systelab.seed.unit;
 
-import com.systelab.seed.client.RequestException;
-import com.systelab.seed.rest.FunctionalTest;
 import io.qameta.allure.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -20,8 +18,10 @@ public class HealthClientTest extends FunctionalTest {
     @Tag("health")
     @Severity(SeverityLevel.BLOCKER)
     @Test
-    public void testHealth() throws RequestException {
-        given().when().get("/health").then().statusCode(200);
+    public void testHealth() {
+        given().
+                when().
+                get("/health").then().statusCode(200);
     }
 
 }
