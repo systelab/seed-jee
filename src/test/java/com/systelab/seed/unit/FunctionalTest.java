@@ -1,11 +1,8 @@
-package com.systelab.seed.rest;
+package com.systelab.seed.unit;
 
 import com.github.fge.jsonschema.SchemaVersion;
 import com.github.fge.jsonschema.cfg.ValidationConfiguration;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
-import com.systelab.seed.client.RequestException;
-import com.systelab.seed.model.patient.Address;
-import com.systelab.seed.model.patient.Patient;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.module.jsv.JsonSchemaValidator;
@@ -26,9 +23,12 @@ public class FunctionalTest {
     protected static JsonSchemaFactory jsonSchemaFactory;
     protected static String bearer;
 
+    private static String testUserName = "Systelab";
+    private static String testPassword = "Systelab";
+
     @BeforeAll
     @DisplayName("Will be executed once before all test methods in the current class")
-    public static void setUp() throws RequestException {
+    public static void setUp() {
         String port = getPort();
         if (port == null)
             RestAssured.port = Integer.valueOf(8080);
@@ -50,7 +50,6 @@ public class FunctionalTest {
 
         setupJsonValidation();
         bearer = login();
-        createTestData(bearer);
     }
 
     @DisplayName("Given an endpoint return the Response accordingly")
@@ -83,25 +82,8 @@ public class FunctionalTest {
                 .and().with().checkedValidation(false);
     }
 
-    public static void createTestData(String bearer) throws RequestException {
-
-        Patient patient = new Patient();
-        patient.setName("Josh");
-        patient.setSurname("Long");
-        patient.setEmail("josh_long@gmail.com");
-
-        Address address = new Address();
-        address.setStreet("Spring Street, 123");
-        address.setCity("Worldwide");
-        address.setZip("08110");
-        patient.setAddress(address);
-
-        given().contentType("application/json").header("Authorization", bearer).body(patient).when().post("/patients/patient").then().statusCode(200);
-    }
-
     public static String login() {
-        Response response = given().contentType("application/x-www-form-urlencoded").
-                formParam("login", "Systelab").formParam("password", "Systelab").
+        Response response = given().contentType("application/x-www-form-urlencoded").formParam("login", testUserName).formParam("password", testPassword).
                 when().post("/users/login");
         return response.getHeader("Authorization");
     }

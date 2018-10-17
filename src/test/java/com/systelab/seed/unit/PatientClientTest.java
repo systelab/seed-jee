@@ -4,7 +4,6 @@ import com.systelab.seed.FakeNameGenerator;
 import com.systelab.seed.TestUtil;
 import com.systelab.seed.model.patient.Address;
 import com.systelab.seed.model.patient.Patient;
-import com.systelab.seed.rest.FunctionalTest;
 import io.qameta.allure.*;
 import org.junit.FixMethodOrder;
 import org.junit.jupiter.api.Assertions;
@@ -66,7 +65,9 @@ public class PatientClientTest extends FunctionalTest {
     @Step("Check that we have an exception if we create an invalid patient")
     public void testCreateInvalidPatient(Patient patient) {
 
-        given().contentType("application/json").header("Authorization", bearer).body(patient).when().post("/patients/patient").then().statusCode(400);
+        given().contentType("application/json").header("Authorization", bearer).body(patient).
+                when().post("/patients/patient").
+                then().statusCode(400);
     }
 
     @DisplayName("Create an invalid Patient.")
@@ -91,7 +92,8 @@ public class PatientClientTest extends FunctionalTest {
         FakeNameGenerator aFakeNameGenerator = new FakeNameGenerator();
         for (int i = 0; i < numberOfPatients; i++) {
             Patient patient = getPatientData(aFakeNameGenerator.generateName(true), aFakeNameGenerator.generateName(true), aFakeNameGenerator.generateName(false) + "@werfen.com");
-            Patient patientCreated = given().contentType("application/json").header("Authorization", bearer).body(patient).when().post("/patients/patient").as(Patient.class);
+            Patient patientCreated = given().contentType("application/json").header("Authorization", bearer).body(patient).
+                    when().post("/patients/patient").as(Patient.class);
 
             TestUtil.printReturnedId("Patient", patientCreated.getId());
         }
@@ -106,13 +108,15 @@ public class PatientClientTest extends FunctionalTest {
 
         createSomePatients(5);
 
-        PatientsPage patientsBefore = given().contentType("application/json").header("Authorization", bearer).when().get("/patients").as(PatientsPage.class);
+        PatientsPage patientsBefore = given().contentType("application/json").header("Authorization", bearer).
+                when().get("/patients").as(PatientsPage.class);
         Assertions.assertNotNull(patientsBefore);
         long initialSize = patientsBefore.getTotalElements();
         savePatientsDatabase(patientsBefore.getContent());
         createSomePatients(5);
 
-        PatientsPage patientsAfter = given().contentType("application/json").header("Authorization", bearer).when().get("/patients").as(PatientsPage.class);
+        PatientsPage patientsAfter = given().contentType("application/json").header("Authorization", bearer).
+                when().get("/patients").as(PatientsPage.class);
         Assertions.assertNotNull(patientsAfter);
         long finalSize = patientsAfter.getTotalElements();
         savePatientsDatabase(patientsAfter.getContent());
@@ -128,7 +132,8 @@ public class PatientClientTest extends FunctionalTest {
     public void testGetPatient() {
 
         Patient patient = getPatientData("John", "Burrows", "jburrows@werfen.com");
-        Patient patientCreated = given().contentType("application/json").header("Authorization", bearer).body(patient).when().post("/patients/patient").as(Patient.class);
+        Patient patientCreated = given().contentType("application/json").header("Authorization", bearer).body(patient).
+                when().post("/patients/patient").as(Patient.class);
         TestUtil.printReturnedId("Patient", patientCreated.getId());
         Patient patientRetrieved = given().contentType("application/json").header("Authorization", bearer).when().get("/patients/" + patientCreated.getId()).as(Patient.class);
         TestUtil.checkObjectIsNotNull("patient", patientRetrieved);
@@ -143,7 +148,9 @@ public class PatientClientTest extends FunctionalTest {
     @Severity(SeverityLevel.BLOCKER)
     @Test
     public void testGetUnexistingPatient() {
-        given().contentType("application/json").header("Authorization", bearer).when().get("/patients/38400000-8cf0-11bd-b23e-10b96e4ef00d").then().statusCode(404);
+        given().contentType("application/json").header("Authorization", bearer).
+                when().get("/patients/38400000-8cf0-11bd-b23e-10b96e4ef00d").
+                then().statusCode(404);
     }
 
     @DisplayName("Delete a Patient.")
@@ -154,9 +161,12 @@ public class PatientClientTest extends FunctionalTest {
     public void testDeletePatient() {
         Patient patient = getPatientData("John", "Burrows", "jburrows@werfen.com");
 
-        Patient patientCreated = given().contentType("application/json").header("Authorization", bearer).body(patient).when().post("/patients/patient").as(Patient.class);
+        Patient patientCreated = given().contentType("application/json").header("Authorization", bearer).body(patient).
+                when().post("/patients/patient").as(Patient.class);
         TestUtil.checkObjectIsNotNull("patient", patientCreated);
-        given().contentType("application/json").header("Authorization", bearer).when().delete("/patients/" + patientCreated.getId()).then().statusCode(200);
+        given().contentType("application/json").header("Authorization", bearer).
+                when().delete("/patients/" + patientCreated.getId()).
+                then().statusCode(200);
     }
 
     @DisplayName("Delete non-existing Patient.")
@@ -165,6 +175,8 @@ public class PatientClientTest extends FunctionalTest {
     @Severity(SeverityLevel.BLOCKER)
     @Test
     public void testDeleteUnexistingPatient() {
-        given().contentType("application/json").header("Authorization", bearer).when().delete("/patients/38400000-8cf0-11bd-b23e-10b96e4ef00d").then().statusCode(404);
+        given().contentType("application/json").header("Authorization", bearer).
+                when().delete("/patients/38400000-8cf0-11bd-b23e-10b96e4ef00d").
+                then().statusCode(404);
     }
 }

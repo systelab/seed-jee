@@ -1,12 +1,8 @@
 package com.systelab.seed.unit;
 
 import com.systelab.seed.TestUtil;
-import com.systelab.seed.client.RequestException;
-import com.systelab.seed.model.patient.Patient;
 import com.systelab.seed.model.user.User;
 import com.systelab.seed.model.user.UserRole;
-import com.systelab.seed.rest.FunctionalTest;
-import com.systelab.seed.util.pagination.Page;
 import io.qameta.allure.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -28,7 +24,7 @@ public class UserClientTest extends FunctionalTest {
     @Tag("user")
     @Severity(SeverityLevel.BLOCKER)
     @Test
-    public void testGetUserList() throws RequestException {
+    public void testGetUserList() {
         UsersPage users = given().contentType("application/json").header("Authorization", bearer).when().get("/users").as(UsersPage.class);
         users.getContent().stream().forEach((user) -> logger.info(user.getSurname()));
         Assertions.assertNotNull(users);
@@ -39,7 +35,7 @@ public class UserClientTest extends FunctionalTest {
     @Tag("user")
     @Severity(SeverityLevel.BLOCKER)
     @Test
-    public void testCreateUser() throws RequestException {
+    public void testCreateUser() {
         User user = new User();
         user.setLogin("agoncalves");
         user.setPassword("agoncalves");
