@@ -148,9 +148,6 @@ public class PatientClientTest extends FunctionalTest {
         given().contentType("application/json").header("Authorization", bearer).when().get("/patients/38400000-8cf0-11bd-b23e-10b96e4ef00d").then().statusCode(400);
     }
 
-/*
-
-
     @DisplayName("Delete a Patient.")
     @Description("Action: Delete a patient by id and check that we get an ok.")
     @Tag("patient")
@@ -158,10 +155,10 @@ public class PatientClientTest extends FunctionalTest {
     @Test
     public void testDeletePatient() throws RequestException {
         Patient patient = getPatientData("John", "Burrows", "jburrows@werfen.com");
-        Patient patientCreated = clientForPatient.create(patient);
+
+        Patient patientCreated = given().contentType("application/json").header("Authorization", bearer).body(patient).when().post("/patients/patient").as(Patient.class);
         TestUtil.checkObjectIsNotNull("patient", patientCreated);
-        boolean result = clientForPatient.delete(patientCreated.getId());
-        TestUtil.checkResultIsTrue(result);
+        given().contentType("application/json").header("Authorization", bearer).when().delete("/patients/patient/"+patientCreated.getId()).then().statusCode(200);
     }
 
     @DisplayName("Delete non-existing Patient.")
@@ -170,15 +167,6 @@ public class PatientClientTest extends FunctionalTest {
     @Severity(SeverityLevel.BLOCKER)
     @Test
     public void testDeleteUnexistingPatient() throws RequestException {
-        Exception caughtException = null;
-        try {
-            clientForPatient.delete(UUID.fromString("38400000-8cf0-11bd-b23e-10b96e4ef00d"));
-        } catch (Exception ex) {
-            caughtException = ex;
-        }
-        TestUtil.checkObjectIsNotNull("Exception", caughtException);
-        TestUtil.checkThatIHaveAnException(404, ((RequestException) caughtException).getErrorCode());
+        given().contentType("application/json").header("Authorization", bearer).when().delete("/patients/patient/38400000-8cf0-11bd-b23e-10b96e4ef00d").then().statusCode(404);
     }
-
-    */
 }
