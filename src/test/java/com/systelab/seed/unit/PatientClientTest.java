@@ -2,38 +2,30 @@ package com.systelab.seed.unit;
 
 import com.systelab.seed.FakeNameGenerator;
 import com.systelab.seed.TestUtil;
-import com.systelab.seed.client.PatientClient;
 import com.systelab.seed.client.RequestException;
 import com.systelab.seed.model.patient.Address;
 import com.systelab.seed.model.patient.Patient;
-import com.systelab.seed.util.pagination.Page;
+import com.systelab.seed.rest.FunctionalTest;
 import io.qameta.allure.*;
 import org.junit.FixMethodOrder;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import org.junit.runners.MethodSorters;
 
 import java.util.List;
-import java.util.UUID;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static io.restassured.RestAssured.given;
 import static java.util.stream.Collectors.joining;
 
 @TmsLink("TC0001_PatientManagement_IntegrationTest")
 @Feature("Patient Test Suite.\n\nGoal:\nThis test case is intended to verify the correct ....\n\nEnvironment:\n...\nPreconditions:\nN/A.")
 @DisplayName("Patients Test Suite")
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class PatientClientTest extends BaseClientTest {
+public class PatientClientTest extends FunctionalTest {
     private static final Logger logger = Logger.getLogger(PatientClientTest.class.getName());
-
-    public static PatientClient clientForPatient;
-
-    @BeforeAll
-    public static void init() throws RequestException {
-        clientForPatient = new PatientClient();
-        login(clientForPatient);
-        logger.log(Level.INFO, clientForPatient.getServerURL());
-    }
 
 
     private Patient getPatientData() {
@@ -66,7 +58,7 @@ public class PatientClientTest extends BaseClientTest {
     @Test
     public void testCreatePatient() throws RequestException {
         Patient patient = getPatientData("John", "Burrows", "jburrows@werfen.com");
-        Patient patientCreated = clientForPatient.create(patient);
+        Patient patientCreated = given().contentType("application/json").header("Authorization", bearer).body(patient).when().post("/patients/patient").as(Patient.class);
         TestUtil.checkObjectIsNotNull("patient", patientCreated);
         TestUtil.checkField("Name", "John", patientCreated.getName());
         TestUtil.checkField("Surname", "Burrows", patientCreated.getSurname());
@@ -75,14 +67,8 @@ public class PatientClientTest extends BaseClientTest {
 
     @Step("Check that we have an exception if we create an invalid patient")
     public void testCreateInvalidPatient(Patient patient) {
-        Exception caughtException = null;
-        try {
-            clientForPatient.create(patient);
-        } catch (Exception ex) {
-            caughtException = ex;
-        }
-        TestUtil.checkObjectIsNotNull("Exception", caughtException);
-        TestUtil.checkThatIHaveAnException(400, ((RequestException) caughtException).getErrorCode());
+
+        given().contentType("application/json").header("Authorization", bearer).body(patient).when().post("/patients/patient").then().statusCode(400);
     }
 
     @DisplayName("Create an invalid Patient.")
@@ -97,7 +83,6 @@ public class PatientClientTest extends BaseClientTest {
         testCreateInvalidPatient(getPatientData("John", "Burrows", "jburrows"));
     }
 
-
     @Attachment(value = "Patients Database")
     public String savePatientsDatabase(List<Patient> patients) {
         return patients.stream().map((patient) -> patient.getSurname() + ", " + patient.getName() + "\t" + patient.getEmail()).collect(joining("\n"));
@@ -108,7 +93,8 @@ public class PatientClientTest extends BaseClientTest {
         FakeNameGenerator aFakeNameGenerator = new FakeNameGenerator();
         for (int i = 0; i < numberOfPatients; i++) {
             Patient patient = getPatientData(aFakeNameGenerator.generateName(true), aFakeNameGenerator.generateName(true), aFakeNameGenerator.generateName(false) + "@werfen.com");
-            Patient patientCreated = clientForPatient.create(patient);
+            Patient patientCreated = given().contentType("application/json").header("Authorization", bearer).body(patient).when().post("/patients/patient").as(Patient.class);
+
             TestUtil.printReturnedId("Patient", patientCreated.getId());
         }
     }
@@ -122,13 +108,13 @@ public class PatientClientTest extends BaseClientTest {
 
         createSomePatients(5);
 
-        Page<Patient> patientsBefore = clientForPatient.get();
+        PatientsPage patientsBefore = given().contentType("application/json").header("Authorization", bearer).when().get("/patients").as(PatientsPage.class);
         Assertions.assertNotNull(patientsBefore);
         long initialSize = patientsBefore.getTotalElements();
         savePatientsDatabase(patientsBefore.getContent());
         createSomePatients(5);
 
-        Page<Patient> patientsAfter = clientForPatient.get();
+        PatientsPage patientsAfter = given().contentType("application/json").header("Authorization", bearer).when().get("/patients").as(PatientsPage.class);
         Assertions.assertNotNull(patientsAfter);
         long finalSize = patientsAfter.getTotalElements();
         savePatientsDatabase(patientsAfter.getContent());
@@ -144,9 +130,9 @@ public class PatientClientTest extends BaseClientTest {
     public void testGetPatient() throws RequestException {
 
         Patient patient = getPatientData("John", "Burrows", "jburrows@werfen.com");
-        Patient patientCreated = clientForPatient.create(patient);
+        Patient patientCreated = given().contentType("application/json").header("Authorization", bearer).body(patient).when().post("/patients/patient").as(Patient.class);
         TestUtil.printReturnedId("Patient", patientCreated.getId());
-        Patient patientRetrieved = clientForPatient.get(patientCreated.getId());
+        Patient patientRetrieved = given().contentType("application/json").header("Authorization", bearer).when().get("/patients/"+patientCreated.getId()).as(Patient.class);
         TestUtil.checkObjectIsNotNull("patient", patientRetrieved);
         TestUtil.checkField("Name", "John", patientRetrieved.getName());
         TestUtil.checkField("Surname", "Burrows", patientRetrieved.getSurname());
@@ -159,17 +145,11 @@ public class PatientClientTest extends BaseClientTest {
     @Severity(SeverityLevel.BLOCKER)
     @Test
     public void testGetUnexistingPatient() throws RequestException {
-
-        Exception caughtException = null;
-        try {
-            clientForPatient.get(UUID.fromString("38400000-8cf0-11bd-b23e-10b96e4ef00d")
-            );
-        } catch (Exception ex) {
-            caughtException = ex;
-        }
-        TestUtil.checkObjectIsNotNull("Exception", caughtException);
-        TestUtil.checkThatIHaveAnException(404, ((RequestException) caughtException).getErrorCode());
+        given().contentType("application/json").header("Authorization", bearer).when().get("/patients/38400000-8cf0-11bd-b23e-10b96e4ef00d").then().statusCode(400);
     }
+
+/*
+
 
     @DisplayName("Delete a Patient.")
     @Description("Action: Delete a patient by id and check that we get an ok.")
@@ -199,4 +179,6 @@ public class PatientClientTest extends BaseClientTest {
         TestUtil.checkObjectIsNotNull("Exception", caughtException);
         TestUtil.checkThatIHaveAnException(404, ((RequestException) caughtException).getErrorCode());
     }
+
+    */
 }
