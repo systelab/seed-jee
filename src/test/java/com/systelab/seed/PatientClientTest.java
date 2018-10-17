@@ -1,7 +1,7 @@
-package com.systelab.seed.unit;
+package com.systelab.seed;
 
-import com.systelab.seed.FakeNameGenerator;
-import com.systelab.seed.TestUtil;
+import com.systelab.seed.utils.FakeNameGenerator;
+import com.systelab.seed.utils.TestUtil;
 import com.systelab.seed.model.patient.Address;
 import com.systelab.seed.model.patient.Patient;
 import io.qameta.allure.*;
@@ -20,8 +20,6 @@ import static java.util.stream.Collectors.joining;
 
 @TmsLink("TC0001_PatientManagement_IntegrationTest")
 @Feature("Patient Test Suite.\n\nGoal:\nThis test case is intended to verify the correct ....\n\nEnvironment:\n...\nPreconditions:\nN/A.")
-@DisplayName("Patients Test Suite")
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class PatientClientTest extends FunctionalTest {
     private static final Logger logger = Logger.getLogger(PatientClientTest.class.getName());
 
@@ -39,7 +37,6 @@ public class PatientClientTest extends FunctionalTest {
         return patient;
     }
 
-    @Step("Get a local patient object with name '{0}', surname '{1}' and email '{2}'")
     public Patient getPatientData(String name, String surname, String email) {
         Patient patient = getPatientData();
         patient.setName(name);
@@ -48,10 +45,7 @@ public class PatientClientTest extends FunctionalTest {
         return patient;
     }
 
-    @DisplayName("Create a Patient.")
-    @Description("Action: Create a patient with name, surname and email and check that the values are stored.")
-    @Tag("patient")
-    @Severity(SeverityLevel.BLOCKER)
+    @Description("Create a patient with name, surname and email")
     @Test
     public void testCreatePatient() {
         Patient patient = getPatientData("John", "Burrows", "jburrows@werfen.com");
@@ -62,7 +56,6 @@ public class PatientClientTest extends FunctionalTest {
         TestUtil.checkField("Email", "jburrows@werfen.com", patientCreated.getEmail());
     }
 
-    @Step("Check that we have an exception if we create an invalid patient")
     public void testCreateInvalidPatient(Patient patient) {
 
         given().contentType("application/json").header("Authorization", bearer).body(patient).
@@ -70,10 +63,7 @@ public class PatientClientTest extends FunctionalTest {
                 then().statusCode(400);
     }
 
-    @DisplayName("Create an invalid Patient.")
-    @Description("Action: Create a patient with invalid data and check that we get an exception.")
-    @Tag("patient")
-    @Severity(SeverityLevel.BLOCKER)
+    @Description("Create a Patient with invalid data")
     @Test
     public void testCreateInvalidPatient() {
         testCreateInvalidPatient(getPatientData("", "Burrows", "jburrows@test.com"));
@@ -87,7 +77,7 @@ public class PatientClientTest extends FunctionalTest {
         return patients.stream().map((patient) -> patient.getSurname() + ", " + patient.getName() + "\t" + patient.getEmail()).collect(joining("\n"));
     }
 
-    @Step("Create {0} patients")
+    @Step("Action: Create {0} patients")
     public void createSomePatients(int numberOfPatients) {
         FakeNameGenerator aFakeNameGenerator = new FakeNameGenerator();
         for (int i = 0; i < numberOfPatients; i++) {
@@ -95,14 +85,11 @@ public class PatientClientTest extends FunctionalTest {
             Patient patientCreated = given().contentType("application/json").header("Authorization", bearer).body(patient).
                     when().post("/patients/patient").as(Patient.class);
 
-            TestUtil.printReturnedId("Patient", patientCreated.getId());
+            TestUtil.checkObjectIsNull("Patient ID", patientCreated.getId());
         }
     }
 
-    @DisplayName("Get a Patient List.")
-    @Description("Action: Get a list of patients, and check that are all the patient of the DB")
-    @Tag("patient")
-    @Severity(SeverityLevel.BLOCKER)
+    @Description("Get a list of patients")
     @Test
     public void testGetPatientList() {
 
@@ -124,17 +111,14 @@ public class PatientClientTest extends FunctionalTest {
         TestUtil.checkANumber("The new list size is", initialSize + 5, finalSize);
     }
 
-    @DisplayName("Get a Patient.")
-    @Description("Action: Get a patient by id, an check that the data is correct.")
-    @Tag("patient")
-    @Severity(SeverityLevel.BLOCKER)
+    @Description("Get a Patient by id")
     @Test
     public void testGetPatient() {
 
         Patient patient = getPatientData("John", "Burrows", "jburrows@werfen.com");
         Patient patientCreated = given().contentType("application/json").header("Authorization", bearer).body(patient).
                 when().post("/patients/patient").as(Patient.class);
-        TestUtil.printReturnedId("Patient", patientCreated.getId());
+        TestUtil.checkObjectIsNull("Patient ID", patientCreated.getId());
         Patient patientRetrieved = given().contentType("application/json").header("Authorization", bearer).when().get("/patients/" + patientCreated.getId()).as(Patient.class);
         TestUtil.checkObjectIsNotNull("patient", patientRetrieved);
         TestUtil.checkField("Name", "John", patientRetrieved.getName());
@@ -142,10 +126,7 @@ public class PatientClientTest extends FunctionalTest {
         TestUtil.checkField("Email", "jburrows@werfen.com", patientRetrieved.getEmail());
     }
 
-    @DisplayName("Get a non-existing Patient.")
-    @Description("Action: Get a patient with an non-existing id and check that we get the appropriate error.")
-    @Tag("patient")
-    @Severity(SeverityLevel.BLOCKER)
+    @Description("Get a patient with an non-existing id")
     @Test
     public void testGetUnexistingPatient() {
         given().contentType("application/json").header("Authorization", bearer).
@@ -153,10 +134,7 @@ public class PatientClientTest extends FunctionalTest {
                 then().statusCode(404);
     }
 
-    @DisplayName("Delete a Patient.")
-    @Description("Action: Delete a patient by id and check that we get an ok.")
-    @Tag("patient")
-    @Severity(SeverityLevel.BLOCKER)
+    @Description("Delete a patient by id")
     @Test
     public void testDeletePatient() {
         Patient patient = getPatientData("John", "Burrows", "jburrows@werfen.com");
@@ -169,10 +147,7 @@ public class PatientClientTest extends FunctionalTest {
                 then().statusCode(200);
     }
 
-    @DisplayName("Delete non-existing Patient.")
-    @Description("Action: Delete a patient with an non-existing id and check that we get the appropriate error.")
-    @Tag("patient")
-    @Severity(SeverityLevel.BLOCKER)
+    @Description("Delete non-existing Patient")
     @Test
     public void testDeleteUnexistingPatient() {
         given().contentType("application/json").header("Authorization", bearer).

@@ -1,4 +1,4 @@
-package com.systelab.seed.unit;
+package com.systelab.seed;
 
 import com.github.fge.jsonschema.SchemaVersion;
 import com.github.fge.jsonschema.cfg.ValidationConfiguration;
@@ -17,7 +17,6 @@ import java.util.Properties;
 
 import static io.restassured.RestAssured.given;
 
-@DisplayName("Base Test to load all the things that the nested tests needs")
 public class FunctionalTest {
 
     protected static JsonSchemaFactory jsonSchemaFactory;
@@ -27,7 +26,6 @@ public class FunctionalTest {
     private static String testPassword = "Systelab";
 
     @BeforeAll
-    @DisplayName("Will be executed once before all test methods in the current class")
     public static void setUp() {
         String port = getPort();
         if (port == null)
@@ -52,7 +50,6 @@ public class FunctionalTest {
         bearer = login();
     }
 
-    @DisplayName("Given an endpoint return the Response accordingly")
     public static Response doGetResponse(String endpoint) {
         return given().headers("Content-Type", ContentType.JSON, "Accept", ContentType.JSON).
                 when().get(endpoint).

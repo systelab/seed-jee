@@ -19,23 +19,23 @@ public class ContentSecurityPolicyFilter implements Filter {
      * allow-forms allow-same-origin allow-scripts, and allow-top-navigation
      */
     public static final String SANDBOX = "sandbox";
-    /** The default policy for loading content such as JavaScript, Images, CSS, Font's, AJAX requests, Frames, HTML5 Media */
+    // The default policy for loading content such as JavaScript, Images, CSS, Font's, AJAX requests, Frames, HTML5 Media 
     public static final String DEFAULT_SRC = "default-src";
-    /** Defines valid sources of images */
+    // Defines valid sources of images 
     public static final String IMG_SRC = "img-src";
-    /** Defines valid sources of JavaScript  */
+    // Defines valid sources of JavaScript  
     public static final String SCRIPT_SRC = "script-src";
-    /** Defines valid sources of stylesheets */
+    // Defines valid sources of stylesheets 
     public static final String STYLE_SRC = "style-src";
-    /** Defines valid sources of fonts */
+    // Defines valid sources of fonts 
     public static final String FONT_SRC = "font-src";
-    /** Applies to XMLHttpRequest (AJAX), WebSocket or EventSource */
+    // Applies to XMLHttpRequest (AJAX), WebSocket or EventSource 
     public static final String CONNECT_SRC = "connect-src";
-    /** Defines valid sources of plugins, eg <object>, <embed> or <applet>.  */
+    // Defines valid sources of plugins, eg <object>, <embed> or <applet>.  
     public static final String OBJECT_SRC = "object-src";
-    /** Defines valid sources of audio and video, eg HTML5 <audio>, <video> elements */
+    // Defines valid sources of audio and video, eg HTML5 <audio>, <video> elements 
     public static final String MEDIA_SRC = "media-src";
-    /** Defines valid sources for loading frames */
+    // Defines valid sources for loading frames 
     public static final String FRAME_SRC = "frame-src";
 
     public static final String SELF_REFERENCE= "'self'";

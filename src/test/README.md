@@ -8,7 +8,7 @@ You can use @Step("Action: ...") to identify that a step is an Action. Otherwise
 ## What to test - Recommendations
 
 You need to decide if it's necessary to report the unit test as formal.
-For example: The class HealthClientTest.java does not require to have formal documentation.
+For example: The class TokenGeneratorTest.java does not require to have formal documentation.
 
 Do not document the util methods. Otherwise, you will have so much documentation in the Test Case.
 For example: The function getPatientData() at PatientClientTest.java is just an util to get a PatientData object and it's not required to have add the @Step("Action: ")

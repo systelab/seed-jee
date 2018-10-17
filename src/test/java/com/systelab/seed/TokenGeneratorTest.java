@@ -1,4 +1,4 @@
-package com.systelab.seed.unit;
+package com.systelab.seed;
 
 import com.systelab.seed.util.security.implementation.JWTAuthenticationTokenGenerator;
 import io.jsonwebtoken.MalformedJwtException;
@@ -18,7 +18,6 @@ public class TokenGeneratorTest {
     private JWTAuthenticationTokenGenerator jwtTokenGenerator;
 
     @BeforeEach
-    @DisplayName("Initialize all the resources to be tested")
     public void initialize(){
         jwtTokenGenerator = new JWTAuthenticationTokenGenerator();
     }
@@ -36,7 +35,6 @@ public class TokenGeneratorTest {
     }
 
     @Test
-    @DisplayName("Assert example when a sentence throws an exception")
     public void givenARandomTokenWhenIsInvalidThenExceptionThrown() {
         Assertions.assertThrows(MalformedJwtException.class, () -> {
             jwtTokenGenerator.validateToken(generateRandomToken());

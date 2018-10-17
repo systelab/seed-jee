@@ -1,4 +1,4 @@
-package com.systelab.seed;
+package com.systelab.seed.utils;
 
 import java.util.Random;
 
