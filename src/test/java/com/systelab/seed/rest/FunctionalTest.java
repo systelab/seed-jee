@@ -3,7 +3,6 @@ package com.systelab.seed.rest;
 import com.github.fge.jsonschema.SchemaVersion;
 import com.github.fge.jsonschema.cfg.ValidationConfiguration;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
-import com.systelab.seed.client.PatientClient;
 import com.systelab.seed.client.RequestException;
 import com.systelab.seed.model.patient.Address;
 import com.systelab.seed.model.patient.Patient;
@@ -13,20 +12,19 @@ import io.restassured.module.jsv.JsonSchemaValidator;
 import io.restassured.module.jsv.JsonSchemaValidatorSettings;
 import io.restassured.parsing.Parser;
 import io.restassured.response.Response;
-
-import static io.restassured.RestAssured.given;
-
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 
 import java.io.IOException;
 import java.util.Properties;
+
+import static io.restassured.RestAssured.given;
 
 @DisplayName("Base Test to load all the things that the nested tests needs")
 public class FunctionalTest {
 
     protected static JsonSchemaFactory jsonSchemaFactory;
-    protected static PatientClient clientForPatient;
+    protected static String bearer;
 
     @BeforeAll
     @DisplayName("Will be executed once before all test methods in the current class")
@@ -51,8 +49,8 @@ public class FunctionalTest {
         System.out.println(RestAssured.baseURI + ":" + RestAssured.port + RestAssured.basePath);
 
         setupJsonValidation();
-
-        createTestData();
+        bearer = login();
+        createTestData(bearer);
     }
 
     @DisplayName("Given an endpoint return the Response accordingly")
@@ -85,8 +83,7 @@ public class FunctionalTest {
                 .and().with().checkedValidation(false);
     }
 
-    public static void createTestData() throws RequestException {
-        clientForPatient = new PatientClient();
+    public static void createTestData(String bearer) throws RequestException {
 
         Patient patient = new Patient();
         patient.setName("Josh");
@@ -98,7 +95,14 @@ public class FunctionalTest {
         address.setCity("Worldwide");
         address.setZip("08110");
         patient.setAddress(address);
-        clientForPatient.create(patient);
+
+        given().contentType("application/json").header("Authorization", bearer).body(patient).when().post("/patients/patient").then().statusCode(200);
     }
 
+    public static String login() {
+        Response response = given().contentType("application/x-www-form-urlencoded").
+                formParam("login", "Systelab").formParam("password", "Systelab").
+                when().post("/users/login");
+        return response.getHeader("Authorization");
+    }
 }
