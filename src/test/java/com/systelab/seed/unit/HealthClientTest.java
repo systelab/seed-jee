@@ -1,26 +1,19 @@
 package com.systelab.seed.unit;
 
-import com.systelab.seed.TestUtil;
-import com.systelab.seed.client.HealthClient;
 import com.systelab.seed.client.RequestException;
+import com.systelab.seed.rest.FunctionalTest;
 import io.qameta.allure.*;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+
+import static io.restassured.RestAssured.given;
 
 
 @TmsLink("TC0003_HealthManagement_IntegrationTest")
 @Feature("Check that the service is healthy by calling a REST endpoint.")
 @DisplayName("Health Check Test Suite")
-public class HealthClientTest extends BaseClientTest {
-
-    public static HealthClient clientForHealth;
-
-    @BeforeAll
-    public static void init() throws RequestException {
-        clientForHealth = new HealthClient();
-    }
+public class HealthClientTest extends FunctionalTest {
 
     @DisplayName("Get the Health status")
     @Description("Action: Get the Health status and check that is OK.")
@@ -28,14 +21,7 @@ public class HealthClientTest extends BaseClientTest {
     @Severity(SeverityLevel.BLOCKER)
     @Test
     public void testHealth() throws RequestException {
-
-        Exception caughtException = null;
-        try {
-            clientForHealth.getHealth();
-        } catch (Exception ex) {
-            caughtException = ex;
-        }
-        TestUtil.checkObjectIsNull("Exception", caughtException);
+        given().when().get("/health").then().statusCode(200);
     }
 
 }
