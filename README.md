@@ -37,7 +37,7 @@ You will need [Java™ SE Development Kit 8][jdk-download] and [Maven][maven].
 
 #### Maven in Windows
 
->If you are working in a Windows environment, you could have some issues if the maven local repository is in a folder with a name containing white spaces (quite common as the default value is ${user.home}/.m2/repository). In order to avoid this, it is fully recommended that you specify another folder in your maven settings.xml file.     
+>If you are working in a Windows environment, you could have some issues if the maven local repository is in a folder with a name containing white spaces (quite common as the default value is ${user.home}/.m2/repository). In order to avoid this, it is fully recommended that you specify another folder in your maven settings.xml file.
 
 For example:
 
@@ -46,7 +46,7 @@ For example:
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
   <localRepository>/dev/repo</localRepository>
-  
+
   ...
 ```
 
@@ -83,40 +83,35 @@ mvn site
 
 Once the reports have been generated, you can check them by browsing the folder target/site and opening the file allure-maven.html
 
-### Run in a traditional way
+### Run with Cargo
 
-In order to run the application, you must install a WildFly and deploy the generated war file. 
-
-Another option could be to change the pom.xml file and remove the jacoco from the <cargo.jvmargs>. 
-
-```
-<cargo.jvmargs>${cargo.container.debug.jvmargs}</cargo.jvmargs>
-```
-
-After the update type the following command:
+Another option could be to run the application with Cargo using the following command:
 
 ```bash
 mvn clean package cargo:run
 ```
 
-Finally browse to: http://127.0.0.1:13080/seed/swagger/ (the port could changes as it is defined in the pom file).
+In order to check it's properly deployed, check the server at http://127.0.0.1:13080/seed/swagger/
 
-Use 'Systelab' as username and password.
+Use 'Systelab' as username and password
 
-Note: If you are using the angular seed, remember to set the API_BASE_PATH in the environment to match the same port.
+Considerations:
+- The port could changes as it is defined in the pom file
+- If you are using the angular seed, remember to set the API_BASE_PATH in the seed-angular environment to match the same port.
+- As an alternative to use Cargo, you can also install a WildFly and MySQL database, and deploy the generated war file afterwards.
 
 ## Docker
 
 ### Build docker image
 
-There is an Automated Build Task in Docker Cloud in order to build the Docker Image. 
+There is an Automated Build Task in Docker Cloud in order to build the Docker Image.
 This task, triggers a new build with every git push to your source code repository to create a 'latest' image.
 There is another build rule to trigger a new tag and create a 'version-x.y.z' image
 
 You can always manually create the image with the following command:
 
 ```bash
-docker build -t systelab/seed-jee . 
+docker build -t systelab/seed-jee .
 ```
 
 The image created, will contain a [wildfly server][wildfly] with the application war deployed.
