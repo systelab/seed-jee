@@ -1,16 +1,13 @@
 package com.systelab.seed;
 
-import com.systelab.seed.utils.FakeNameGenerator;
-import com.systelab.seed.utils.TestUtil;
 import com.systelab.seed.model.patient.Address;
 import com.systelab.seed.model.patient.Patient;
+import com.systelab.seed.model.patient.PatientsPage;
+import com.systelab.seed.utils.FakeNameGenerator;
+import com.systelab.seed.utils.TestUtil;
 import io.qameta.allure.*;
-import org.junit.FixMethodOrder;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.junit.runners.MethodSorters;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -20,8 +17,8 @@ import static java.util.stream.Collectors.joining;
 
 @TmsLink("TC0001_PatientManagement_IntegrationTest")
 @Feature("Patient Test Suite.\n\nGoal:\nThis test case is intended to verify the correct ....\n\nEnvironment:\n...\nPreconditions:\nN/A.")
-public class PatientClientTest extends FunctionalTest {
-    private static final Logger logger = Logger.getLogger(PatientClientTest.class.getName());
+public class PatientResourceTest extends FunctionalTest {
+    private static final Logger logger = Logger.getLogger(PatientResourceTest.class.getName());
 
     private Patient getPatientData() {
         Patient patient = new Patient();
@@ -85,7 +82,7 @@ public class PatientClientTest extends FunctionalTest {
             Patient patientCreated = given().contentType("application/json").header("Authorization", bearer).body(patient).
                     when().post("/patients/patient").as(Patient.class);
 
-            TestUtil.checkObjectIsNull("Patient ID", patientCreated.getId());
+            TestUtil.checkObjectIsNotNull("Patient ID", patientCreated.getId());
         }
     }
 
@@ -118,7 +115,7 @@ public class PatientClientTest extends FunctionalTest {
         Patient patient = getPatientData("John", "Burrows", "jburrows@werfen.com");
         Patient patientCreated = given().contentType("application/json").header("Authorization", bearer).body(patient).
                 when().post("/patients/patient").as(Patient.class);
-        TestUtil.checkObjectIsNull("Patient ID", patientCreated.getId());
+        TestUtil.checkObjectIsNotNull("Patient ID", patientCreated.getId());
         Patient patientRetrieved = given().contentType("application/json").header("Authorization", bearer).when().get("/patients/" + patientCreated.getId()).as(Patient.class);
         TestUtil.checkObjectIsNotNull("patient", patientRetrieved);
         TestUtil.checkField("Name", "John", patientRetrieved.getName());

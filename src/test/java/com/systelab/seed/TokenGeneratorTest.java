@@ -2,10 +2,9 @@ package com.systelab.seed;
 
 import com.systelab.seed.util.security.implementation.JWTAuthenticationTokenGenerator;
 import io.jsonwebtoken.MalformedJwtException;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.security.Key;
 import java.security.SecureRandom;
@@ -18,7 +17,7 @@ public class TokenGeneratorTest {
     private JWTAuthenticationTokenGenerator jwtTokenGenerator;
 
     @BeforeEach
-    public void initialize(){
+    public void initialize() {
         jwtTokenGenerator = new JWTAuthenticationTokenGenerator();
     }
 
@@ -65,7 +64,7 @@ public class TokenGeneratorTest {
 
     private static String generateRandomToken() {
         SecureRandom random = new SecureRandom();
-        long longToken = Math.abs( random.nextLong() );
-        return Long.toString( longToken, 16 );
+        long longToken = Math.abs(random.nextLong());
+        return Long.toString(longToken, 16);
     }
 }

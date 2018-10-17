@@ -4,13 +4,11 @@ import com.github.fge.jsonschema.SchemaVersion;
 import com.github.fge.jsonschema.cfg.ValidationConfiguration;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
 import io.restassured.module.jsv.JsonSchemaValidator;
 import io.restassured.module.jsv.JsonSchemaValidatorSettings;
 import io.restassured.parsing.Parser;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -50,16 +48,10 @@ public class FunctionalTest {
         bearer = login();
     }
 
-    public static Response doGetResponse(String endpoint) {
-        return given().headers("Content-Type", ContentType.JSON, "Accept", ContentType.JSON).
-                when().get(endpoint).
-                then().contentType(ContentType.JSON).extract().response();
-    }
-
     private static String getPort() {
         try {
             Properties p = new Properties();
-            p.load(FunctionalTest.class.getResourceAsStream("../client/test.properties"));
+            p.load(FunctionalTest.class.getResourceAsStream("./client/test.properties"));
             return p.getProperty("server.port");
         } catch (IOException e) {
             throw new IllegalStateException("Could not load test.properties file in package " + FunctionalTest.class.getPackage().getName(), e);
