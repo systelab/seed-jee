@@ -9,7 +9,9 @@ import java.util.Properties;
 
 import static io.restassured.RestAssured.given;
 
-public class FunctionalTest {
+public class RESTResourcelTest {
+
+    protected static final String AUTHORIZATION_HEADER = "Authorization";
 
     private static String bearer;
 
@@ -36,12 +38,12 @@ public class FunctionalTest {
     private static Integer getPort(String property, int defaultValue) {
         try {
             Properties p = new Properties();
-            p.load(FunctionalTest.class.getResourceAsStream("./client/test.properties"));
+            p.load(RESTResourcelTest.class.getResourceAsStream("./client/test.properties"));
             String port = p.getProperty(property);
             if (port == null) return Integer.valueOf(defaultValue);
             else return Integer.valueOf(port);
         } catch (IOException e) {
-            throw new IllegalStateException("Could not load test.properties file in package " + FunctionalTest.class.getPackage().getName(), e);
+            throw new IllegalStateException("Could not load test.properties file in package " + RESTResourcelTest.class.getPackage().getName(), e);
         }
     }
 

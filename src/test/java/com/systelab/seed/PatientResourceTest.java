@@ -7,7 +7,6 @@ import com.systelab.seed.utils.FakeNameGenerator;
 import com.systelab.seed.utils.TestUtil;
 import io.qameta.allure.*;
 import io.restassured.http.ContentType;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -17,7 +16,7 @@ import static java.util.stream.Collectors.joining;
 
 @TmsLink("TC0001_PatientManagement_IntegrationTest")
 @Feature("Patient Test Suite.\n\nGoal:\nThis test case is intended to verify the correct ....\n\nEnvironment:\n...\nPreconditions:\nN/A.")
-public class PatientResourceTest extends FunctionalTest {
+public class PatientResourceTest extends RESTResourcelTest {
 
     private Patient getPatientData() {
         Patient patient = new Patient();
@@ -45,7 +44,7 @@ public class PatientResourceTest extends FunctionalTest {
     @Test
     public void testCreatePatient() {
         Patient patient = getPatientData("John", "Burrows", "jburrows@werfen.com");
-        Patient patientCreated = given().contentType(ContentType.JSON).header("Authorization", getBearer()).body(patient).
+        Patient patientCreated = given().contentType(ContentType.JSON).header(AUTHORIZATION_HEADER, getBearer()).body(patient).
                 when().post("/patients/patient").as(Patient.class);
         TestUtil.checkObjectIsNotNull("patient", patientCreated);
         TestUtil.checkField("Name", "John", patientCreated.getName());
@@ -54,8 +53,7 @@ public class PatientResourceTest extends FunctionalTest {
     }
 
     private void testCreateInvalidPatient(Patient patient) {
-
-        given().contentType(ContentType.JSON).header("Authorization", getBearer()).body(patient).
+        given().contentType(ContentType.JSON).header(AUTHORIZATION_HEADER, getBearer()).body(patient).
                 when().post("/patients/patient").
                 then().statusCode(400);
     }
@@ -79,7 +77,7 @@ public class PatientResourceTest extends FunctionalTest {
         FakeNameGenerator aFakeNameGenerator = new FakeNameGenerator();
         for (int i = 0; i < numberOfPatients; i++) {
             Patient patient = getPatientData(aFakeNameGenerator.generateName(true), aFakeNameGenerator.generateName(true), aFakeNameGenerator.generateName(false) + "@werfen.com");
-            Patient patientCreated = given().contentType(ContentType.JSON).header("Authorization", getBearer()).body(patient).
+            Patient patientCreated = given().contentType(ContentType.JSON).header(AUTHORIZATION_HEADER, getBearer()).body(patient).
                     when().post("/patients/patient").as(Patient.class);
             TestUtil.checkObjectIsNotNull("Patient ID", patientCreated.getId());
         }
@@ -91,16 +89,14 @@ public class PatientResourceTest extends FunctionalTest {
 
         createSomePatients(5);
 
-        PatientsPage patientsBefore = given().contentType(ContentType.JSON).header("Authorization", getBearer()).
+        PatientsPage patientsBefore = given().contentType(ContentType.JSON).header(AUTHORIZATION_HEADER, getBearer()).
                 when().get("/patients").as(PatientsPage.class);
-        Assertions.assertNotNull(patientsBefore);
         long initialSize = patientsBefore.getTotalElements();
         savePatientsDatabase(patientsBefore.getContent());
         createSomePatients(5);
 
-        PatientsPage patientsAfter = given().contentType(ContentType.JSON).header("Authorization", getBearer()).
+        PatientsPage patientsAfter = given().contentType(ContentType.JSON).header(AUTHORIZATION_HEADER, getBearer()).
                 when().get("/patients").as(PatientsPage.class);
-        Assertions.assertNotNull(patientsAfter);
         long finalSize = patientsAfter.getTotalElements();
         savePatientsDatabase(patientsAfter.getContent());
 
@@ -112,10 +108,10 @@ public class PatientResourceTest extends FunctionalTest {
     public void testGetPatient() {
 
         Patient patient = getPatientData("John", "Burrows", "jburrows@werfen.com");
-        Patient patientCreated = given().contentType(ContentType.JSON).header("Authorization", getBearer()).body(patient).
+        Patient patientCreated = given().contentType(ContentType.JSON).header(AUTHORIZATION_HEADER, getBearer()).body(patient).
                 when().post("/patients/patient").as(Patient.class);
         TestUtil.checkObjectIsNotNull("Patient ID", patientCreated.getId());
-        Patient patientRetrieved = given().contentType(ContentType.JSON).header("Authorization", getBearer()).
+        Patient patientRetrieved = given().contentType(ContentType.JSON).header(AUTHORIZATION_HEADER, getBearer()).
                 when().get("/patients/" + patientCreated.getId()).as(Patient.class);
         TestUtil.checkObjectIsNotNull("patient", patientRetrieved);
         TestUtil.checkField("Name", "John", patientRetrieved.getName());
@@ -126,7 +122,7 @@ public class PatientResourceTest extends FunctionalTest {
     @Description("Get a patient with an non-existing id")
     @Test
     public void testGetUnexistingPatient() {
-        given().contentType(ContentType.JSON).header("Authorization", getBearer()).
+        given().contentType(ContentType.JSON).header(AUTHORIZATION_HEADER, getBearer()).
                 when().get("/patients/38400000-8cf0-11bd-b23e-10b96e4ef00d").
                 then().statusCode(404);
     }
@@ -135,11 +131,10 @@ public class PatientResourceTest extends FunctionalTest {
     @Test
     public void testDeletePatient() {
         Patient patient = getPatientData("John", "Burrows", "jburrows@werfen.com");
-
-        Patient patientCreated = given().contentType(ContentType.JSON).header("Authorization", getBearer()).body(patient).
+        Patient patientCreated = given().contentType(ContentType.JSON).header(AUTHORIZATION_HEADER, getBearer()).body(patient).
                 when().post("/patients/patient").as(Patient.class);
         TestUtil.checkObjectIsNotNull("patient", patientCreated);
-        given().contentType(ContentType.JSON).header("Authorization", getBearer()).
+        given().contentType(ContentType.JSON).header(AUTHORIZATION_HEADER, getBearer()).
                 when().delete("/patients/" + patientCreated.getId()).
                 then().statusCode(200);
     }
@@ -147,7 +142,7 @@ public class PatientResourceTest extends FunctionalTest {
     @Description("Delete non-existing Patient")
     @Test
     public void testDeleteUnexistingPatient() {
-        given().contentType(ContentType.JSON).header("Authorization", getBearer()).
+        given().contentType(ContentType.JSON).header(AUTHORIZATION_HEADER, getBearer()).
                 when().delete("/patients/38400000-8cf0-11bd-b23e-10b96e4ef00d").
                 then().statusCode(404);
     }

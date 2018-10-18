@@ -16,13 +16,13 @@ import static io.restassured.RestAssured.given;
 
 @TmsLink("TC0002_LoginManagement_IntegrationTest")
 @Feature("User Test Suite.\n\nGoal:\nThis test case is intended to verify the correct ....\n\nEnvironment:\n...\nPreconditions:\nN/A.")
-public class UserResourceTest extends FunctionalTest {
+public class UserResourceTest extends RESTResourcelTest {
     private static final Logger logger = Logger.getLogger(UserResourceTest.class.getName());
 
     @Description("Get the User list")
     @Test
     public void testGetUserList() {
-        UsersPage users = given().contentType(ContentType.JSON).header("Authorization", getBearer()).
+        UsersPage users = given().contentType(ContentType.JSON).header(AUTHORIZATION_HEADER, getBearer()).
                 when().get("/users").as(UsersPage.class);
         users.getContent().stream().forEach((user) -> logger.info(user.getSurname()));
         TestUtil.checkObjectIsNotNull("Users", users);
@@ -38,7 +38,7 @@ public class UserResourceTest extends FunctionalTest {
         user.setSurname("Goncalves");
         user.setRole(UserRole.ADMIN);
 
-        User userCreated = given().contentType(ContentType.JSON).header("Authorization", getBearer()).body(user).
+        User userCreated = given().contentType(ContentType.JSON).header(AUTHORIZATION_HEADER, getBearer()).body(user).
                 when().post("/users/user").as(User.class);
         TestUtil.checkObjectIsNotNull("User", userCreated);
         TestUtil.checkField("Name", "Antonio", userCreated.getName());
