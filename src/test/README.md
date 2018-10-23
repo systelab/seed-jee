@@ -7,6 +7,8 @@ You can use @Step("Action: ...") to identify that a step is an Action. Otherwise
 
 ## What to test - Recommendations
 
+As a first step, you need to consider the verification against the specifications, how the REST API is build in terms of structure, objects, methods (Use Swagger at http://127.0.0.1:13080/seed/swagger/ )
+
 You need to decide if it's necessary to report the unit test as formal.
 For example: The class TokenGeneratorTest.java does not require to have formal documentation.
 

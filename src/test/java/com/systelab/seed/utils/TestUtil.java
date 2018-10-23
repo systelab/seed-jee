@@ -15,12 +15,12 @@ public class TestUtil {
         Assertions.assertEquals(expectedValue, returnedValue);
     }
 
-    @Step("Field {0} is not equal to null")
+    @Step("Object {0} exists")
     public static void checkObjectIsNotNull(String objectType, Object object) {
         Assertions.assertNotNull(object);
     }
 
-    @Step("Field {0} is equal to null")
+    @Step("Object {0} does not exist")
     public static void checkObjectIsNull(String objectType, Object object) {
         Assertions.assertNull(object);
     }
