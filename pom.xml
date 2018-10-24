@@ -115,7 +115,6 @@
 					<testFailureIgnore>false</testFailureIgnore>
 					<argLine>
 						-javaagent:${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar ${jacoco.cmdline}
-                        -Dcucumber.options="--plugin io.qameta.allure.cucumberjvm.AllureCucumberJvm"
 					</argLine>
 
 					<systemProperties>
@@ -143,14 +142,11 @@
 				<version>2.19.1</version>
 				<configuration>
 					<includes>
-                        <include>com.systelab.seed.unit.*</include>
-						<include>com.systelab.seed.rest.*</include>
-                        <include>com.systelab.seed.bdd.*</include>
+                        <include>com.systelab.seed.*</include>
 					</includes>
 					<testFailureIgnore>false</testFailureIgnore>
 					<argLine>
 						-javaagent:${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar ${jacoco.cmdline}
-                        -Dcucumber.options="--plugin io.qameta.allure.cucumberjvm.AllureCucumberJvm"
 					</argLine>
 					<systemProperties>
 						<property>
@@ -368,24 +364,6 @@
             <version>5.1.0</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.containers</groupId>
-            <artifactId>jersey-container-servlet-core</artifactId>
-            <version>2.27</version>
-            <scope>test</scope>
-        </dependency>
-		<dependency>
-			<groupId>org.glassfish.jersey.inject</groupId>
-			<artifactId>jersey-hk2</artifactId>
-			<version>2.27</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.glassfish.jersey.media</groupId>
-			<artifactId>jersey-media-json-jackson</artifactId>
-			<version>2.27</version>
-			<scope>test</scope>
-		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-annotations</artifactId>
@@ -422,11 +400,6 @@
 			<version>2.7.0</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>io.qameta.allure</groupId>
-			<artifactId>allure-cucumber-jvm</artifactId>
-			<version>2.7.0</version>
-		</dependency>
         <dependency>
             <groupId>io.rest-assured</groupId>
             <artifactId>rest-assured</artifactId>
@@ -451,18 +424,6 @@
 			<version>1.2.5</version>
             <scope>test</scope>
 		</dependency>
-        <dependency>
-            <groupId>info.cukes</groupId>
-            <artifactId>cucumber-java</artifactId>
-            <version>1.2.5</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>info.cukes</groupId>
-            <artifactId>cucumber-junit</artifactId>
-            <version>1.2.5</version>
-            <scope>test</scope>
-        </dependency>
 		<dependency>
 			<groupId>org.hamcrest</groupId>
 			<artifactId>hamcrest-all</artifactId>
