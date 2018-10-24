@@ -1,7 +1,7 @@
 package com.systelab.seed.resource;
 
 import com.systelab.seed.infrastructure.auth.AuthenticationTokenNeeded;
-import com.systelab.seed.model.patient.UsersPage;
+import com.systelab.seed.model.user.UsersPage;
 import com.systelab.seed.model.user.User;
 import com.systelab.seed.service.UserService;
 import com.systelab.seed.util.exceptions.UserNotFoundException;

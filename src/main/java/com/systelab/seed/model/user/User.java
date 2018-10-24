@@ -1,8 +1,9 @@
 package com.systelab.seed.model.user;
 
+import com.systelab.seed.model.ModelBase;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.hibernate.annotations.GenericGenerator;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -12,22 +13,17 @@ import java.util.UUID;
 
 @Entity
 @Data
+@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @Table(name = "SeedUser")
 @NamedQueries({@NamedQuery(name = User.FIND_ALL, query = "SELECT u FROM User u ORDER BY u.surname DESC"), @NamedQuery(name = User.FIND_BY_LOGIN_PASSWORD, query = "SELECT u FROM User u WHERE u.login = :login AND u.password = :password"),
         @NamedQuery(name = User.ALL_COUNT, query = "SELECT COUNT(u.id) FROM User u")})
 
 @XmlRootElement
-public class User {
+public class User extends ModelBase {
     public static final String FIND_ALL = "User.findAll";
     public static final String ALL_COUNT = "User.allCount";
     public static final String FIND_BY_LOGIN_PASSWORD = "User.findByLoginAndPassword";
-
-    @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(columnDefinition = "BINARY(16)")
-    private UUID id;
 
     @Size(min = 1, max = 255)
     private String surname;
@@ -36,7 +32,7 @@ public class User {
     private String name;
 
     @Size(min = 1, max = 10)
-    @Column(length = 10, nullable = false, unique=true)
+    @Column(length = 10, nullable = false, unique = true)
     private String login;
 
     @Size(min = 1, max = 256)
