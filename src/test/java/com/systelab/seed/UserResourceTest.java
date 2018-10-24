@@ -1,6 +1,6 @@
 package com.systelab.seed;
 
-import com.systelab.seed.model.patient.UsersPage;
+import com.systelab.seed.model.user.UsersPage;
 import com.systelab.seed.model.user.User;
 import com.systelab.seed.model.user.UserRole;
 import com.systelab.seed.utils.TestUtil;
