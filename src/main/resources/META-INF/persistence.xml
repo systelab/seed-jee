@@ -3,8 +3,8 @@
 <persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
  	<persistence-unit name="SEED" transaction-type="JTA">
  		 <jta-data-source>java:/SEED</jta-data-source>
-     		<class>com.systelab.seed.model.patient.Patient</class>
-     		<class>com.systelab.seed.model.user.User</class>
+     		<class>com.systelab.seed.patient.entity.Patient</class>
+     		<class>com.systelab.seed.user.entity.User</class>
      		
      		<properties>
 				<property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>

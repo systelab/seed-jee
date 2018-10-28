@@ -1,6 +1,6 @@
 package com.systelab.seed;
 
-import com.systelab.seed.util.security.implementation.JWTAuthenticationTokenGenerator;
+import com.systelab.seed.infrastructure.auth.implementation.JWTAuthenticationTokenGenerator;
 import io.jsonwebtoken.MalformedJwtException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

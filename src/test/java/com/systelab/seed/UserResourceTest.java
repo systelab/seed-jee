@@ -1,8 +1,8 @@
 package com.systelab.seed;
 
-import com.systelab.seed.model.user.UsersPage;
-import com.systelab.seed.model.user.User;
-import com.systelab.seed.model.user.UserRole;
+import com.systelab.seed.user.entity.UsersPage;
+import com.systelab.seed.user.entity.User;
+import com.systelab.seed.user.entity.UserRole;
 import com.systelab.seed.utils.TestUtil;
 import io.qameta.allure.Description;
 import io.qameta.allure.Feature;

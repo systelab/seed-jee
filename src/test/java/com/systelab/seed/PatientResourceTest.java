@@ -1,8 +1,8 @@
 package com.systelab.seed;
 
-import com.systelab.seed.model.patient.Address;
-import com.systelab.seed.model.patient.Patient;
-import com.systelab.seed.model.patient.PatientsPage;
+import com.systelab.seed.patient.entity.Address;
+import com.systelab.seed.patient.entity.Patient;
+import com.systelab.seed.patient.entity.PatientsPage;
 import com.systelab.seed.utils.FakeNameGenerator;
 import com.systelab.seed.utils.TestUtil;
 import io.qameta.allure.*;
