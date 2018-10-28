@@ -10,7 +10,7 @@ to quickly bootstrap your projects and dev environment.
 The seed contains a Patient Management sample application and is preconfigured to install the JEE
 framework and a bunch of development and testing tools for instant development gratification.
 
-The app doesn't do too much, just shows how to use different JEE standards and other suggested tools together:
+The app just shows how to use different JEE standards and other suggested tools together:
 
 * [Bean Validation][beanvalidation].
 * [JAXB][jaxb]
@@ -22,50 +22,27 @@ The app doesn't do too much, just shows how to use different JEE standards and o
 * [CORS][cors]
 * [Swagger][swagger]
 * [Allure][allure] with [JUnit][junit]
+* [Lombok][lombok]
 
 You can also check out our [Spring Boot implementation](https://github.com/systelab/seed-springboot).
 
 ## Getting Started
 
-To get you started you can simply clone the `seed-jee` repository and install the dependencies:
-
 ### Prerequisites
 
-You need [git][git] to clone the `seed-jee` repository.
-
-You will need [Java™ SE Development Kit 8][jdk-download] and [Maven][maven].
-
-#### Maven in Windows
-
->If you are working in a Windows environment, you could have some issues if the maven local repository is in a folder with a name containing white spaces (quite common as the default value is ${user.home}/.m2/repository). In order to avoid this, it is fully recommended that you specify another folder in your maven settings.xml file.
-
-For example:
-
-```xml
-<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
-          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
-  <localRepository>/dev/repo</localRepository>
-
-  ...
-```
+You need [git][git], [Java™ SE Development Kit 8][jdk-download] and [Maven][maven].
+Ensure the environment variables are set properly: JAVA_HOME, MAVEN_HOME, M2_HOME and PATH.
 
 ### Clone `seed-jee`
 
-Clone the `seed-jee` repository using git:
+Clone the `seed-jee` repository using git.
 
 ```bash
 git clone https://github.com/systelab/seed-jee.git
 cd seed-jee
 ```
 
-If you just want to start a new project without the `seed-jee` commit history then you can do:
-
-```bash
-git clone --depth=1 https://github.com/systelab/seed-jee.git <your-project-name>
-```
-
-The `depth=1` tells git to only pull down one commit worth of historical data.
+> If you just want to start a new project without the `seed-jee` commit history then you can use the parameter "--depth=1" to only pull down one commit worth of historical data.
 
 ### Install Dependencies
 
@@ -74,18 +51,11 @@ In order to install the dependencies you must run:
 ```bash
 mvn install
 ```
-
-To generate the reports including the Allure test report, you must run:
-
-```bash
-mvn site
-```
-
-Once the reports have been generated, you can check them by browsing the folder target/site and opening the file allure-maven.html
+> In case of issues, refer to the Troubleshooting section
 
 ### Run with Cargo
 
-Another option could be to run the application with Cargo using the following command:
+Run the application with Cargo using the following command:
 
 ```bash
 mvn clean package cargo:run
@@ -96,9 +66,11 @@ In order to check it's properly deployed, check the server at http://127.0.0.1:1
 Use 'Systelab' as username and password
 
 Considerations:
-- The port could changes as it is defined in the pom file
-- If you are using the angular seed, remember to set the API_BASE_PATH in the seed-angular environment to match the same port.
-- As an alternative to use Cargo, you can also install a WildFly and MySQL database, and deploy the generated war file afterwards.
+> The port could changes as it is defined in the pom file
+> If you are using the angular seed, remember to set the API_BASE_PATH in the seed-angular environment to match the same port.
+> As an alternative to use Cargo, you can also install a WildFly and MySQL database, and deploy the generated war file afterwards.
+> To generate the reports including the Allure test report, you must run "mvn site". Once the reports have been generated, you can check them by browsing the folder target/site and opening the file allure-maven.html
+> You need to install the Lombok library on your IDE such as eclipse.
 
 ## Docker
 
@@ -130,6 +102,22 @@ In the github root folder, you will find information on how to use docker-compos
 
 In the github root folder, you will find information on how to run the solution in a [Kubernetes][kubernetes] cluster.
 
+## Troubleshooting
+
+### Maven in Windows
+
+>If you are working in a Windows environment, you could have some issues if the maven local repository is in a folder with a name containing white spaces (quite common as the default value is ${user.home}/.m2/repository). In order to avoid this, it is fully recommended that you specify another folder in your maven settings.xml file.
+
+For example:
+
+```xml
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+  <localRepository>/dev/repo</localRepository>
+
+  ...
+```
 
 [git]: https://git-scm.com/
 [maven]: https://maven.apache.org/download.cgi
@@ -148,4 +136,5 @@ In the github root folder, you will find information on how to run the solution 
 [allure]: https://docs.qameta.io/allure/
 [junit]: https://junit.org/junit5/
 [kubernetes]: https://kubernetes.io
+[lombok]: https://projectlombok.org/
 
