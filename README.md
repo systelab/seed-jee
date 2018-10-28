@@ -32,7 +32,7 @@ You can also check out our [Spring Boot implementation](https://github.com/syste
 
 You need [git][git], [Java™ SE Development Kit 8][jdk-download] and [Maven][maven].
 
-Ensure the environment variables are set properly: JAVA_HOME, MAVEN_HOME, M2_HOME and PATH.
+Ensure the environment variables are properly set: JAVA_HOME, MAVEN_HOME, M2_HOME and PATH.
 
 ### Clone `seed-jee`
 
