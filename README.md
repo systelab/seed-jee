@@ -31,6 +31,7 @@ You can also check out our [Spring Boot implementation](https://github.com/syste
 ### Prerequisites
 
 You need [git][git], [Java™ SE Development Kit 8][jdk-download] and [Maven][maven].
+
 Ensure the environment variables are set properly: JAVA_HOME, MAVEN_HOME, M2_HOME and PATH.
 
 ### Clone `seed-jee`
@@ -66,7 +67,7 @@ In order to check it's properly deployed, check the server at http://127.0.0.1:1
 Use 'Systelab' as username and password
 
 Considerations:
-> The port could changes as it is defined in the pom file
+> The port could changes as it is defined in the pom.xml file
 
 > If you are using the angular seed, remember to set the API_BASE_PATH in the seed-angular environment to match the same port.
 
@@ -78,7 +79,7 @@ Considerations:
 
 ## Automatic Test
 
-For information on Automatic Test, refer to the test package at /src/test
+Refer to the test package at /src/test
 
 ## Docker
 
