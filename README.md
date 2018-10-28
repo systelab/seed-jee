@@ -67,10 +67,18 @@ Use 'Systelab' as username and password
 
 Considerations:
 > The port could changes as it is defined in the pom file
+
 > If you are using the angular seed, remember to set the API_BASE_PATH in the seed-angular environment to match the same port.
+
 > As an alternative to use Cargo, you can also install a WildFly and MySQL database, and deploy the generated war file afterwards.
+
 > To generate the reports including the Allure test report, you must run "mvn site". Once the reports have been generated, you can check them by browsing the folder target/site and opening the file allure-maven.html
+
 > You need to install the Lombok library on your IDE such as eclipse.
+
+## Automatic Test
+
+For information on Automatic Test, refer to the test package at /src/test
 
 ## Docker
 
