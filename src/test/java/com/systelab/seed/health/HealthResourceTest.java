@@ -1,10 +1,11 @@
-package com.systelab.seed;
+package com.systelab.seed.health;
 
+import com.systelab.seed.RESTResourceTest;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
 
-public class HealthResourceTest extends RESTResourcelTest {
+public class HealthResourceTest extends RESTResourceTest {
 
     @Test
     public void testHealth() {
@@ -12,5 +13,4 @@ public class HealthResourceTest extends RESTResourcelTest {
                 when().get("/health").
                 then().statusCode(200);
     }
-
 }

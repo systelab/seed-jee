@@ -1,5 +1,6 @@
-package com.systelab.seed;
+package com.systelab.seed.patient;
 
+import com.systelab.seed.RESTResourceTest;
 import com.systelab.seed.patient.entity.Address;
 import com.systelab.seed.patient.entity.Patient;
 import com.systelab.seed.patient.entity.PatientsPage;
@@ -21,7 +22,7 @@ import static java.util.stream.Collectors.joining;
 
 @TmsLink("TC0001_PatientManagement_IntegrationTest")
 @Feature("Patient Test Suite.\n\nGoal:\nThe goal of this TC is to verify that the Patient management actions (CRUD) behabe as expected according the specifications and the input values.\n\nEnvironment:\n...\nPreconditions:\nN/A.")
-public class PatientResourceTest extends RESTResourcelTest {
+public class PatientResourceTest extends RESTResourceTest {
 
     private Patient getPatientData() {
         Patient patient = new Patient();

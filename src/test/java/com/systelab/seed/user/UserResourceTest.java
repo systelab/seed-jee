@@ -1,5 +1,6 @@
-package com.systelab.seed;
+package com.systelab.seed.user;
 
+import com.systelab.seed.RESTResourceTest;
 import com.systelab.seed.user.entity.UsersPage;
 import com.systelab.seed.user.entity.User;
 import com.systelab.seed.user.entity.UserRole;
@@ -16,7 +17,7 @@ import static io.restassured.RestAssured.given;
 
 @TmsLink("TC0002_LoginManagement_IntegrationTest")
 @Feature("User Test Suite.\n\nGoal:\nThis test case is intended to verify the correct ....\n\nEnvironment:\n...\nPreconditions:\nN/A.")
-public class UserResourceTest extends RESTResourcelTest {
+public class UserResourceTest extends RESTResourceTest {
     private static final Logger logger = Logger.getLogger(UserResourceTest.class.getName());
 
     @Description("Get the User list")

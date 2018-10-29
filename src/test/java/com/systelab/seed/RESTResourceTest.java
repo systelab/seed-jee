@@ -9,7 +9,7 @@ import java.util.Properties;
 
 import static io.restassured.RestAssured.given;
 
-public class RESTResourcelTest {
+public class RESTResourceTest {
 
     protected static final String AUTHORIZATION_HEADER = "Authorization";
 
@@ -38,12 +38,12 @@ public class RESTResourcelTest {
     private static Integer getPort(String property, int defaultValue) {
         try {
             Properties p = new Properties();
-            p.load(RESTResourcelTest.class.getResourceAsStream("./client/test.properties"));
+            p.load(RESTResourceTest.class.getResourceAsStream("./client/test.properties"));
             String port = p.getProperty(property);
             if (port == null) return Integer.valueOf(defaultValue);
             else return Integer.valueOf(port);
         } catch (IOException e) {
-            throw new IllegalStateException("Could not load test.properties file in package " + RESTResourcelTest.class.getPackage().getName(), e);
+            throw new IllegalStateException("Could not load test.properties file in package " + RESTResourceTest.class.getPackage().getName(), e);
         }
     }
 

@@ -142,7 +142,7 @@
 				<version>2.19.1</version>
 				<configuration>
 					<includes>
-                        <include>com.systelab.seed.*</include>
+                        <include>com.systelab.seed.**.*</include>
 					</includes>
 					<testFailureIgnore>false</testFailureIgnore>
 					<argLine>

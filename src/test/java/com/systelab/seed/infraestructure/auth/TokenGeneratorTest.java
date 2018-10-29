@@ -1,4 +1,4 @@
-package com.systelab.seed;
+package com.systelab.seed.infraestructure.auth;
 
 import com.systelab.seed.infrastructure.auth.implementation.JWTAuthenticationTokenGenerator;
 import io.jsonwebtoken.MalformedJwtException;
