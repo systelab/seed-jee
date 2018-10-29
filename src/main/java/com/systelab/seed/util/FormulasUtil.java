@@ -1,19 +1,13 @@
 package com.systelab.seed.util;
 
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class FormulasUtil {
 	 
-	public static ArrayList<Double> invalidDoubleValues = new ArrayList<Double>()
-	  {
-	    {
-	      add(Double.POSITIVE_INFINITY);
-	      add(Double.NEGATIVE_INFINITY);
-	      add(null);
-	      add(Double.NaN);
-	    }
-	  };
-	  
+	public static List<Double> invalidDoubleValues = Arrays.asList(Double.POSITIVE_INFINITY,
+			Double.NEGATIVE_INFINITY, null, Double.NaN);
+
 	  /*
 	   * Coefficient of Variation Target_CV = Target_SD / Target_Mean
 	   */
