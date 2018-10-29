@@ -3,11 +3,9 @@ package com.systelab.seed;
 import java.util.Arrays;
 import java.util.Collection;
 
-import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
