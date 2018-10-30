@@ -1,7 +1,5 @@
 package com.systelab.seed.infrastructure.auth;
 
-import com.systelab.seed.util.security.AuthenticationTokenGenerator;
-
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
