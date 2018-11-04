@@ -74,8 +74,8 @@ public class BodyMassIndexCalculatorTest {
 	    @Test
 	    public void checkSingleCalculation()
 	    {
-	    	Double sdCalculated = BodyMassIndexCalculator.getBMI(73.5, 1.786);;
-            TestUtil.checkField("checkBMICalculation: ", 23.0, sdCalculated , 0.0000005);
+	    	Double bmiCalculated = BodyMassIndexCalculator.getBMI(73.5, 1.786);
+            TestUtil.checkField("checkBMICalculation: ", 23.0, bmiCalculated , 0.0000005);
 	    }
 	  }
 }
