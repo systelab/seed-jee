@@ -39,7 +39,7 @@ public class BodyMassIndexCalculatorTest {
                 new Scenario(75.0, 1.8, 23.1),
                 new Scenario(95.0, 1.8, 29.3),
                 new Scenario(78.5, 1.805, 24.1)
-        };
+         );
         // @formatter:on
     }
 
