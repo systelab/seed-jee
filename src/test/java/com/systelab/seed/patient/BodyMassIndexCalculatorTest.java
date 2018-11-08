@@ -1,4 +1,4 @@
-package com.systelab.seed.patient;
+package  com.systelab.seed.patient.control;
 
 import com.systelab.seed.patient.control.BodyMassIndexCalculator;
 import com.systelab.seed.utils.TestUtil;
