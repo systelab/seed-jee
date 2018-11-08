@@ -1,6 +1,5 @@
-package  com.systelab.seed.patient.control;
+package com.systelab.seed.patient.control;
 
-import com.systelab.seed.patient.control.BodyMassIndexCalculator;
 import com.systelab.seed.utils.TestUtil;
 import io.qameta.allure.Description;
 import io.qameta.allure.Feature;
@@ -9,6 +8,9 @@ import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class BodyMassIndexCalculatorTest {
 
@@ -39,7 +41,7 @@ public class BodyMassIndexCalculatorTest {
                 new Scenario(75.0, 1.8, 23.1),
                 new Scenario(95.0, 1.8, 29.3),
                 new Scenario(78.5, 1.805, 24.1)
-         );
+        );
         // @formatter:on
     }
 
