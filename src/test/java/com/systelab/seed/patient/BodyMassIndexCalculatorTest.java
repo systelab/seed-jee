@@ -48,7 +48,7 @@ public class BodyMassIndexCalculatorTest {
     }
 
     @TmsLink("TC1234_Formulas")
-    @Feature("Goal: This test case is intended to verify the correct calculation of the different Statistical Calculations")
+    @Feature("Goal: This test case is intended to verify the correct calculation of the Body Mass Index")
     @ParameterizedTest
     @MethodSource("scenarios")
     public void checkBMICalculationForCorrectValuesTest(Scenario scenario) {
