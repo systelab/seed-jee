@@ -62,7 +62,7 @@ public class BodyMassIndexCalculatorTest {
 
     //This is an example of a Single Test in the same class with Parameterized Tests
     @TmsLink("TC1234_Formulas")
-    @Feature("Goal: This test case is intended to verify the correct calculation of the different Statistical Calculations")
+    @Feature("Goal: This test case is intended to verify the correct calculation of the Body Mass Index")
     public static class ComponentSingleTests {
         @Description("Calculate BMI")
         @Test
