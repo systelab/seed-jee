@@ -24,7 +24,7 @@ public class BodyMassIndexCalculatorTest {
         }
     }
 
-    static Scenario[] scenarios() {
+    static List<Scenario> scenarios() {
         // @formatter:off
         return new Scenario[]{
                 new Scenario(0.0, 0.0, null),
