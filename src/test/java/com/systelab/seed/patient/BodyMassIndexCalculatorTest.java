@@ -43,7 +43,7 @@ public class BodyMassIndexCalculatorTest {
         // @formatter:on
     }
 
-    @Step("Action: With a weight of {0} kg and a height of {1} meters")
+    @Step("Action: Calculate the BMI with a weight of {0} kg and a height of {1} meters")
     public void printScenario(Double weight, Double height) {
     }
 
