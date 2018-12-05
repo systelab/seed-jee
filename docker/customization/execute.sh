@@ -32,8 +32,25 @@ echo "=> LOGSTASH_HOST (logstash server): " $LOGSTASH_HOST
 echo "=> LOGSTASH_PORT (logstash port): " $LOGSTASH_PORT
 
 
+
 # Wait for the DB Server
 /opt/jboss/wildfly/customization/wait-for-it.sh $MYSQL_HOST:$MYSQL_PORT -t 0
+
+
+# Enable compression
+$JBOSS_CLI -c << EOF
+batch
+
+/subsystem=undertow/configuration=filter/gzip=gzipFilter/:add
+/subsystem=undertow/server=default-server/host=default-host/filter-ref=gzipFilter:add(predicate="not min-content-size(1024)")
+
+/subsystem=undertow/configuration=filter/response-header=vary:add(header-name=Vary, header-value=Accept-Encoding)
+/subsystem=undertow/server=default-server/host=default-host/filter-ref=vary:add
+
+# Execute the batch
+run-batch
+
+EOF
 
 $JBOSS_CLI -c << EOF
 batch
