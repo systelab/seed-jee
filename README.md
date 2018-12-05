@@ -107,6 +107,20 @@ The app will be available at https://localhost:8443 http://localhost:8080
 
 In the github root folder, you will find information on how to use docker-compose, a tool for define and run multi-container Docker applications.
 
+### Certificate
+
+A self signed certificate is provided in order to show use how to setup the application.
+
+The certificate was generated with the following commands:
+
+```bash
+keytool -genkey -keyalg RSA -alias selfsigned -keystore keystore.jks -storepass password -validity 365 -keysize 2048
+keytool -importkeystore -srckeystore keystore.jks -destkeystore keystore.p12 -deststoretype pkcs12
+```
+
+> Do not use the certificate provided in production and never put any secret in your configuration files.
+
+
 ## Kubernetes
 
 In the github root folder, you will find information on how to run the solution in a [Kubernetes][kubernetes] cluster.
