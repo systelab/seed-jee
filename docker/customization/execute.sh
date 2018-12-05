@@ -31,13 +31,11 @@ echo "=> MYSQL_URI (mySQL URI): " $MYSQL_URI
 echo "=> LOGSTASH_HOST (logstash server): " $LOGSTASH_HOST
 echo "=> LOGSTASH_PORT (logstash port): " $LOGSTASH_PORT
 
-
-
 # Wait for the DB Server
 /opt/jboss/wildfly/customization/wait-for-it.sh $MYSQL_HOST:$MYSQL_PORT -t 0
 
 
-# Enable compression
+# Enable compression and setup SSL
 $JBOSS_CLI -c << EOF
 batch
 
@@ -46,6 +44,13 @@ batch
 
 /subsystem=undertow/configuration=filter/response-header=vary:add(header-name=Vary, header-value=Accept-Encoding)
 /subsystem=undertow/server=default-server/host=default-host/filter-ref=vary:add
+
+# Set the ssl port to 443
+/socket-binding-group=standard-sockets/socket-binding=https:write-attribute(name="port",value="8443")
+
+# Security realm
+/core-service=management/security-realm=ApplicationRealm/server-identity=ssl:remove
+/core-service=management/security-realm=ApplicationRealm/server-identity=ssl:add(alias=selfsigned,keystore-relative-to=jboss.server.config.dir,key-password=password,keystore-password=password,keystore-path=keystore.p12)
 
 # Execute the batch
 run-batch
@@ -98,7 +103,8 @@ EOF
 
 fi
 
-
+# Copy the Keystore to the configuration folder
+cp $JBOSS_HOME/customization/keystore.p12 $JBOSS_HOME/standalone/configuration/keystore.p12
 
 # Deploy the WAR
 cp /opt/jboss/wildfly/customization/seed.war $JBOSS_HOME/$JBOSS_MODE/deployments/seed.war

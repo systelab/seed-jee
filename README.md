@@ -100,10 +100,10 @@ The image created, will contain a [wildfly server][wildfly] with the application
 ### Run the container
 
 ```bash
-docker run -e MYSQL_HOST=ip -e MYSQL_PORT=port -e MYSQL_DATABASE=database -e MYSQL_USER=user -e MYSQL_PASSWORD=password -p 8080:8080 systelab/seed-jee
+docker run -e MYSQL_HOST=ip -e MYSQL_PORT=port -e MYSQL_DATABASE=database -e MYSQL_USER=user -e MYSQL_PASSWORD=password -p 8443:8443 -p 8080:8080 systelab/seed-jee
 ```
 
-The app will be available at http://localhost:8080
+The app will be available at https://localhost:8443 http://localhost:8080
 
 In the github root folder, you will find information on how to use docker-compose, a tool for define and run multi-container Docker applications.
 
