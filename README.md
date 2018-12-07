@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/systelab/seed-jee.svg?branch=master)](https://travis-ci.org/systelab/seed-jee)
-[![Build status](https://ci.appveyor.com/api/projects/status/3skyerb10ds9xqyg?svg=true)](https://ci.appveyor.com/project/systelab/seed-jee)
+[![Build status](https://ci.appveyor.com/api/projects/status/00wrdykh6qa8je59?svg=true)](https://ci.appveyor.com/project/systelab/seed-jee)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/0fc377c99d404e2bada322b98f4e6f52)](https://www.codacy.com/app/alfonsoserra/seed-jee?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=systelab/seed-jee&amp;utm_campaign=Badge_Grade)
 [![Known Vulnerabilities](https://snyk.io/test/github/systelab/seed-jee/badge.svg?targetFile=pom.xml)](https://snyk.io/test/github/systelab/seed-jee?targetFile=pom.xml)
 
