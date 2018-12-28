@@ -10,6 +10,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
@@ -32,9 +33,11 @@ public class Patient extends BaseEntity implements Serializable {
     public static final String FIND_ALL = "Patient.findAll";
     public static final String ALL_COUNT = "Patient.allCount";
 
+    @NotNull
     @Size(min = 1, max = 255)
     private String surname;
 
+    @NotNull
     @Size(min = 1, max = 255)
     private String name;
 

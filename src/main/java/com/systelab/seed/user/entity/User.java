@@ -25,23 +25,27 @@ public class User extends BaseEntity {
     public static final String ALL_COUNT = "User.allCount";
     public static final String FIND_BY_LOGIN_PASSWORD = "User.findByLoginAndPassword";
 
+    @NotNull
     @Size(min = 1, max = 255)
     private String surname;
 
+    @NotNull
     @Size(min = 1, max = 255)
     private String name;
 
+    @NotNull
     @Size(min = 1, max = 10)
     @Column(length = 10, nullable = false, unique = true)
     private String login;
 
+    @NotNull
     @Size(min = 1, max = 256)
     @Column(length = 256, nullable = false)
     private String password;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "userrole")
-    @NotNull
     private UserRole role;
 
     public User() {
