@@ -1,14 +1,13 @@
 package com.systelab.seed.user;
 
 import com.systelab.seed.RESTResourceTest;
-import com.systelab.seed.user.entity.UsersPage;
 import com.systelab.seed.user.entity.User;
 import com.systelab.seed.user.entity.UserRole;
+import com.systelab.seed.user.entity.UsersPage;
 import com.systelab.seed.utils.TestUtil;
 import io.qameta.allure.Description;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
 
 import java.util.logging.Logger;
@@ -23,8 +22,10 @@ public class UserResourceTest extends RESTResourceTest {
     @Description("Get the User list")
     @Test
     public void testGetUserList() {
-        UsersPage users = given().contentType(ContentType.JSON).header(AUTHORIZATION_HEADER, getBearer()).
-                when().get("/users").as(UsersPage.class);
+        UsersPage users = given().log().all().
+                when().get("/users").
+                then().assertThat().statusCode(200).
+                extract().as(UsersPage.class);
         users.getContent().stream().forEach((user) -> logger.info(user.getSurname()));
         TestUtil.checkObjectIsNotNull("Users", users);
     }
@@ -39,8 +40,10 @@ public class UserResourceTest extends RESTResourceTest {
         user.setSurname("Goncalves");
         user.setRole(UserRole.ADMIN);
 
-        User userCreated = given().contentType(ContentType.JSON).header(AUTHORIZATION_HEADER, getBearer()).body(user).
-                when().post("/users/user").as(User.class);
+        User userCreated = given().body(user).
+                when().post("/users/user").
+                then().assertThat().statusCode(200).
+                extract().as(User.class);
         TestUtil.checkObjectIsNotNull("User", userCreated);
         TestUtil.checkField("Name", "Antonio", userCreated.getName());
         TestUtil.checkField("Surname", "Goncalves", userCreated.getSurname());

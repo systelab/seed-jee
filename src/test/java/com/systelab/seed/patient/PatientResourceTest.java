@@ -7,13 +7,8 @@ import com.systelab.seed.patient.entity.PatientsPage;
 import com.systelab.seed.utils.FakeNameGenerator;
 import com.systelab.seed.utils.TestUtil;
 import io.qameta.allure.*;
-import io.restassured.http.ContentType;
-import io.restassured.response.Response;
-import io.restassured.specification.RequestSpecification;
-
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
-
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
@@ -29,7 +24,7 @@ public class PatientResourceTest extends RESTResourceTest {
         patient.setName("Ralph");
         patient.setSurname("Burrows");
         patient.setEmail("rburrows@gmail.com");
-		//These are optional
+        //These are optional
         Address address = new Address();
         address.setStreet("E-Street, 90");
         address.setCity("Barcelona");
@@ -37,7 +32,7 @@ public class PatientResourceTest extends RESTResourceTest {
         patient.setAddress(address);
         return patient;
     }
-	
+
     private Patient getPatientData(String name, String surname, String email) {
         Patient patient = getPatientData();
         patient.setName(name);
@@ -50,8 +45,10 @@ public class PatientResourceTest extends RESTResourceTest {
     @Test
     public void testCreatePatient() {
         Patient patient = getPatientData("John", "Burrows", "jburrows@werfen.com");
-        Patient patientCreated = given().contentType(ContentType.JSON).header(AUTHORIZATION_HEADER, getBearer()).body(patient).
-                when().post("/patients/patient").as(Patient.class);
+        Patient patientCreated = given().body(patient).
+                when().post("/patients/patient").
+                then().assertThat().statusCode(200).
+                extract().as(Patient.class);
         TestUtil.checkObjectIsNotNull("Patient", patientCreated);
         TestUtil.checkField("Name", "John", patientCreated.getName());
         TestUtil.checkField("Surname", "Burrows", patientCreated.getSurname());
@@ -59,15 +56,15 @@ public class PatientResourceTest extends RESTResourceTest {
     }
 
     private void testCreateInvalidPatient(Patient patient) {
-    	
-        RequestSpecification httpRequest =given();
-        httpRequest.contentType(ContentType.JSON).header(AUTHORIZATION_HEADER, getBearer()).body(patient);
-        Response response = httpRequest.post("/patients/patient");
-        int statusCode =response.getStatusCode();
-		TestUtil.checkField("Status Code", 400, statusCode);
+
+        int statusCode = given().body(patient).
+                when().post("/patients/patient").
+                then().
+                extract().statusCode();
+        TestUtil.checkField("Status Code", 400, statusCode);
     }
 
-	@Description("Create a Patient with invalid data")
+    @Description("Create a Patient with invalid data")
     @Test
     public void testCreateInvalidPatient() {
         testCreateInvalidPatient(getPatientData("", "Burrows", "jburrows@test.com"));
@@ -86,29 +83,35 @@ public class PatientResourceTest extends RESTResourceTest {
         FakeNameGenerator aFakeNameGenerator = new FakeNameGenerator();
         for (int i = 0; i < numberOfPatients; i++) {
             Patient patient = getPatientData(aFakeNameGenerator.generateName(true), aFakeNameGenerator.generateName(true), aFakeNameGenerator.generateName(false) + "@werfen.com");
-            Patient patientCreated = given().contentType(ContentType.JSON).header(AUTHORIZATION_HEADER, getBearer()).body(patient).
-                    when().post("/patients/patient").as(Patient.class);
+            Patient patientCreated = given().body(patient).
+                    when().post("/patients/patient").
+                    then().assertThat().statusCode(200).
+                    extract().as(Patient.class);
             //This check is identical for all patients and shall be specific or merged in one informing about creation of {0} patients.
-			TestUtil.checkObjectIsNotNull("Patient ID "+patientCreated.getId(), patientCreated.getId());
+            TestUtil.checkObjectIsNotNull("Patient ID " + patientCreated.getId(), patientCreated.getId());
         }
     }
 
     @Description("Get a list of patients")
     @Test
     public void testGetPatientList() {
-    	
-    	int numberOfPatients=5;
+
+        int numberOfPatients = 5;
         createSomePatients(numberOfPatients);
 
-        PatientsPage patientsBefore = given().contentType(ContentType.JSON).header(AUTHORIZATION_HEADER, getBearer()).
-                when().get("/patients").as(PatientsPage.class);
+        PatientsPage patientsBefore = given().
+                when().get("/patients").
+                then().assertThat().statusCode(200).
+                extract().as(PatientsPage.class);
         long initialSize = patientsBefore.getTotalElements();
         savePatientsDatabase(patientsBefore.getContent());
-		TestUtil.checkANumber("List size", numberOfPatients, initialSize);
-		createSomePatients(numberOfPatients);
+        TestUtil.checkANumber("List size", numberOfPatients, initialSize);
+        createSomePatients(numberOfPatients);
 
-        PatientsPage patientsAfter = given().contentType(ContentType.JSON).header(AUTHORIZATION_HEADER, getBearer()).
-                when().get("/patients").as(PatientsPage.class);
+        PatientsPage patientsAfter = given().
+                when().get("/patients").
+                then().assertThat().statusCode(200).
+                extract().as(PatientsPage.class);
         long finalSize = patientsAfter.getTotalElements();
         savePatientsDatabase(patientsAfter.getContent());
         TestUtil.checkANumber("List size", initialSize + numberOfPatients, finalSize);
@@ -119,57 +122,63 @@ public class PatientResourceTest extends RESTResourceTest {
     public void testGetPatient() {
 
         Patient patient = getPatientData("John", "Burrows", "jburrows@werfen.com");
-        Patient patientCreated = given().contentType(ContentType.JSON).header(AUTHORIZATION_HEADER, getBearer()).body(patient).
-                when().post("/patients/patient").as(Patient.class);
+        Patient patientCreated = given().body(patient).
+                when().post("/patients/patient").
+                then().assertThat().statusCode(200).
+                extract().as(Patient.class);
         //I would assign ID and use the value to report in the exp.result
-		TestUtil.checkObjectIsNotNull("Patient ID "+patientCreated.getId(), patientCreated.getId());
-        Patient patientRetrieved = given().contentType(ContentType.JSON).header(AUTHORIZATION_HEADER, getBearer()).
-                when().get("/patients/" + patientCreated.getId()).as(Patient.class);
+        TestUtil.checkObjectIsNotNull("Patient ID " + patientCreated.getId(), patientCreated.getId());
+        Patient patientRetrieved = given().
+                when().get("/patients/" + patientCreated.getId()).
+                then().assertThat().statusCode(200).
+                extract().as(Patient.class);
         TestUtil.checkObjectIsNotNull("Patient", patientRetrieved);
-        if(patientRetrieved!=null){
-			TestUtil.checkField("Name", "John", patientRetrieved.getName());
-	        TestUtil.checkField("Surname", "Burrows", patientRetrieved.getSurname());
-	        TestUtil.checkField("Email", "jburrows@werfen.com", patientRetrieved.getEmail());
+        if (patientRetrieved != null) {
+            TestUtil.checkField("Name", "John", patientRetrieved.getName());
+            TestUtil.checkField("Surname", "Burrows", patientRetrieved.getSurname());
+            TestUtil.checkField("Email", "jburrows@werfen.com", patientRetrieved.getEmail());
         }
     }
 
     @Description("Get a patient with an non-existing id")
     @Test
     public void testGetUnexistingPatient() {
-	     RequestSpecification httpRequest = given();
-	   	 httpRequest.contentType(ContentType.JSON).header(AUTHORIZATION_HEADER, getBearer());
-	   	 Response response = httpRequest.get("/patients/38400000-8cf0-11bd-b23e-10b96e4ef00d");
-	   	 int statusCode =response.getStatusCode();
-	   	 TestUtil.checkField("Status Code after a GET", 404, statusCode);
+        int statusCode = given().
+                when().get("/patients/38400000-8cf0-11bd-b23e-10b96e4ef00d").
+                then().
+                extract().statusCode();
+        TestUtil.checkField("Status Code after a GET", 404, statusCode);
     }
 
     @Description("Delete a patient by id")
     @Test
     public void testDeletePatient() {
         Patient patient = getPatientData("John", "Burrows", "jburrows@werfen.com");
-        Patient patientCreated = given().contentType(ContentType.JSON).header(AUTHORIZATION_HEADER, getBearer()).body(patient).
-                when().post("/patients/patient").as(Patient.class);
+        Patient patientCreated = given().body(patient).
+                when().post("/patients/patient").
+                then().assertThat().statusCode(200).
+                extract().as(Patient.class);
         //We don't need to log this check
-		//TestUtil.checkObjectIsNotNull("Patient", patientCreated);
-		Assertions.assertNotNull(patientCreated);
-        given().contentType(ContentType.JSON).header(AUTHORIZATION_HEADER, getBearer()).
+        //TestUtil.checkObjectIsNotNull("Patient", patientCreated);
+        Assertions.assertNotNull(patientCreated);
+        given().
                 when().delete("/patients/" + patientCreated.getId()).
-                then().statusCode(200);
+                then().assertThat().statusCode(200);
 
-        RequestSpecification httpRequest =given();
-        httpRequest.contentType(ContentType.JSON).header(AUTHORIZATION_HEADER, getBearer());
-        Response response = httpRequest.get("/patients/" + patientCreated.getId());
-        int statusCode =response.getStatusCode();
-		TestUtil.checkField("Status Code after a GET", 404, statusCode);
+        int statusCode = given().
+                when().get("/patients/" + patientCreated.getId()).
+                then().
+                extract().statusCode();
+        TestUtil.checkField("Status Code after a GET", 404, statusCode);
     }
 
     @Description("Delete non-existing Patient")
     @Test
     public void testDeleteUnexistingPatient() {
-    	 RequestSpecification httpRequest = given();
-    	 httpRequest.contentType(ContentType.JSON).header(AUTHORIZATION_HEADER, getBearer());
-    	 Response response = httpRequest.delete("/patients/38400000-8cf0-11bd-b23e-10b96e4ef00d");
-    	 int statusCode =response.getStatusCode();
-  		 TestUtil.checkField("Status Code", 404, statusCode);
+        int statusCode = given().
+                when().delete("/patients/38400000-8cf0-11bd-b23e-10b96e4ef00d").
+                then().
+                extract().statusCode();
+        TestUtil.checkField("Status Code", 404, statusCode);
     }
 }
