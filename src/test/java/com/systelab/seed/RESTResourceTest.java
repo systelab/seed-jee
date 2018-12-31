@@ -1,6 +1,8 @@
 package com.systelab.seed;
 
 import io.restassured.RestAssured;
+import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.http.ContentType;
 import io.restassured.parsing.Parser;
 import org.junit.jupiter.api.BeforeAll;
 
@@ -13,7 +15,7 @@ public class RESTResourceTest {
 
     protected static final String AUTHORIZATION_HEADER = "Authorization";
 
-    private static String bearer;
+    private static RequestSpecBuilder requestSpecBuilder;
 
     @BeforeAll
     public static void setUp() {
@@ -21,18 +23,20 @@ public class RESTResourceTest {
         RestAssured.basePath = getProperty("server.base", "/seed/v1/");
         RestAssured.baseURI = getProperty("server.host", "http://localhost");
         RestAssured.defaultParser = Parser.JSON;
-        bearer = login("Systelab","Systelab");
+
+        if (requestSpecBuilder == null) {
+            String bearer = login("Systelab", "Systelab");
+            requestSpecBuilder = new RequestSpecBuilder().addHeader(AUTHORIZATION_HEADER, bearer)
+                    .setAccept(ContentType.JSON).setContentType(ContentType.JSON);
+            RestAssured.requestSpecification = requestSpecBuilder.build();
+        }
 
         System.out.println(RestAssured.baseURI + ":" + RestAssured.port + RestAssured.basePath);
     }
 
-    public static String getBearer() {
-        return bearer;
-    }
-
-    private static String login(String username,String password) {
+    private static String login(String username, String password) {
         return given().contentType("application/x-www-form-urlencoded").formParam("login", username).formParam("password", password).
-                when().post("/users/login").getHeader("Authorization");
+                when().post("/users/login").getHeader(AUTHORIZATION_HEADER);
     }
 
     private static Integer getPort(String property, int defaultValue) {
