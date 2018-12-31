@@ -22,7 +22,7 @@ public class UserResourceTest extends RESTResourceTest {
     @Description("Get the User list")
     @Test
     public void testGetUserList() {
-        UsersPage users = given().log().all().
+        UsersPage users = given().
                 when().get("/users").
                 then().assertThat().statusCode(200).
                 extract().as(UsersPage.class);
