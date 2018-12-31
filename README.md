@@ -19,6 +19,8 @@ The app just shows how to use different JEE standards and other suggested tools 
 * [JPA][jpa]
 * [EJB][ejb]
 * [JAX-RS][jaxrs]
+* [Feign][feign]
+* [Hystrix][hystrix]
 * [JWT][jwt]
 * [CORS][cors]
 * [Swagger][swagger]
@@ -161,4 +163,5 @@ For example:
 [junit]: https://junit.org/junit5/
 [kubernetes]: https://kubernetes.io
 [lombok]: https://projectlombok.org/
-
+[feign]: https://github.com/OpenFeign/feign
+[hystrix]: https://github.com/Netflix/Hystrix
