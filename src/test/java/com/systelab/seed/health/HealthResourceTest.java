@@ -10,8 +10,8 @@ public class HealthResourceTest extends RESTResourceTest {
 
     @Test
     public void testHealth() {
-        given().contentType(ContentType.TEXT).
-                when().accept(ContentType.TEXT).get("/health").
-                then().assertThat().statusCode(200);
+        given().contentType(ContentType.TEXT)
+                .when().accept(ContentType.TEXT).get("/health")
+                .then().assertThat().statusCode(200);
     }
 }

@@ -45,10 +45,10 @@ public class PatientResourceTest extends RESTResourceTest {
     @Test
     public void testCreatePatient() {
         Patient patient = getPatientData("John", "Burrows", "jburrows@werfen.com");
-        Patient patientCreated = given().body(patient).
-                when().post("/patients/patient").
-                then().assertThat().statusCode(200).
-                extract().as(Patient.class);
+        Patient patientCreated = given().body(patient)
+                .when().post("/patients/patient")
+                .then().assertThat().statusCode(200)
+                .extract().as(Patient.class);
         TestUtil.checkObjectIsNotNull("Patient", patientCreated);
         TestUtil.checkField("Name", "John", patientCreated.getName());
         TestUtil.checkField("Surname", "Burrows", patientCreated.getSurname());
@@ -57,10 +57,10 @@ public class PatientResourceTest extends RESTResourceTest {
 
     private void testCreateInvalidPatient(Patient patient) {
 
-        int statusCode = given().body(patient).
-                when().post("/patients/patient").
-                then().
-                extract().statusCode();
+        int statusCode = given().body(patient)
+                .when().post("/patients/patient")
+                .then()
+                .extract().statusCode();
         TestUtil.checkField("Status Code", 400, statusCode);
     }
 
@@ -83,10 +83,10 @@ public class PatientResourceTest extends RESTResourceTest {
         FakeNameGenerator aFakeNameGenerator = new FakeNameGenerator();
         for (int i = 0; i < numberOfPatients; i++) {
             Patient patient = getPatientData(aFakeNameGenerator.generateName(true), aFakeNameGenerator.generateName(true), aFakeNameGenerator.generateName(false) + "@werfen.com");
-            Patient patientCreated = given().body(patient).
-                    when().post("/patients/patient").
-                    then().assertThat().statusCode(200).
-                    extract().as(Patient.class);
+            Patient patientCreated = given().body(patient)
+                    .when().post("/patients/patient")
+                    .then().assertThat().statusCode(200)
+                    .extract().as(Patient.class);
             //This check is identical for all patients and shall be specific or merged in one informing about creation of {0} patients.
             TestUtil.checkObjectIsNotNull("Patient ID " + patientCreated.getId(), patientCreated.getId());
         }
@@ -99,19 +99,19 @@ public class PatientResourceTest extends RESTResourceTest {
         int numberOfPatients = 5;
         createSomePatients(numberOfPatients);
 
-        PatientsPage patientsBefore = given().
-                when().get("/patients").
-                then().assertThat().statusCode(200).
-                extract().as(PatientsPage.class);
+        PatientsPage patientsBefore = given()
+                .when().get("/patients")
+                .then().assertThat().statusCode(200)
+                .extract().as(PatientsPage.class);
         long initialSize = patientsBefore.getTotalElements();
         savePatientsDatabase(patientsBefore.getContent());
         TestUtil.checkANumber("List size", numberOfPatients, initialSize);
         createSomePatients(numberOfPatients);
 
-        PatientsPage patientsAfter = given().
-                when().get("/patients").
-                then().assertThat().statusCode(200).
-                extract().as(PatientsPage.class);
+        PatientsPage patientsAfter = given()
+                .when().get("/patients")
+                .then().assertThat().statusCode(200)
+                .extract().as(PatientsPage.class);
         long finalSize = patientsAfter.getTotalElements();
         savePatientsDatabase(patientsAfter.getContent());
         TestUtil.checkANumber("List size", initialSize + numberOfPatients, finalSize);
@@ -122,16 +122,16 @@ public class PatientResourceTest extends RESTResourceTest {
     public void testGetPatient() {
 
         Patient patient = getPatientData("John", "Burrows", "jburrows@werfen.com");
-        Patient patientCreated = given().body(patient).
-                when().post("/patients/patient").
-                then().assertThat().statusCode(200).
-                extract().as(Patient.class);
+        Patient patientCreated = given().body(patient)
+                .when().post("/patients/patient")
+                .then().assertThat().statusCode(200)
+                .extract().as(Patient.class);
         //I would assign ID and use the value to report in the exp.result
         TestUtil.checkObjectIsNotNull("Patient ID " + patientCreated.getId(), patientCreated.getId());
-        Patient patientRetrieved = given().
-                when().get("/patients/" + patientCreated.getId()).
-                then().assertThat().statusCode(200).
-                extract().as(Patient.class);
+        Patient patientRetrieved = given()
+                .when().get("/patients/" + patientCreated.getId())
+                .then().assertThat().statusCode(200)
+                .extract().as(Patient.class);
         TestUtil.checkObjectIsNotNull("Patient", patientRetrieved);
         if (patientRetrieved != null) {
             TestUtil.checkField("Name", "John", patientRetrieved.getName());
@@ -143,10 +143,10 @@ public class PatientResourceTest extends RESTResourceTest {
     @Description("Get a patient with an non-existing id")
     @Test
     public void testGetUnexistingPatient() {
-        int statusCode = given().
-                when().get("/patients/38400000-8cf0-11bd-b23e-10b96e4ef00d").
-                then().
-                extract().statusCode();
+        int statusCode = given()
+                .when().get("/patients/38400000-8cf0-11bd-b23e-10b96e4ef00d")
+                .then()
+                .extract().statusCode();
         TestUtil.checkField("Status Code after a GET", 404, statusCode);
     }
 
@@ -154,31 +154,31 @@ public class PatientResourceTest extends RESTResourceTest {
     @Test
     public void testDeletePatient() {
         Patient patient = getPatientData("John", "Burrows", "jburrows@werfen.com");
-        Patient patientCreated = given().body(patient).
-                when().post("/patients/patient").
-                then().assertThat().statusCode(200).
-                extract().as(Patient.class);
+        Patient patientCreated = given().body(patient)
+                .when().post("/patients/patient")
+                .then().assertThat().statusCode(200)
+                .extract().as(Patient.class);
         //We don't need to log this check
         //TestUtil.checkObjectIsNotNull("Patient", patientCreated);
         Assertions.assertNotNull(patientCreated);
-        given().
-                when().delete("/patients/" + patientCreated.getId()).
-                then().assertThat().statusCode(200);
+        given()
+                .when().delete("/patients/" + patientCreated.getId())
+                .then().assertThat().statusCode(200);
 
-        int statusCode = given().
-                when().get("/patients/" + patientCreated.getId()).
-                then().
-                extract().statusCode();
+        int statusCode = given()
+                .when().get("/patients/" + patientCreated.getId())
+                .then()
+                .extract().statusCode();
         TestUtil.checkField("Status Code after a GET", 404, statusCode);
     }
 
     @Description("Delete non-existing Patient")
     @Test
     public void testDeleteUnexistingPatient() {
-        int statusCode = given().
-                when().delete("/patients/38400000-8cf0-11bd-b23e-10b96e4ef00d").
-                then().
-                extract().statusCode();
+        int statusCode = given()
+                .when().delete("/patients/38400000-8cf0-11bd-b23e-10b96e4ef00d")
+                .then()
+                .extract().statusCode();
         TestUtil.checkField("Status Code", 404, statusCode);
     }
 }
