@@ -1,7 +1,7 @@
 ### STAGE 1: Build ###
 
 # We label our stage as 'builder'
-FROM maven:alpine as builder
+FROM maven:3.6.0-jdk-12-alpine as builder
 
 ## Storing node modules on a separate layer will prevent unnecessary npm installs at each build
 RUN mkdir /seed-jee
@@ -15,7 +15,7 @@ RUN mvn package
 
 ### STAGE 2: Setup ###
 
-FROM jboss/wildfly:14.0.1.Final
+FROM jboss/wildfly:15.0.0.Final
 
 COPY docker/customization /opt/jboss/wildfly/customization/
 

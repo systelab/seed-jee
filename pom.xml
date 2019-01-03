@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 
@@ -11,10 +11,10 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<aspectj.version>1.8.10</aspectj.version>
+		<aspectj.version>1.9.2</aspectj.version>
 		<webapp.laboratoryInformationSystemUrl>http://localhost:8080/modulab/rest</webapp.laboratoryInformationSystemUrl>
 
-    	<cargo.wildfly.port>13080</cargo.wildfly.port>
+		<cargo.wildfly.port>13080</cargo.wildfly.port>
 		<!-- The port to use when the debugger is enabled. -->
 		<cargo.container.debug.port>8000</cargo.container.debug.port>
 		<!-- The suspend setting to use when the debugger is enabled. -->
@@ -38,17 +38,16 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.7.0</version>
+				<version>3.8.0</version>
 				<inherited>true</inherited>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<release>11</release>
 				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
-				<version>3.0.0</version>
+				<version>3.2.2</version>
 				<configuration>
 					<failOnMissingWebXml>false</failOnMissingWebXml>
 					<filteringDeploymentDescriptors>true</filteringDeploymentDescriptors>
@@ -57,57 +56,57 @@
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.7.7.201606060606</version>
+				<version>0.8.2</version>
 				<executions>
-			        <!--
-			            Prepares the property pointing to the JaCoCo runtime agent which
-			            is passed as VM argument when Maven the Failsafe plugin is executed.
-			        -->
-			        <execution>
-			            <id>pre-integration-test</id>
-			            <phase>pre-integration-test</phase>
-			            <goals>
-			                <goal>prepare-agent</goal>
-			            </goals>
-			            <configuration>
-			                <!-- Sets the path to the file which contains the execution data. -->
-			                <destFile>${project.build.directory}/coverage-reports/jacoco-it.exec</destFile>
-			                <append>true</append>
-                            <includes>
-                            	<include>*</include>
-                            </includes>
-                            <excludes>
-                            	<exclude>org.jboss.as.test.*</exclude>
-                            </excludes>
-                            <output>file</output>
-			                <propertyName>jacoco.cmdline</propertyName>
-			            </configuration>
-			        </execution>
-			        <!--
-			            Ensures that the code coverage report for integration tests after
-			            integration tests have been run.
-			        -->
-			        <execution>
-			            <id>post-integration-test</id>
-			            <phase>post-integration-test</phase>
-			            <goals>
-			                <goal>report</goal>
-			            </goals>
-			            <configuration>
-			                <!-- Sets the path to the file which contains the execution data. -->
-			                <dataFile>${project.build.directory}/coverage-reports/jacoco-it.exec</dataFile>
-			                <!-- Sets the output directory for the code coverage report. -->
-			                <outputDirectory>${project.reporting.outputDirectory}/jacoco-it</outputDirectory>
-			            </configuration>
-			        </execution>
-			    </executions>
+					<!--
+                        Prepares the property pointing to the JaCoCo runtime agent which
+                        is passed as VM argument when Maven the Failsafe plugin is executed.
+                    -->
+					<execution>
+						<id>pre-integration-test</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+						<configuration>
+							<!-- Sets the path to the file which contains the execution data. -->
+							<destFile>${project.build.directory}/coverage-reports/jacoco-it.exec</destFile>
+							<append>true</append>
+							<includes>
+								<include>*</include>
+							</includes>
+							<excludes>
+								<exclude>org.jboss.as.test.*</exclude>
+							</excludes>
+							<output>file</output>
+							<propertyName>jacoco.cmdline</propertyName>
+						</configuration>
+					</execution>
+					<!--
+                        Ensures that the code coverage report for integration tests after
+                        integration tests have been run.
+                    -->
+					<execution>
+						<id>post-integration-test</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+						<configuration>
+							<!-- Sets the path to the file which contains the execution data. -->
+							<dataFile>${project.build.directory}/coverage-reports/jacoco-it.exec</dataFile>
+							<!-- Sets the output directory for the code coverage report. -->
+							<outputDirectory>${project.reporting.outputDirectory}/jacoco-it</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
-			
+
 			<plugin>
 				<!-- Don't use {surefire,failsafe} 2.20 because has memory leaks -->
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.20.1</version>
+				<version>3.0.0-M3</version>
 				<configuration>
 					<excludes>
 						<exclude>**/*.java</exclude>
@@ -139,10 +138,10 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
-				<version>2.19.1</version>
+				<version>3.0.0-M3</version>
 				<configuration>
 					<includes>
-                        <include>com.systelab.seed.**.*</include>
+						<include>com/systelab/seed/**/**.*</include>
 					</includes>
 					<testFailureIgnore>false</testFailureIgnore>
 					<argLine>
@@ -165,16 +164,6 @@
 						<artifactId>aspectjweaver</artifactId>
 						<version>${aspectj.version}</version>
 					</dependency>
-                    <dependency>
-                        <groupId>org.junit.platform</groupId>
-                        <artifactId>junit-platform-surefire-provider</artifactId>
-                        <version>1.0.3</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.junit.jupiter</groupId>
-                        <artifactId>junit-jupiter-engine</artifactId>
-                        <version>5.1.0</version>
-                    </dependency>
 				</dependencies>
 				<executions>
 					<execution>
@@ -188,10 +177,10 @@
 			<plugin>
 				<groupId>org.codehaus.cargo</groupId>
 				<artifactId>cargo-maven2-plugin</artifactId>
-				<version>1.6.10</version>
+				<version>1.7.1</version>
 				<configuration>
 					<container>
-						<containerId>wildfly13x</containerId>
+						<containerId>wildfly14x</containerId>
 						<timeout>60000</timeout>
 						<dependencies>
 							<dependency>
@@ -200,8 +189,8 @@
 							</dependency>
 						</dependencies>
 						<systemProperties>
-						    <jboss.shutdown.forceHalt>false</jboss.shutdown.forceHalt>
-  					    </systemProperties>
+							<jboss.shutdown.forceHalt>false</jboss.shutdown.forceHalt>
+						</systemProperties>
 					</container>
 					<configuration>
 						<properties>
@@ -247,21 +236,29 @@
 					</execution>
 				</executions>
 			</plugin>
-            <!--Needed only to show reports locally. Run jetty:run and
+			<!--Needed only to show reports locally. Run jetty:run and
             open localhost:8080 to show the report-->
-            <plugin>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-maven-plugin</artifactId>
-                <version>9.4.8.v20171121</version>
-                <configuration>
-                    <webAppSourceDirectory>${project.build.directory}/site/allure-maven-plugin</webAppSourceDirectory>
-                    <stopKey>stop</stopKey>
-                    <stopPort>1234</stopPort>
+			<plugin>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-maven-plugin</artifactId>
+				<version>9.4.14.v20181114</version>
+				<configuration>
+					<webAppSourceDirectory>${project.build.directory}/site/allure-maven-plugin</webAppSourceDirectory>
+					<stopKey>stop</stopKey>
+					<stopPort>1234</stopPort>
 					<httpConnector>
 						<port>9999</port>
 					</httpConnector>
-                </configuration>
-            </plugin>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>versions-maven-plugin</artifactId>
+				<version>2.7</version>
+				<configuration>
+					<generateBackupPoms>false</generateBackupPoms>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
@@ -279,12 +276,12 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jxr-plugin</artifactId>
-				<version>2.5</version>
+				<version>3.0.0</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.10.4</version>
+				<version>3.0.1</version>
 				<configuration>
 					<failOnError>false</failOnError>
 				</configuration>
@@ -292,7 +289,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-report-plugin</artifactId>
-				<version>2.19.1</version>
+				<version>3.0.0-M3</version>
 			</plugin>
 		</plugins>
 	</reporting>
@@ -340,11 +337,11 @@
 			<artifactId>swagger-jaxrs2</artifactId>
 			<version>2.0.4</version>
 		</dependency>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>1.4.197</version>
-        </dependency>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>1.4.197</version>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
@@ -357,17 +354,23 @@
 			<scope>provided</scope>
 		</dependency>
 
-        <!--#### TEST DEPENDENCIES ####-->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>5.1.0</version>
-            <scope>test</scope>
-        </dependency>
+		<!--#### TEST DEPENDENCIES ####-->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<version>5.3.1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>5.3.1</version>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-params</artifactId>
-			<version>5.1.0</version>
+			<version>5.3.1</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -385,15 +388,15 @@
 		<dependency>
 			<groupId>org.junit.vintage</groupId>
 			<artifactId>junit-vintage-engine</artifactId>
-			<version>5.1.0</version>
+			<version>5.3.1</version>
 			<scope>test</scope>
 		</dependency>
-        <dependency>
-            <groupId>org.junit.platform</groupId>
-            <artifactId>junit-platform-launcher</artifactId>
-            <version>1.0.0</version>
-            <scope>test</scope>
-        </dependency>
+		<dependency>
+			<groupId>org.junit.platform</groupId>
+			<artifactId>junit-platform-launcher</artifactId>
+			<version>1.3.2</version>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>io.qameta.allure</groupId>
 			<artifactId>allure-maven</artifactId>
@@ -406,29 +409,29 @@
 			<version>2.7.0</version>
 			<scope>test</scope>
 		</dependency>
-        <dependency>
-            <groupId>io.rest-assured</groupId>
-            <artifactId>rest-assured</artifactId>
-            <version>3.1.1</version>
-            <scope>test</scope>
-        </dependency>
+		<dependency>
+			<groupId>io.rest-assured</groupId>
+			<artifactId>rest-assured</artifactId>
+			<version>3.1.1</version>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>io.rest-assured</groupId>
 			<artifactId>json-schema-validator</artifactId>
 			<version>3.1.1</version>
-            <scope>test</scope>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.github.fge</groupId>
 			<artifactId>json-schema-validator</artifactId>
 			<version>2.2.6</version>
-            <scope>test</scope>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.github.fge</groupId>
 			<artifactId>json-schema-core</artifactId>
 			<version>1.2.5</version>
-            <scope>test</scope>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.hamcrest</groupId>
@@ -436,11 +439,11 @@
 			<version>1.3</version>
 			<scope>test</scope>
 		</dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>1.7.25</version>
-        </dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>1.7.25</version>
+		</dependency>
 	</dependencies>
 
 </project>
