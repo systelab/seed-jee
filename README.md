@@ -33,7 +33,7 @@ You can also check out our [Spring Boot implementation](https://github.com/syste
 
 ### Prerequisites
 
-You need [git][git], [Java™ SE Development Kit 8][jdk-download] and [Maven][maven].
+You need [git][git], [OpenJDK 11][jdk-download] and [Maven][maven].
 
 Ensure the environment variables are properly set: JAVA_HOME, MAVEN_HOME, M2_HOME and PATH.
 
@@ -147,7 +147,7 @@ For example:
 
 [git]: https://git-scm.com/
 [maven]: https://maven.apache.org/download.cgi
-[jdk-download]: http://www.oracle.com/technetwork/java/javase/downloads
+[jdk-download]: https://adoptopenjdk.net/
 [JEE]: http://www.oracle.com/technetwork/java/javaee/tech/index.html
 [wildfly]: http://wildfly.org
 [beanvalidation]:https://docs.oracle.com/javaee/7/tutorial/bean-validation001.htm
