@@ -2,8 +2,6 @@ package com.systelab.seed.infrastructure.security;
 
 import java.io.IOException;
 
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerResponseContext;
 import javax.ws.rs.container.ContainerResponseFilter;
@@ -54,7 +52,7 @@ public class SecurityResponseHeadersFilter implements ContainerResponseFilter {
     private static String sandboxValue= "";
     private static String defaultSrc= "none";
     private static String imgSrc = SELF_REFERENCE+" data: online.swagger.io";
-    private static String scriptSrc= SELF_REFERENCE+" 'unsafe-inline' ";;
+    private static String scriptSrc= SELF_REFERENCE+" 'unsafe-inline' ";
     private static String styleSrc= SELF_REFERENCE+" 'unsafe-inline' fonts.googleapis.com";
     private static String fontSrc= SELF_REFERENCE+" fonts.gstatic.com";
     private static String connectSrc= SELF_REFERENCE;
