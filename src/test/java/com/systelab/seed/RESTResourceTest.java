@@ -52,8 +52,8 @@ public class RESTResourceTest {
     }
 
     private static String getProperty(String property, String defaultValue) {
-        String readedProperty = System.getProperty(property);
-        if (readedProperty == null) return defaultValue;
-        else return readedProperty;
+        String readProperty = System.getProperty(property);
+        if (readProperty == null) return defaultValue;
+        else return readProperty;
     }
 }
