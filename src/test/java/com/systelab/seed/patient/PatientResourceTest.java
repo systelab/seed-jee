@@ -9,6 +9,7 @@ import com.systelab.seed.utils.TestUtil;
 import io.qameta.allure.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import java.time.LocalDate;
 
 import java.util.List;
 
@@ -24,6 +25,8 @@ public class PatientResourceTest extends RESTResourceTest {
         patient.setName("Ralph");
         patient.setSurname("Burrows");
         patient.setEmail("rburrows@gmail.com");
+        patient.setMedicalNumber("123456");
+        patient.setDob(LocalDate.of(1948, 8, 11));
         //These are optional
         Address address = new Address();
         address.setStreet("E-Street, 90");
@@ -41,10 +44,19 @@ public class PatientResourceTest extends RESTResourceTest {
         return patient;
     }
 
-    @Description("Create a new patient with name, surname and email")
+    private Patient getPatientData(String name, String surname, String email, String medicalNumber) {
+        Patient patient = getPatientData();
+        patient.setName(name);
+        patient.setSurname(surname);
+        patient.setEmail(email);
+        patient.setMedicalNumber(medicalNumber);
+        return patient;
+    }
+
+    @Description("Create a new patient with name, surname, email and medical number")
     @Test
     public void testCreatePatient() {
-        Patient patient = getPatientData("John", "Burrows", "jburrows@werfen.com");
+        Patient patient = getPatientData("John", "Burrows", "jburrows@werfen.com", "112233");
         Patient patientCreated = given().body(patient)
                 .when().post("/patients/patient")
                 .then().assertThat().statusCode(200)
@@ -53,6 +65,12 @@ public class PatientResourceTest extends RESTResourceTest {
         TestUtil.checkField("Name", "John", patientCreated.getName());
         TestUtil.checkField("Surname", "Burrows", patientCreated.getSurname());
         TestUtil.checkField("Email", "jburrows@werfen.com", patientCreated.getEmail());
+        // include validation all patient fields
+        TestUtil.checkField("Medical Number", "112233", patientCreated.getMedicalNumber());
+        TestUtil.checkField("DOB", LocalDate.of(1948, 8, 11), patientCreated.getDob());
+        TestUtil.checkField("Street", "E-Street, 90", patientCreated.getAddress().getStreet());
+        TestUtil.checkField("City", "Barcelona", patientCreated.getAddress().getCity());
+        TestUtil.checkField("Zip", "08021", patientCreated.getAddress().getZip());
     }
 
     private void testCreateInvalidPatient(Patient patient) {
@@ -67,10 +85,12 @@ public class PatientResourceTest extends RESTResourceTest {
     @Description("Create a Patient with invalid data")
     @Test
     public void testCreateInvalidPatient() {
-        testCreateInvalidPatient(getPatientData("", "Burrows", "jburrows@test.com"));
-        testCreateInvalidPatient(getPatientData("John", "", "jburrows@test.com"));
-        testCreateInvalidPatient(getPatientData("", "", "jburrows@test.com"));
-        testCreateInvalidPatient(getPatientData("John", "Burrows", "jburrows"));
+        testCreateInvalidPatient(getPatientData("", "", "", ""));
+        testCreateInvalidPatient(getPatientData("", "Burrows", "jburrows@test.com", "123"));
+        testCreateInvalidPatient(getPatientData("John", "", "jburrows@test.com", ""));
+        testCreateInvalidPatient(getPatientData("", "", "jburrows@test.com", "1"));
+        testCreateInvalidPatient(getPatientData("John", "Burrows", "jburrows", "345423"));
+        //TODO: All possible combinations and patterns(email)
     }
 
     @Attachment(value = "Patients Database")
@@ -106,6 +126,7 @@ public class PatientResourceTest extends RESTResourceTest {
         long initialSize = patientsBefore.getTotalElements();
         savePatientsDatabase(patientsBefore.getContent());
         TestUtil.checkANumber("List size", numberOfPatients, initialSize);
+        // TODO: Verify the elements in the list also.
         createSomePatients(numberOfPatients);
 
         PatientsPage patientsAfter = given()
@@ -127,6 +148,7 @@ public class PatientResourceTest extends RESTResourceTest {
                 .then().assertThat().statusCode(200)
                 .extract().as(Patient.class);
         //I would assign ID and use the value to report in the exp.result
+        // TODO: Get rid of excessive documentation (some verifications shouldn't be reported)
         TestUtil.checkObjectIsNotNull("Patient ID " + patientCreated.getId(), patientCreated.getId());
         Patient patientRetrieved = given()
                 .when().get("/patients/" + patientCreated.getId())
@@ -137,6 +159,9 @@ public class PatientResourceTest extends RESTResourceTest {
             TestUtil.checkField("Name", "John", patientRetrieved.getName());
             TestUtil.checkField("Surname", "Burrows", patientRetrieved.getSurname());
             TestUtil.checkField("Email", "jburrows@werfen.com", patientRetrieved.getEmail());
+
+            TestUtil.checkField("Medical Number", "123456", patientRetrieved.getMedicalNumber());
+            TestUtil.checkField("DOB", LocalDate.of(1948, 8, 11), patientRetrieved.getDob());
         }
     }
 
@@ -181,4 +206,6 @@ public class PatientResourceTest extends RESTResourceTest {
                 .extract().statusCode();
         TestUtil.checkField("Status Code", 404, statusCode);
     }
+
+    // TODO: Include update patient,
 }

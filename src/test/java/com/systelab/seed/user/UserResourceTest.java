@@ -30,6 +30,7 @@ public class UserResourceTest extends RESTResourceTest {
         TestUtil.checkObjectIsNotNull("Users", users);
     }
 
+    // TODO: Pending login verification
     @Description("Create a User with name, login and password")
     @Test
     public void testCreateUser() {
