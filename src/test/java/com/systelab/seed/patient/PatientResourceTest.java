@@ -158,8 +158,7 @@ public class PatientResourceTest extends RESTResourceTest {
                 .when().post("/patients/patient")
                 .then().assertThat().statusCode(200)
                 .extract().as(Patient.class);
-        //I would assign ID and use the value to report in the exp.result
-        // TODO: Get rid of excessive documentation (some verifications shouldn't be reported)
+
         TestUtil.checkObjectIsNotNull("Patient ID " + patientCreated.getId(), patientCreated.getId());
         Patient patientRetrieved = given()
                 .when().get("/patients/" + patientCreated.getId())
@@ -194,8 +193,7 @@ public class PatientResourceTest extends RESTResourceTest {
                 .when().post("/patients/patient")
                 .then().assertThat().statusCode(200)
                 .extract().as(Patient.class);
-        //We don't need to log this check
-        //TestUtil.checkObjectIsNotNull("Patient", patientCreated);
+
         Assertions.assertNotNull(patientCreated);
         given()
                 .when().delete("/patients/" + patientCreated.getId())
@@ -218,7 +216,6 @@ public class PatientResourceTest extends RESTResourceTest {
         TestUtil.checkField("Status Code", 404, statusCode);
     }
 
-    // TODO: Include update patient,
     @Description("Update a patient by id")
     @Test
     public void testUpdatePatient()
@@ -240,7 +237,7 @@ public class PatientResourceTest extends RESTResourceTest {
         TestUtil.checkField("Name", patientCreated.getName(), patientUpdated.getName());
         TestUtil.checkField("Surname", patientCreated.getSurname(), patientUpdated.getSurname());
         TestUtil.checkField("Medical Number", patientCreated.getMedicalNumber(), patientUpdated.getMedicalNumber());
-        //TestUtil.checkField("DoB", patientCreated.getDob(), patientUpdated.getDob());
+        TestUtil.checkField("DoB", patientCreated.getDob(), patientUpdated.getDob());
         TestUtil.checkField("Street", patientCreated.getAddress().getStreet(), patientUpdated.getAddress().getStreet());
         TestUtil.checkField("City", patientCreated.getAddress().getCity(), patientUpdated.getAddress().getCity());
         TestUtil.checkField("Zip", patientCreated.getAddress().getZip(), patientUpdated.getAddress().getZip());
