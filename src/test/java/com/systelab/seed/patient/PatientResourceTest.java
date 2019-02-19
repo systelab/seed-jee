@@ -86,10 +86,21 @@ public class PatientResourceTest extends RESTResourceTest {
     @Test
     public void testCreateInvalidPatient() {
         testCreateInvalidPatient(getPatientData("", "", "", ""));
-        testCreateInvalidPatient(getPatientData("", "Burrows", "jburrows@test.com", "123"));
-        testCreateInvalidPatient(getPatientData("John", "", "jburrows@test.com", ""));
-        testCreateInvalidPatient(getPatientData("", "", "jburrows@test.com", "1"));
-        testCreateInvalidPatient(getPatientData("John", "Burrows", "jburrows", "345423"));
+        testCreateInvalidPatient(getPatientData("", "", "", "111"));
+        testCreateInvalidPatient(getPatientData("", "", "jburrows@example", ""));
+        testCreateInvalidPatient(getPatientData("", "", "jburrows@.com", "222"));
+        testCreateInvalidPatient(getPatientData("", "Jameson", "", ""));
+        testCreateInvalidPatient(getPatientData("", "Jameson", "", "111"));
+        testCreateInvalidPatient(getPatientData("", "Jameson", "@example.com", ""));
+        testCreateInvalidPatient(getPatientData("", "Jameson", "jj@.", "333"));
+        testCreateInvalidPatient(getPatientData("Thomas", "", "", ""));
+        testCreateInvalidPatient(getPatientData("Thomas", "", "", "111"));
+        testCreateInvalidPatient(getPatientData("Thomas", "", "jj@example.com", ""));
+        testCreateInvalidPatient(getPatientData("John", "", "jburrows@test,com", "222"));
+        testCreateInvalidPatient(getPatientData("Thomas", "Summers", "", ""));
+        testCreateInvalidPatient(getPatientData("Thomas", "Summers", "", "333"));
+        testCreateInvalidPatient(getPatientData("Thomas", "Summers", "tsms@example,com", ""));
+        testCreateInvalidPatient(getPatientData("John", "Burrows", "jburrows,", "345423"));
         //TODO: All possible combinations and patterns(email)
     }
 
@@ -208,4 +219,36 @@ public class PatientResourceTest extends RESTResourceTest {
     }
 
     // TODO: Include update patient,
+    @Description("Update a patient by id")
+    @Test
+    public void testUpdatePatient()
+    {
+        Patient patient = getPatientData("John", "Burrows", "jburrows@werfen.com");
+        Patient patientCreated = given().body(patient)
+            .when().post("/patients/patient")
+            .then().assertThat().statusCode(200)
+            .extract().as(Patient.class);
+        Assertions.assertNotNull(patientCreated);
+        patientCreated.setEmail("new@emailchanged.com");
+        Patient patientUpdated = given().body(patientCreated)
+            .when().put("/patients/" + patientCreated.getId())
+            .then().assertThat().statusCode(200)
+            .extract().as(Patient.class);
+        TestUtil.checkObjectIsNotNull("Patient", patientUpdated);
+        TestUtil.checkField("Email", patientCreated.getEmail(), patientUpdated.getEmail());
+        // more fields to verify
+    }
+
+    @Description("Update non-existent patient")
+    @Test
+    public void testUpdateUnexistingPatient()
+    {
+        Patient patient = getPatientData("John", "Burrows", "jburrows@werfen.com");
+
+        int statusCode = given().body(patient)
+            .when().put("/patients/38400000-8cf0-11bd-b23e-10b96e4ef00d")
+            .then()
+            .extract().statusCode();
+        TestUtil.checkField("Status Code", 404, statusCode);
+    }
 }
