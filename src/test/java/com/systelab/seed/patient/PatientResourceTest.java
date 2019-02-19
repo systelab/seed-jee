@@ -235,20 +235,35 @@ public class PatientResourceTest extends RESTResourceTest {
             .then().assertThat().statusCode(200)
             .extract().as(Patient.class);
         TestUtil.checkObjectIsNotNull("Patient", patientUpdated);
+        //TestUtil.checkField("Id", patientCreated.getId(), patientUpdated.getId());
         TestUtil.checkField("Email", patientCreated.getEmail(), patientUpdated.getEmail());
-        // more fields to verify
+        TestUtil.checkField("Name", patientCreated.getName(), patientUpdated.getName());
+        TestUtil.checkField("Surname", patientCreated.getSurname(), patientUpdated.getSurname());
+        TestUtil.checkField("Medical Number", patientCreated.getMedicalNumber(), patientUpdated.getMedicalNumber());
+        //TestUtil.checkField("DoB", patientCreated.getDob(), patientUpdated.getDob());
+        TestUtil.checkField("Street", patientCreated.getAddress().getStreet(), patientUpdated.getAddress().getStreet());
+        TestUtil.checkField("City", patientCreated.getAddress().getCity(), patientUpdated.getAddress().getCity());
+        TestUtil.checkField("Zip", patientCreated.getAddress().getZip(), patientUpdated.getAddress().getZip());
     }
 
-    @Description("Update non-existent patient")
+    @Description("Update non-existent patient, that is Create new Patient")
     @Test
     public void testUpdateUnexistingPatient()
     {
         Patient patient = getPatientData("John", "Burrows", "jburrows@werfen.com");
-
-        int statusCode = given().body(patient)
+        Patient patientCreated = given().body(patient)
             .when().put("/patients/38400000-8cf0-11bd-b23e-10b96e4ef00d")
             .then()
-            .extract().statusCode();
-        TestUtil.checkField("Status Code", 404, statusCode);
+            .extract().as(Patient.class);
+        TestUtil.checkObjectIsNotNull("Patient", patientCreated);
+        //TestUtil.checkField("Id", patientCreated.getId(), patient.getId());
+        TestUtil.checkField("Email", patientCreated.getEmail(), patient.getEmail());
+        TestUtil.checkField("Name", patientCreated.getName(), patient.getName());
+        TestUtil.checkField("Surname", patientCreated.getSurname(), patient.getSurname());
+        TestUtil.checkField("Medical Number", patientCreated.getMedicalNumber(), patient.getMedicalNumber());
+        //TestUtil.checkField("DoB", patientCreated.getDob(), patient.getDob());
+        TestUtil.checkField("Street", patientCreated.getAddress().getStreet(), patient.getAddress().getStreet());
+        TestUtil.checkField("City", patientCreated.getAddress().getCity(), patient.getAddress().getCity());
+        TestUtil.checkField("Zip", patientCreated.getAddress().getZip(), patient.getAddress().getZip());
     }
 }
