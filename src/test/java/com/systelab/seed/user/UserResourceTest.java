@@ -102,7 +102,7 @@ public class UserResourceTest extends RESTResourceTest {
         String auth = given().contentType("application/x-www-form-urlencoded").formParam("login", login).formParam("password", password).
             when().post("/users/login").getHeader(AUTHORIZATION_HEADER);
 
-        TestUtil.checkObjectIsNotNull("Auth. " + auth, auth);
+        TestUtil.checkObjectIsNotNull("Auth. ", auth);
     }
 
     @Description("Login - Unsuccessful")
@@ -112,6 +112,6 @@ public class UserResourceTest extends RESTResourceTest {
         String password = "noPass";
         String auth = given().contentType("application/x-www-form-urlencoded").formParam("login", login).formParam("password", password).
             when().post("/users/login").getHeader(AUTHORIZATION_HEADER);
-        TestUtil.checkObjectIsNull("Auth. " + auth, auth);
+        TestUtil.checkObjectIsNull("Auth. ", auth);
     }
 }
