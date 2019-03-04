@@ -143,6 +143,17 @@ public class PatientResourceTest extends RESTResourceTest {
         testCreateInvalidPatient(getPatientData("John", "Jameson", "@", "222"));
     }
 
+    @Description("Create a Patient with invalid data: name, surname or medicalNumber field too long")
+    @Test
+    public void testCreateInvalidPatientTooLongText() {
+        String tooLongString = "thisStringIsIntendedToCauseAnExceptionBecauseOfItsExcessiveLengthTheMostLongStringAllowedMustHaveLessThanTeoHundredAndFiftyFiveCharactersThisShouldBeVerifiedInEveryTextFieldToEnsureTheLimitationIsWorkingProperlyThisStringOnlyHasEnglishLettersButMoreScenarios";
+
+        testCreateInvalidPatient(getPatientData(tooLongString, "Jameson", "jj@test.com", "123"));
+        testCreateInvalidPatient(getPatientData("John", tooLongString, "jj@test.com", "123"));
+        testCreateInvalidPatient(getPatientData("John", "Jameson", "jj@test.com", tooLongString));
+        // use it in email field too?
+    }
+
     @Attachment(value = "Patients Database")
     private String savePatientsDatabase(List<Patient> patients) {
         return patients.stream().map((patient) -> patient.getSurname() + ", " + patient.getName() + "\t" + patient.getEmail()).collect(joining("\n"));

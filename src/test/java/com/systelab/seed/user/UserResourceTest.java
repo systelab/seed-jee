@@ -20,6 +20,16 @@ import static io.restassured.RestAssured.given;
 public class UserResourceTest extends RESTResourceTest {
     private static final Logger logger = Logger.getLogger(UserResourceTest.class.getName());
 
+    private User getUserData(String name, String surname, String login, String password) {
+        User user = new User();
+        user.setName(name);
+        user.setSurname(surname);
+        user.setLogin(login);
+        user.setPassword(password);
+        user.setRole(UserRole.USER);
+        return user;
+    }
+
     @Description("Get the User list")
     @Test
     public void testGetUserList() {
@@ -69,6 +79,35 @@ public class UserResourceTest extends RESTResourceTest {
             .then()
             .extract().statusCode();
         TestUtil.checkField("Status Code after a GET", 404, statusCode);
+    }
+
+    private void testCreateInvalidUser(User user) {
+        int statusCode = given().body(user)
+            .when().post("/users/user")
+            .then()
+            .extract().statusCode();
+        TestUtil.checkField("Status Code", 400, statusCode);
+    }
+
+    @Description("Create a user with invalid data: empty mandatory fields (name, surname, login, password)")
+    @Test
+    public void testCreateInvalidUserEmptyMandatoryFields() {
+        testCreateInvalidUser(getUserData("", "Jones", "jjones", "passJJones"));
+        testCreateInvalidUser(getUserData("Jude", "", "jjones", "passJJones"));
+        testCreateInvalidUser(getUserData("Jude", "Jones", "", "passJJones"));
+        testCreateInvalidUser(getUserData("Jude", "Jones", "jjones", ""));
+    }
+
+    @Description("Create a user with invalid data: text fields too long (name, surname, login, password)")
+    @Test
+    public void testCreateInvalidUserTooLongText() {
+        String tooLongString = "thisStringIsIntendedToCauseAnExceptionBecauseOfItsExcessiveLengthTheMostLongStringAllowedMustHaveLessThanTeoHundredAndFiftyFiveCharactersThisShouldBeVerifiedInEveryTextFieldToEnsureTheLimitationIsWorkingProperlyThisStringOnlyHasEnglishLettersButMoreScenarios";
+        String tooLongLogin = "12345678901";
+
+        testCreateInvalidUser(getUserData(tooLongString, "Jones", "jjones", "passJJones"));
+        testCreateInvalidUser(getUserData("Jude", tooLongString, "jjones", "passJJones"));
+        testCreateInvalidUser(getUserData("Jude", "Jones", tooLongLogin, "passJJones"));
+        testCreateInvalidUser(getUserData("Jude", "Jones", "jjones", tooLongString));
     }
 
     @Description("Get User by id")
