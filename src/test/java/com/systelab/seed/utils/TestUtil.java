@@ -2,6 +2,7 @@ package com.systelab.seed.utils;
 
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
+import java.time.LocalDate;
 
 public class TestUtil {
 
@@ -55,7 +56,10 @@ public class TestUtil {
         Assertions.assertEquals(value, returnedValue);
     }
 
-    @Step("Field {0} is equal to {1} Â± {3}")
+    @Step("Field {0} is equal to {1}")
+    public static void checkField(String field, LocalDate value, LocalDate returnedValue) {Assertions.assertEquals(value, returnedValue); }
+
+    @Step("Field {0} is equal to {1} ± {3}")
     public static void checkField(String field, Double value, Double returnedValue, double delta) {
         Assertions.assertEquals(value, returnedValue, delta);
     }
