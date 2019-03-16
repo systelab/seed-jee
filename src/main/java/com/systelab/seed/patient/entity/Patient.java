@@ -3,6 +3,7 @@ package com.systelab.seed.patient.entity;
 import com.systelab.seed.BaseEntity;
 import com.systelab.seed.infrastructure.constraints.Email;
 import com.systelab.seed.infrastructure.jaxb.JsonLocalDateTypeAdapter;
+import com.systelab.seed.patientallergy.entity.PatientAllergy;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,10 +14,12 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Set;
 
 @XmlRootElement
 @XmlType(propOrder = {"id", "creationTime", "updateTime", "name", "surname", "medicalNumber", "email", "dob", "address"})
@@ -53,4 +56,8 @@ public class Patient extends BaseEntity implements Serializable {
 
     @Embedded
     private Address address;
+
+    @XmlTransient
+    @OneToMany( mappedBy="patient" )
+    private Set<PatientAllergy> allergies;
 }
