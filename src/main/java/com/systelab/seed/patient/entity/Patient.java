@@ -1,5 +1,6 @@
 package com.systelab.seed.patient.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.systelab.seed.BaseEntity;
 import com.systelab.seed.infrastructure.constraints.Email;
 import com.systelab.seed.infrastructure.jaxb.JsonLocalDateTypeAdapter;
@@ -19,6 +20,7 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 @XmlRootElement
@@ -57,7 +59,8 @@ public class Patient extends BaseEntity implements Serializable {
     @Embedded
     private Address address;
 
-    @XmlTransient
-    @OneToMany( mappedBy="patient" )
-    private Set<PatientAllergy> allergies;
+    @JsonIgnore
+    @OneToMany( mappedBy="patient",fetch = FetchType.EAGER )
+    private Set<PatientAllergy> allergies=new HashSet<>();
+
 }

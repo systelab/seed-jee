@@ -1,9 +1,8 @@
 package com.systelab.seed.patient.boundary;
 
-import com.systelab.seed.patient.boundary.PatientNotFoundException;
-import com.systelab.seed.patient.entity.Patient;
 import com.systelab.seed.infrastructure.pagination.Page;
 import com.systelab.seed.infrastructure.pagination.Pageable;
+import com.systelab.seed.patient.entity.Patient;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import javax.ejb.Local;
