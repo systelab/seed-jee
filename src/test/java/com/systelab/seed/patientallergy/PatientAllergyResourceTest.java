@@ -39,19 +39,17 @@ public class PatientAllergyResourceTest extends RESTResourceTest {
         String expectedSurname = "Senfield";
 
         Patient patient = getPatientData(expectedName, expectedSurname);
-        Patient patientCreated = given().body(patient)
+        return given().body(patient)
                 .when().post("/patients/patient")
                 .then().assertThat().statusCode(200)
                 .extract().as(Patient.class);
-        return patientCreated;
     }
 
     private Set<PatientAllergy> getPatientAllergies(Patient patient) {
-        Set<PatientAllergy> allergies = given()
+        return given()
                 .when().get("/patients/" + patient.getId() + "/allergies")
                 .then().assertThat().statusCode(200)
                 .extract().as(PatientAllergySet.class);
-        return allergies;
     }
 
     private Allergy createAnAllergy() {
@@ -59,27 +57,24 @@ public class PatientAllergyResourceTest extends RESTResourceTest {
         String expectedAllergySigns = "Some signs";
 
         Allergy allergy = getAllergyData(expectedAllergyName, expectedAllergySigns);
-        Allergy allergyCreated = given().body(allergy)
+        return given().body(allergy)
                 .when().post("/allergies/allergy")
                 .then().assertThat().statusCode(200)
                 .extract().as(Allergy.class);
-        return allergyCreated;
     }
 
     private PatientAllergy addAnAllergyToAPatient(Patient patient, PatientAllergy patientAllergy) {
-        PatientAllergy patientAllergyCreated = given().body(patientAllergy)
+        return given().body(patientAllergy)
                 .when().post("/patients/" + patient.getId() + "/allergies/allergy")
                 .then().assertThat().statusCode(200)
                 .extract().as(PatientAllergy.class);
-        return patientAllergyCreated;
     }
 
     private PatientAllergy updateAnAllergyToAPatient(Patient patient, PatientAllergy patientAllergy) {
-        PatientAllergy patientAllergyCreated = given().body(patientAllergy)
-                .when().put("/patients/" + patient.getId() + "/allergies/"+patientAllergy.getAllergy().getId())
+        return given().body(patientAllergy)
+                .when().put("/patients/" + patient.getId() + "/allergies/" + patientAllergy.getAllergy().getId())
                 .then().assertThat().statusCode(200)
                 .extract().as(PatientAllergy.class);
-        return patientAllergyCreated;
     }
 
     private void removeAnAllergyFromAPatient(Patient patient, Allergy allergy) {
@@ -106,7 +101,7 @@ public class PatientAllergyResourceTest extends RESTResourceTest {
 
         PatientAllergy patientAllergy = new PatientAllergy(patientCreated, allergyCreated);
         patientAllergy.setNote("A note");
-         addAnAllergyToAPatient(patientCreated, patientAllergy);
+        addAnAllergyToAPatient(patientCreated, patientAllergy);
 
         Set<PatientAllergy> allergies = getPatientAllergies(patientCreated);
 
@@ -122,7 +117,7 @@ public class PatientAllergyResourceTest extends RESTResourceTest {
 
         PatientAllergy patientAllergy = new PatientAllergy(patientCreated, allergyCreated);
 
-        int code=given().body(patientAllergy)
+        int code = given().body(patientAllergy)
                 .when().post("/patients/" + patientCreated.getId() + "/allergies/allergy")
                 .then().assertThat()
                 .extract().statusCode();
@@ -162,11 +157,11 @@ public class PatientAllergyResourceTest extends RESTResourceTest {
 
         PatientAllergy patientAllergy = new PatientAllergy(patientCreated, allergyCreated);
         patientAllergy.setNote("A note");
-        PatientAllergy patientAllergyCreated1 = addAnAllergyToAPatient(patientCreated, patientAllergy);
+        addAnAllergyToAPatient(patientCreated, patientAllergy);
 
 
         patientAllergy.setNote(noteToBeModified);
-        PatientAllergy patientAllergyCreated2 = addAnAllergyToAPatient(patientCreated, patientAllergy);
+        addAnAllergyToAPatient(patientCreated, patientAllergy);
 
         Set<PatientAllergy> allergies = getPatientAllergies(patientCreated);
 
@@ -210,7 +205,7 @@ public class PatientAllergyResourceTest extends RESTResourceTest {
 
         PatientAllergy patientAllergy = new PatientAllergy(patientCreated, allergyCreated);
         patientAllergy.setNote("A note");
-        PatientAllergy patientAllergyCreated = addAnAllergyToAPatient(patientCreated, patientAllergy);
+        addAnAllergyToAPatient(patientCreated, patientAllergy);
 
         removeAnAllergyFromAPatient(patientCreated, allergyCreated);
 

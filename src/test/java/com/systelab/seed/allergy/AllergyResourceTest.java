@@ -150,11 +150,9 @@ public class AllergyResourceTest extends RESTResourceTest {
                 .then().assertThat().statusCode(200)
                 .extract().as(Allergy.class);
         Assertions.assertNotNull(allergyRetrieved, "Allergy not retrieved");
-        if (allergyRetrieved != null) {
-            TestUtil.checkField("Name", "Tree pollen", allergyRetrieved.getName());
-            TestUtil.checkField("Signs", "Watering eyes", allergyRetrieved.getSigns());
-            TestUtil.checkField("Symptoms", "Dry, red and cracked skin", allergyRetrieved.getSymptoms());
-        }
+        TestUtil.checkField("Name", "Tree pollen", allergyRetrieved.getName());
+        TestUtil.checkField("Signs", "Watering eyes", allergyRetrieved.getSigns());
+        TestUtil.checkField("Symptoms", "Dry, red and cracked skin", allergyRetrieved.getSymptoms());
     }
 
     @Description("Get a allergy with an non-existing id")
