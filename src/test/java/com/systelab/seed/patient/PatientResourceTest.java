@@ -178,7 +178,6 @@ public class PatientResourceTest extends RESTResourceTest {
     public void testGetPatientList() {
 
         int numberOfPatients = 5;
-        createSomePatients(numberOfPatients);
 
         PatientsPage patientsBefore = given()
                 .when().get("/patients")
@@ -186,7 +185,7 @@ public class PatientResourceTest extends RESTResourceTest {
                 .extract().as(PatientsPage.class);
         long initialSize = patientsBefore.getTotalElements();
         savePatientsDatabase(patientsBefore.getContent());
-        Assertions.assertEquals(numberOfPatients, initialSize);
+
         createSomePatients(numberOfPatients);
 
         PatientsPage patientsAfter = given()
@@ -195,6 +194,7 @@ public class PatientResourceTest extends RESTResourceTest {
                 .extract().as(PatientsPage.class);
         long finalSize = patientsAfter.getTotalElements();
         savePatientsDatabase(patientsAfter.getContent());
+
         TestUtil.checkANumber("List size", initialSize + numberOfPatients, finalSize);
     }
 
