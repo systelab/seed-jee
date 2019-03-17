@@ -15,5 +15,7 @@ public interface PatientAllergyService {
 
     PatientAllergy addPatientAllergy(UUID patientId, PatientAllergy patientAllergy) throws PatientNotFoundException, AllergyNotFoundException;
 
+    PatientAllergy updatePatientAllergy(UUID patientId, UUID allergyId, PatientAllergy patientAllergy) throws PatientNotFoundException, AllergyNotFoundException;
+
     void removePatientAllergy(UUID patientId, UUID allergyId) throws PatientNotFoundException, AllergyNotFoundException;
 }

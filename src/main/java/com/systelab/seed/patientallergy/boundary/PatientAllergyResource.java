@@ -87,6 +87,31 @@ public class PatientAllergyResource {
         }
     }
 
+    @Operation(description = "Add allergy to patient", summary = "Add allergy to patient")
+    @ApiResponse(responseCode = "200", description = "A Patient Allergy", content = @Content(schema = @Schema(implementation = PatientAllergy.class)))
+    @ApiResponse(responseCode = "404", description = "Patient not found")
+    @ApiResponse(responseCode = "500", description = "Internal Server Error")
+    @PUT
+    @Path("{patientId}/allergies/{allergyId}")
+    @PermitAll
+    public Response updateAllergyToPatient(@PathParam("patientId") String patientId, @PathParam("allergyId") String allergyId, @RequestBody(description = "Allergy", required = true, content = @Content(
+            schema = @Schema(implementation = PatientAllergy.class))) @Valid PatientAllergy patientAllergy) {
+        try {
+            PatientAllergy savedPatientAllergy = patientAllergyService.updatePatientAllergy(UUID.fromString(patientId), UUID.fromString(allergyId),patientAllergy);
+            return Response.ok().entity(savedPatientAllergy).build();
+        } catch (PatientNotFoundException ex) {
+            logger.log(Level.SEVERE, PatientAllergyResource.INVALID_PATIENT_ERROR_MESSAGE, ex);
+            return Response.status(Status.NOT_FOUND).build();
+        } catch (AllergyNotFoundException ex) {
+            logger.log(Level.SEVERE, PatientAllergyResource.INVALID_ALLERGY_ERROR_MESSAGE, ex);
+            return Response.status(Status.NOT_FOUND).build();
+        } catch (Exception ex) {
+            logger.log(Level.SEVERE, PatientAllergyResource.INTERNAL_SERVER_ERROR_MESSAGE, ex);
+            return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+
     @Operation(description = "Remove allergy from patient", summary = "Remove allergy from patient")
     @ApiResponse(responseCode = "200", description = "OK")
     @ApiResponse(responseCode = "404", description = "Patient not found")

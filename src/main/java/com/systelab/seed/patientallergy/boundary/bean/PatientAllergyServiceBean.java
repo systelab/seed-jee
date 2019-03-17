@@ -49,9 +49,29 @@ public class PatientAllergyServiceBean implements PatientAllergyService {
         patientAllergyToStore.setAssertedDate(patientAllergy.getAssertedDate());
         patientAllergyToStore.setLastOccurrence(patientAllergy.getLastOccurrence());
         em.merge(patientAllergyToStore);
-        em.flush();
         return patientAllergyToStore;
     }
+
+    @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public PatientAllergy updatePatientAllergy(UUID patientId, UUID allergyId, PatientAllergy patientAllergy) throws PatientNotFoundException, AllergyNotFoundException {
+        Patient patient = em.find(Patient.class, patientId);
+        Allergy allergy = em.find(Allergy.class, allergyId);
+
+        if (patient == null) {
+            throw new PatientNotFoundException();
+        }
+        if (allergy == null) {
+            throw new AllergyNotFoundException();
+        }
+        PatientAllergy patientAllergyToStore = new PatientAllergy(patient, allergy);
+        patientAllergyToStore.setNote(patientAllergy.getNote());
+        patientAllergyToStore.setAssertedDate(patientAllergy.getAssertedDate());
+        patientAllergyToStore.setLastOccurrence(patientAllergy.getLastOccurrence());
+        em.merge(patientAllergyToStore);
+        return patientAllergyToStore;
+    }
+
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
