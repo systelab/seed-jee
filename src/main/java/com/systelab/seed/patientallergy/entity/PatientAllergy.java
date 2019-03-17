@@ -13,6 +13,7 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -43,6 +44,7 @@ public class PatientAllergy implements Serializable {
     @Schema(description = "ISO 8601 Format.", example = "1986-01-22T23:28:56.782Z")
     private LocalDate assertedDate;
 
+    @NotNull
     @Size(min = 1, max = 255)
     private String note;
 

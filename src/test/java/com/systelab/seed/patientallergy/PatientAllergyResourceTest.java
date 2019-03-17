@@ -105,6 +105,23 @@ public class PatientAllergyResourceTest extends RESTResourceTest {
         TestUtil.checkANumber("Expect 1 allergy", 1, allergies.size());
     }
 
+    @Description("Add an allergy to a patient without notes")
+    @Test
+    public void testAddAnAllergyWithoutNotesToAPatient() {
+
+        Patient patientCreated = createAPatient();
+        Allergy allergyCreated = createAnAllergy();
+
+        PatientAllergy patientAllergy = new PatientAllergy(patientCreated, allergyCreated);
+
+        int code=given().body(patientAllergy)
+                .when().post("/patients/" + patientCreated.getId() + "/allergies/allergy")
+                .then().assertThat()
+                .extract().statusCode();
+
+        TestUtil.checkANumber("Expect an error 400", 400, code);
+    }
+
     @Description("Add more than one allergy to a patient")
     @Test
     public void testAddMoreThanOneAllergyToAPatient() {
@@ -152,7 +169,7 @@ public class PatientAllergyResourceTest extends RESTResourceTest {
         TestUtil.checkField("Note", noteToBeModified, first.getNote());
     }
 
-    @Description("Delete an allergy to a patient")
+    @Description("Delete an allergy from a patient")
     @Test
     public void testDeleteAnAllergyFromAPatient() {
 
@@ -168,6 +185,20 @@ public class PatientAllergyResourceTest extends RESTResourceTest {
         Set<PatientAllergy> allergies = getPatientAllergies(patientCreated);
 
         TestUtil.checkANumber("Expect 1 allergy", 0, allergies.size());
+    }
+
+    @Description("Delete an unexisting allergy from a patient")
+    @Test
+    public void testDeleteAnUnexistingAllergyFromAPatient() {
+
+        Patient patientCreated = createAPatient();
+        Allergy allergyCreated = createAnAllergy();
+
+        removeAnAllergyFromAPatient(patientCreated, allergyCreated);
+
+        Set<PatientAllergy> allergies = getPatientAllergies(patientCreated);
+
+        TestUtil.checkANumber("Expect 0 allergy", 0, allergies.size());
     }
 
 }
