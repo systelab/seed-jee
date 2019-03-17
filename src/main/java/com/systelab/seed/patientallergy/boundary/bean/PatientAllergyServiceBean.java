@@ -44,13 +44,13 @@ public class PatientAllergyServiceBean implements PatientAllergyService {
         if (allergy == null) {
             throw new AllergyNotFoundException();
         }
-        PatientAllergy a = new PatientAllergy(patient, allergy);
-        a.setNote(patientAllergy.getNote());
-        a.setAssertedDate(patientAllergy.getAssertedDate());
-        a.setLastOccurrence(patientAllergy.getLastOccurrence());
-        em.merge(a);
+        PatientAllergy patientAllergyToStore = new PatientAllergy(patient, allergy);
+        patientAllergyToStore.setNote(patientAllergy.getNote());
+        patientAllergyToStore.setAssertedDate(patientAllergy.getAssertedDate());
+        patientAllergyToStore.setLastOccurrence(patientAllergy.getLastOccurrence());
+        em.merge(patientAllergyToStore);
         em.flush();
-        return a;
+        return patientAllergyToStore;
     }
 
     @Override
@@ -65,7 +65,9 @@ public class PatientAllergyServiceBean implements PatientAllergyService {
         if (allergy == null) {
             throw new AllergyNotFoundException();
         }
-        PatientAllergy a = new PatientAllergy(patient, allergy);
-        em.remove(a);
+        PatientAllergy patientAllergyToRemove = new PatientAllergy(patient, allergy);
+        PatientAllergy patientAllergy = em.find(PatientAllergy.class, patientAllergyToRemove.getId());
+        if (patientAllergy!=null)
+            em.remove(patientAllergy);
     }
 }

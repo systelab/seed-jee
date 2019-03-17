@@ -50,9 +50,9 @@ public class PatientAllergyResource {
     @GET
     @Path("{uid}/allergies")
     @PermitAll
-    public Response getPatientAllergies(@PathParam("uid") String patientId) {
+    public Response getPatientAllergies(@PathParam("uid") String uid) {
         try {
-            Set<PatientAllergy> allergies = patientAllergyService.getPatientAllergies(UUID.fromString(patientId));
+            Set<PatientAllergy> allergies = patientAllergyService.getPatientAllergies(UUID.fromString(uid));
             return Response.ok().entity(allergies).build();
         } catch (PatientNotFoundException ex) {
             logger.log(Level.SEVERE, PatientAllergyResource.INVALID_PATIENT_ERROR_MESSAGE, ex);
@@ -70,11 +70,11 @@ public class PatientAllergyResource {
     @POST
     @Path("{uid}/allergies/allergy")
     @PermitAll
-    public Response addAllergyToPatient(@PathParam("uid") String patientId, @RequestBody(description = "Allergy", required = true, content = @Content(
+    public Response addAllergyToPatient(@PathParam("uid") String uid, @RequestBody(description = "Allergy", required = true, content = @Content(
             schema = @Schema(implementation = PatientAllergy.class))) @Valid PatientAllergy patientAllergy) {
         try {
-            PatientAllergy a = patientAllergyService.addPatientAllergy(UUID.fromString(patientId), patientAllergy);
-            return Response.ok().entity(a).build();
+            PatientAllergy savedPatientAllergy = patientAllergyService.addPatientAllergy(UUID.fromString(uid), patientAllergy);
+            return Response.ok().entity(savedPatientAllergy).build();
         } catch (PatientNotFoundException ex) {
             logger.log(Level.SEVERE, PatientAllergyResource.INVALID_PATIENT_ERROR_MESSAGE, ex);
             return Response.status(Status.NOT_FOUND).build();
