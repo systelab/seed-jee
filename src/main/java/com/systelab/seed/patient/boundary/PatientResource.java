@@ -38,7 +38,6 @@ import java.util.logging.Logger;
 public class PatientResource {
     private static final String INTERNAL_SERVER_ERROR_MESSAGE = "Internal Server Error";
     private static final String INVALID_PATIENT_ERROR_MESSAGE = "Invalid Patient";
-    private static final String INVALID_ALLERGY_ERROR_MESSAGE = "Invalid Allergy";
 
     private Logger logger;
 
