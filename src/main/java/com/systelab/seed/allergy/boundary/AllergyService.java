@@ -3,8 +3,6 @@ package com.systelab.seed.allergy.boundary;
 import com.systelab.seed.allergy.entity.Allergy;
 import com.systelab.seed.infrastructure.pagination.Page;
 import com.systelab.seed.infrastructure.pagination.Pageable;
-import com.systelab.seed.patient.entity.Patient;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import javax.ejb.Local;
 import java.util.UUID;

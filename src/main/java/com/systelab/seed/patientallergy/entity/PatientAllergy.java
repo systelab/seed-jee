@@ -1,7 +1,6 @@
 package com.systelab.seed.patientallergy.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.systelab.seed.BaseEntity;
 import com.systelab.seed.allergy.entity.Allergy;
 import com.systelab.seed.patient.entity.Patient;
 import io.swagger.v3.oas.annotations.media.Schema;
