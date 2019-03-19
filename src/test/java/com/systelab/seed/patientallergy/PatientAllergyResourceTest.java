@@ -147,7 +147,6 @@ public class PatientAllergyResourceTest extends RESTResourceTest {
         TestUtil.checkANumber("Expect 2 allergy", 2, allergies.size());
     }
 
-
     @Description("Add the same allergy twice")
     @Test
     public void testAddAnAllergyTwiceToAPatient() {
@@ -161,15 +160,12 @@ public class PatientAllergyResourceTest extends RESTResourceTest {
 
 
         patientAllergy.setNote(noteToBeModified);
-        addAnAllergyToAPatient(patientCreated, patientAllergy);
 
-        Set<PatientAllergy> allergies = getPatientAllergies(patientCreated);
-
-        Iterator<PatientAllergy> iterator = allergies.iterator();
-        PatientAllergy first = iterator.next();
-
-        TestUtil.checkANumber("Expect 1 allergy", 1, allergies.size());
-        TestUtil.checkField("Note", noteToBeModified, first.getNote());
+        int code = given().body(patientAllergy)
+                .when().post("/patients/" + patientCreated.getId() + "/allergies/allergy")
+                .then()
+                .extract().statusCode();
+        TestUtil.checkANumber("Expect an error 404", 404, code);
     }
 
     @Description("Update an allergy from a patient")
@@ -195,6 +191,24 @@ public class PatientAllergyResourceTest extends RESTResourceTest {
         TestUtil.checkField("Note", noteToBeModified, first.getNote());
     }
 
+    @Description("Update an allergy to a new patient (Update is idempotent)")
+    @Test
+    public void testAddAnAllergyToANewPatient() {
+
+        Patient patientCreated = createAPatient();
+        Allergy allergyCreated = createAnAllergy();
+
+        PatientAllergy patientAllergy = new PatientAllergy(patientCreated, allergyCreated);
+        patientAllergy.setNote("Some notes");
+
+        given().body(patientAllergy)
+                .when().put("/patients/" + patientCreated.getId() + "/allergies/"+allergyCreated.getId())
+                .then().assertThat().statusCode(200);
+
+        Set<PatientAllergy> allergies = getPatientAllergies(patientCreated);
+
+        TestUtil.checkANumber("Expect 1 allergy", 1, allergies.size());
+    }
 
     @Description("Delete an allergy from a patient")
     @Test
@@ -227,5 +241,4 @@ public class PatientAllergyResourceTest extends RESTResourceTest {
 
         TestUtil.checkANumber("Expect 0 allergy", 0, allergies.size());
     }
-
 }

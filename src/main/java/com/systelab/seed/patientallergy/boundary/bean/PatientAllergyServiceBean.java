@@ -1,5 +1,6 @@
 package com.systelab.seed.patientallergy.boundary.bean;
 
+import com.systelab.seed.allergy.boundary.AllergyAlreadyExistException;
 import com.systelab.seed.allergy.boundary.AllergyNotFoundException;
 import com.systelab.seed.allergy.entity.Allergy;
 import com.systelab.seed.patient.boundary.PatientNotFoundException;
@@ -34,7 +35,7 @@ public class PatientAllergyServiceBean implements PatientAllergyService {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public PatientAllergy addPatientAllergy(UUID patientId, PatientAllergy patientAllergy) throws PatientNotFoundException, AllergyNotFoundException {
+    public PatientAllergy addPatientAllergy(UUID patientId, PatientAllergy patientAllergy) throws PatientNotFoundException, AllergyNotFoundException, AllergyAlreadyExistException {
         Patient patient = em.find(Patient.class, patientId);
         Allergy allergy = em.find(Allergy.class, patientAllergy.getAllergy().getId());
 
@@ -48,7 +49,12 @@ public class PatientAllergyServiceBean implements PatientAllergyService {
         patientAllergyToStore.setNote(patientAllergy.getNote());
         patientAllergyToStore.setAssertedDate(patientAllergy.getAssertedDate());
         patientAllergyToStore.setLastOccurrence(patientAllergy.getLastOccurrence());
-        em.merge(patientAllergyToStore);
+
+        if (em.find(PatientAllergy.class, patientAllergyToStore.getId()) == null) {
+            em.merge(patientAllergyToStore);
+        } else {
+            throw new AllergyAlreadyExistException();
+        }
         return patientAllergyToStore;
     }
 
@@ -87,7 +93,7 @@ public class PatientAllergyServiceBean implements PatientAllergyService {
         }
         PatientAllergy patientAllergyToRemove = new PatientAllergy(patient, allergy);
         PatientAllergy patientAllergy = em.find(PatientAllergy.class, patientAllergyToRemove.getId());
-        if (patientAllergy!=null)
+        if (patientAllergy != null)
             em.remove(patientAllergy);
     }
 }

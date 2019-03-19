@@ -1,5 +1,6 @@
 package com.systelab.seed.patientallergy.boundary;
 
+import com.systelab.seed.allergy.boundary.AllergyAlreadyExistException;
 import com.systelab.seed.allergy.boundary.AllergyNotFoundException;
 import com.systelab.seed.patient.boundary.PatientNotFoundException;
 import com.systelab.seed.patientallergy.entity.PatientAllergy;
@@ -81,7 +82,11 @@ public class PatientAllergyResource {
         } catch (AllergyNotFoundException ex) {
             logger.log(Level.SEVERE, PatientAllergyResource.INVALID_ALLERGY_ERROR_MESSAGE, ex);
             return Response.status(Status.NOT_FOUND).build();
-        } catch (Exception ex) {
+        } catch (AllergyAlreadyExistException ex) {
+            logger.log(Level.SEVERE, PatientAllergyResource.INVALID_ALLERGY_ERROR_MESSAGE, ex);
+            return Response.status(Status.NOT_FOUND).build();
+        }
+        catch (Exception ex) {
             logger.log(Level.SEVERE, PatientAllergyResource.INTERNAL_SERVER_ERROR_MESSAGE, ex);
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         }

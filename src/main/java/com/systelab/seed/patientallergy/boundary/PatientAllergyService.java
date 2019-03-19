@@ -1,5 +1,6 @@
 package com.systelab.seed.patientallergy.boundary;
 
+import com.systelab.seed.allergy.boundary.AllergyAlreadyExistException;
 import com.systelab.seed.allergy.boundary.AllergyNotFoundException;
 import com.systelab.seed.patient.boundary.PatientNotFoundException;
 import com.systelab.seed.patientallergy.entity.PatientAllergy;
@@ -13,7 +14,7 @@ public interface PatientAllergyService {
 
     Set<PatientAllergy> getPatientAllergies(UUID patientId) throws PatientNotFoundException;
 
-    PatientAllergy addPatientAllergy(UUID patientId, PatientAllergy patientAllergy) throws PatientNotFoundException, AllergyNotFoundException;
+    PatientAllergy addPatientAllergy(UUID patientId, PatientAllergy patientAllergy) throws PatientNotFoundException, AllergyNotFoundException, AllergyAlreadyExistException;
 
     PatientAllergy updatePatientAllergy(UUID patientId, UUID allergyId, PatientAllergy patientAllergy) throws PatientNotFoundException, AllergyNotFoundException;
 
