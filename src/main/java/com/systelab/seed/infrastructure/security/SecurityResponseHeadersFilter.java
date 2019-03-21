@@ -15,53 +15,41 @@ public class SecurityResponseHeadersFilter implements ContainerResponseFilter {
    * You can keep the sandbox value empty to keep all restrictions in place, or add values:
    * allow-forms allow-same-origin allow-scripts, and allow-top-navigation
    */
-  public static final String SANDBOX = "sandbox";
+  private static final String SANDBOX = "sandbox";
   // The default policy for loading content such as JavaScript, Images, CSS, Font's, AJAX requests, Frames, HTML5 Media
-  public static final String DEFAULT_SRC = "default-src";
+  private static final String DEFAULT_SRC = "default-src";
   // Defines valid sources of images
-  public static final String IMG_SRC = "img-src";
+  private static final String IMG_SRC = "img-src";
   // Defines valid sources of JavaScript
-  public static final String SCRIPT_SRC = "script-src";
+  private static final String SCRIPT_SRC = "script-src";
   // Defines valid sources of stylesheets
-  public static final String STYLE_SRC = "style-src";
+  private static final String STYLE_SRC = "style-src";
   // Defines valid sources of fonts
-  public static final String FONT_SRC = "font-src";
+  private static final String FONT_SRC = "font-src";
   // Applies to XMLHttpRequest (AJAX), WebSocket or EventSource
-  public static final String CONNECT_SRC = "connect-src";
+  private static final String CONNECT_SRC = "connect-src";
   // Defines valid sources of plugins, eg <object>, <embed> or <applet>.
-  public static final String OBJECT_SRC = "object-src";
+  private static final String OBJECT_SRC = "object-src";
   // Defines valid sources of audio and video, eg HTML5 <audio>, <video> elements
-  public static final String MEDIA_SRC = "media-src";
+  private static final String MEDIA_SRC = "media-src";
   // Defines valid sources for loading frames
-  public static final String FRAME_SRC = "frame-src";
-  public static final String REPORT_URI = "report-uri";
+  private static final String FRAME_SRC = "frame-src";
+  private static final String REPORT_URI = "report-uri";
 
-  public static final String SELF_REFERENCE = "'self'";
-  public static final String ACCESS_CONTROL_ALLOW_ORIGIN = "Access-Control-Allow-Origin";
-  public static final String ACCESS_CONTROL_ALLOW_HEADERS = "Access-Control-Allow-Headers";
-  public static final String ACCESS_CONTROL_ALLOW_CREDENTIALS = "Access-Control-Allow-Credentials";
-  public static final String ACCESS_CONTROL_ALLOW_METHODS = "Access-Control-Allow-Methods";
-  public static final String ACCESS_CONTROL_MAX_AGE = "Access-Control-Max-Age";
-  public static final String ACCESS_CONTROL_EXPOSE_HEADERS = "Access-Control-Expose-Headers";
-  public static final String X_XSS_PROTECTION = "X-XSS-Protection";
-  public static final String X_FRAME_OPTIONS = "X-Frame-Options";
-  public static final String STRICT_TRANSPORT_SECURITY = "Strict-Transport-Security";
-  public static final String CONTENT_SECURITY_POLICY_HEADER = "Content-Security-Policy";
 
-  /**
-   * set of CSP policies that will be applied on each HTTP response. https://www.owasp.org/index.php/Content_Security_Policy
-   */
-  private static String reportUri = "/ContentSecurityPolicyReporter";
-  private static String sandboxValue = "";
-  private static String defaultSrc = "none";
-  private static String imgSrc = SELF_REFERENCE + " data: online.swagger.io";
-  private static String scriptSrc = SELF_REFERENCE + " 'unsafe-inline' ";
-  private static String styleSrc = SELF_REFERENCE + " 'unsafe-inline' fonts.googleapis.com";
-  private static String fontSrc = SELF_REFERENCE + " fonts.gstatic.com";
-  private static String connectSrc = SELF_REFERENCE;
-  private static String objectSrc = SELF_REFERENCE;
-  private static String mediaSrc = SELF_REFERENCE;
-  private static String frameSrc = SELF_REFERENCE;
+  private static final String ACCESS_CONTROL_ALLOW_ORIGIN = "Access-Control-Allow-Origin";
+  private static final String ACCESS_CONTROL_ALLOW_HEADERS = "Access-Control-Allow-Headers";
+  private static final String ACCESS_CONTROL_ALLOW_CREDENTIALS = "Access-Control-Allow-Credentials";
+  private static final String ACCESS_CONTROL_ALLOW_METHODS = "Access-Control-Allow-Methods";
+  private static final String ACCESS_CONTROL_MAX_AGE = "Access-Control-Max-Age";
+  private static final String ACCESS_CONTROL_EXPOSE_HEADERS = "Access-Control-Expose-Headers";
+  private static final String X_XSS_PROTECTION = "X-XSS-Protection";
+  private static final String X_FRAME_OPTIONS = "X-Frame-Options";
+  private static final String STRICT_TRANSPORT_SECURITY = "Strict-Transport-Security";
+  private static final String CONTENT_SECURITY_POLICY_HEADER = "Content-Security-Policy";
+  private static final String TRUE = "true";
+  private static final String SELF_VALUE = "'self'";
+
 
   @Override
   public void filter(ContainerRequestContext request, ContainerResponseContext response)
@@ -130,18 +118,26 @@ public class SecurityResponseHeadersFilter implements ContainerResponseFilter {
 
   private void addContentSecurityPolice(ContainerResponseContext response) {
     StringBuilder contentSecurityPolicy = new StringBuilder(DEFAULT_SRC).append(" ")
-        .append(defaultSrc);
+        .append("none");
+    /**
+     * set of CSP policies that will be applied on each HTTP response. https://www.owasp.org/index.php/Content_Security_Policy
+     */
 
-    addDirectiveToContentSecurityPolicy(contentSecurityPolicy, IMG_SRC, imgSrc);
-    addDirectiveToContentSecurityPolicy(contentSecurityPolicy, SCRIPT_SRC, scriptSrc);
-    addDirectiveToContentSecurityPolicy(contentSecurityPolicy, STYLE_SRC, styleSrc);
-    addDirectiveToContentSecurityPolicy(contentSecurityPolicy, FONT_SRC, fontSrc);
-    addDirectiveToContentSecurityPolicy(contentSecurityPolicy, CONNECT_SRC, connectSrc);
-    addDirectiveToContentSecurityPolicy(contentSecurityPolicy, OBJECT_SRC, objectSrc);
-    addDirectiveToContentSecurityPolicy(contentSecurityPolicy, MEDIA_SRC, mediaSrc);
-    addDirectiveToContentSecurityPolicy(contentSecurityPolicy, FRAME_SRC, frameSrc);
-    addDirectiveToContentSecurityPolicy(contentSecurityPolicy, REPORT_URI, reportUri);
-    addSandoxDirectiveToContentSecurityPolicy(contentSecurityPolicy, sandboxValue);
+    addDirectiveToContentSecurityPolicy(contentSecurityPolicy, IMG_SRC,
+        SELF_VALUE + " data: online.swagger.io");
+    addDirectiveToContentSecurityPolicy(contentSecurityPolicy, SCRIPT_SRC,
+        SELF_VALUE + " 'unsafe-inline' ");
+    addDirectiveToContentSecurityPolicy(contentSecurityPolicy, STYLE_SRC,
+        SELF_VALUE + " 'unsafe-inline' fonts.googleapis.com");
+    addDirectiveToContentSecurityPolicy(contentSecurityPolicy, FONT_SRC,
+        SELF_VALUE + " fonts.gstatic.com");
+    addDirectiveToContentSecurityPolicy(contentSecurityPolicy, CONNECT_SRC, SELF_VALUE);
+    addDirectiveToContentSecurityPolicy(contentSecurityPolicy, OBJECT_SRC, SELF_VALUE);
+    addDirectiveToContentSecurityPolicy(contentSecurityPolicy, MEDIA_SRC, SELF_VALUE);
+    addDirectiveToContentSecurityPolicy(contentSecurityPolicy, FRAME_SRC, SELF_VALUE);
+    addDirectiveToContentSecurityPolicy(contentSecurityPolicy, REPORT_URI,
+        "/ContentSecurityPolicyReporter");
+    addSandoxDirectiveToContentSecurityPolicy(contentSecurityPolicy, "");
     response.getHeaders()
         .putSingle(CONTENT_SECURITY_POLICY_HEADER, contentSecurityPolicy.toString());
   }
@@ -149,7 +145,7 @@ public class SecurityResponseHeadersFilter implements ContainerResponseFilter {
   private void addDirectiveToContentSecurityPolicy(StringBuilder contentSecurityPolicy,
       String directiveName,
       String value) {
-    if (isNotBlank(value) && !defaultSrc.equals(value)) {
+    if (isNotBlank(value) && !"none".equals(value)) {
       contentSecurityPolicy.append("; ").append(directiveName).append(" ").append(value);
     }
   }
@@ -157,7 +153,7 @@ public class SecurityResponseHeadersFilter implements ContainerResponseFilter {
   private void addSandoxDirectiveToContentSecurityPolicy(StringBuilder contentSecurityPolicy,
       String value) {
     if (isNotBlank(value)) {
-      if ("true".equalsIgnoreCase(value)) {
+      if (TRUE.equalsIgnoreCase(value)) {
         contentSecurityPolicy.append("; ").append(SANDBOX);
       } else {
         contentSecurityPolicy.append("; ").append(SANDBOX).append(" ").append(value);
