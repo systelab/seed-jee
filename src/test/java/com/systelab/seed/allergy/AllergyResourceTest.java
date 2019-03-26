@@ -47,7 +47,7 @@ public class AllergyResourceTest extends RESTResourceTest {
         TestUtil.checkField("Name", expectedName, allergyCreated.getName());
     }
 
-    @Description("Create a new allergy with name, surname, email, medical number, dob, and complete address")
+    @Description("Create a new allergy with all the information")
     @Test
     public void testCreateAllergyWithAllInfo() {
         String expectedName = "Animal dander";
@@ -72,7 +72,7 @@ public class AllergyResourceTest extends RESTResourceTest {
         TestUtil.checkField("Status Code", 400, statusCode);
     }
 
-    @Description("Create a Allergy with invalid data: mandatory fields empty (name, surname)")
+    @Description("Create a Allergy with invalid data: mandatory fields empty (name, signs)")
     @Test
     public void testCreateInvalidAllergyMandatoryFieldsEmpty() {
         testCreateInvalidAllergy(getAllergyData("", "", "Sneezing"));
@@ -80,7 +80,7 @@ public class AllergyResourceTest extends RESTResourceTest {
         testCreateInvalidAllergy(getAllergyData("Pollen", "", "Sneezing"));
     }
 
-    @Description("Create a Allergy with invalid data: name, surname or medicalNumber field too long")
+    @Description("Create a Allergy with invalid data: name, signs or symptoms field too long")
     @Test
     public void testCreateInvalidAllergyTooLongText() {
         String tooLongString = "thisStringIsIntendedToCauseAnExceptionBecauseOfItsExcessiveLengthTheMostLongStringAllowedMustHaveLessThanTeoHundredAndFiftyFiveCharactersThisShouldBeVerifiedInEveryTextFieldToEnsureTheLimitationIsWorkingProperlyThisStringOnlyHasEnglishLettersButMoreScenarios";
