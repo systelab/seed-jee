@@ -22,8 +22,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
                         description = "Server",
                         url = "/seed")
         },
-        tags= {@Tag(name = "Patient", description = "Patient Management"),
-        @Tag(name = "User", description = "User Management"), @Tag(name = "Health", description = "Health checking")})
+        tags = {@Tag(name = "Patient", description = "Patient Management"),
+                @Tag(name = "Allergy", description = "Allergy Management"),
+                @Tag(name = "User", description = "User Management"),
+                @Tag(name = "Health", description = "Health checking")})
 @SecurityScheme(
         name = "Authorization",
         type = SecuritySchemeType.HTTP,

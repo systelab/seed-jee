@@ -10,6 +10,8 @@ public class BaseException extends Exception {
     private final ErrorCode errorCode;
 
     public enum ErrorCode {
+        ALLERGY_ALREADY_EXIST(5),
+        ALLERGY_NOT_FOUND(4),
         PATIENT_NOT_FOUND(3),
         USER_NOT_FOUND(2),
         DEFAULT_ERROR(1);

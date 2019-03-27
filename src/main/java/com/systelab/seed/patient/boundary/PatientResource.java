@@ -1,11 +1,11 @@
 package com.systelab.seed.patient.boundary;
 
 import com.systelab.seed.infrastructure.auth.AuthenticationTokenNeeded;
-import com.systelab.seed.patient.entity.Patient;
-import com.systelab.seed.patient.entity.PatientsPage;
-import com.systelab.seed.patient.control.MedicalRecordNumberService;
 import com.systelab.seed.infrastructure.pagination.Page;
 import com.systelab.seed.infrastructure.pagination.Pageable;
+import com.systelab.seed.patient.control.MedicalRecordNumberService;
+import com.systelab.seed.patient.entity.Patient;
+import com.systelab.seed.patient.entity.PatientsPage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -106,7 +106,7 @@ public class PatientResource {
     public Response updatePatient(@PathParam("uid") String patientId, @RequestBody(description = "Patient", required = true, content = @Content(
             schema = @Schema(implementation = Patient.class))) @Valid Patient patient) {
         try {
-            UUID id=UUID.fromString(patientId);
+            UUID id = UUID.fromString(patientId);
             patient.setId(id);
             Patient updatedPatient = patientService.update(id, patient);
             return Response.ok().entity(updatedPatient).build();
@@ -125,7 +125,7 @@ public class PatientResource {
     @PermitAll
     public Response getPatient(@PathParam("uid") String patientId) {
         try {
-            UUID id=UUID.fromString(patientId);
+            UUID id = UUID.fromString(patientId);
             Patient patient = patientService.getPatient(id);
 
             if (patient == null) {
@@ -161,6 +161,7 @@ public class PatientResource {
     @Operation(description = "Delete a Patient", summary = "Delete a Patient")
     @SecurityRequirement(name = "Authorization")
     @ApiResponse(responseCode = "200", description = "OK")
+    @ApiResponse(responseCode = "404", description = "Patient not found")
     @ApiResponse(responseCode = "500", description = "Internal Server Error")
     @DELETE
     @Path("{uid}")
@@ -168,7 +169,7 @@ public class PatientResource {
     @RolesAllowed("ADMIN")
     public Response remove(@PathParam("uid") String patientId) {
         try {
-            UUID id=UUID.fromString(patientId);
+            UUID id = UUID.fromString(patientId);
             patientService.delete(id);
             return Response.ok().build();
         } catch (PatientNotFoundException ex) {

@@ -1,8 +1,10 @@
 package com.systelab.seed.patient.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.systelab.seed.BaseEntity;
 import com.systelab.seed.infrastructure.constraints.Email;
 import com.systelab.seed.infrastructure.jaxb.JsonLocalDateTypeAdapter;
+import com.systelab.seed.patientallergy.entity.PatientAllergy;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,6 +19,8 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @XmlRootElement
 @XmlType(propOrder = {"id", "creationTime", "updateTime", "name", "surname", "medicalNumber", "email", "dob", "address"})
@@ -53,4 +57,9 @@ public class Patient extends BaseEntity implements Serializable {
 
     @Embedded
     private Address address;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "patient", fetch = FetchType.EAGER)
+    private Set<PatientAllergy> allergies = new HashSet<>();
+
 }

@@ -1,11 +1,11 @@
 package com.systelab.seed.patient.boundary.bean;
 
-import com.systelab.seed.patient.control.cdi.PatientCreated;
-import com.systelab.seed.patient.entity.Patient;
-import com.systelab.seed.patient.boundary.PatientService;
 import com.systelab.seed.infrastructure.pagination.Page;
 import com.systelab.seed.infrastructure.pagination.Pageable;
 import com.systelab.seed.patient.boundary.PatientNotFoundException;
+import com.systelab.seed.patient.boundary.PatientService;
+import com.systelab.seed.patient.control.cdi.PatientCreated;
+import com.systelab.seed.patient.entity.Patient;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -101,5 +101,4 @@ public class PatientServiceBean implements PatientService {
     public Patient getPatient(UUID patientId) {
         return em.find(Patient.class, patientId);
     }
-
 }
