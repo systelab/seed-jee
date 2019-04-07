@@ -29,12 +29,12 @@ public class Allergy extends BaseEntity implements Serializable {
 
     @NotNull
     @Size(min = 1, max = 255)
-    public String name;
+    private String name;
 
     @NotNull
     @Size(min = 1, max = 255)
-    public String signs;
+    private String signs;
 
     @Size(min = 1, max = 255)
-    public String symptoms;
+    private String symptoms;
 }
