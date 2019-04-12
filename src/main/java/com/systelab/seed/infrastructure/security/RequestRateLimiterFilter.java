@@ -60,11 +60,6 @@ public class RequestRateLimiterFilter implements ContainerRequestFilter {
    */
   @Override
   public void filter(ContainerRequestContext requestContext) throws IOException {
-    String authorizationHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
-    if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-      logger.log(Level.SEVERE, "Invalid authorizationHeader : {0} ", authorizationHeader);
-      throw new NotAuthorizedException("Authorization header must be provided");
-    }
     AtomicRateLimiter rateLimiter = getLimiter(getKey());
     if (!rateLimiter.getPermission(rateLimiterConfig.getTimeoutDuration())) {
       long secondsToWait = Duration.ofNanos(rateLimiter.getDetailedMetrics().getNanosToWait())
