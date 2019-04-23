@@ -12,12 +12,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 
@@ -30,21 +28,15 @@ import javax.ws.rs.ext.Provider;
  */
 public class RequestRateLimiterFilter implements ContainerRequestFilter {
 
+  private static final long MINUTES_DURATION = ApplicationProperties.getInstance()
+      .getRateLimitingMinutesDuration();
+  private static final int LIMIT_FOR_PERIOD = ApplicationProperties.getInstance()
+      .getRateLimitingRequestLimit();
 
   @Context
   private HttpServletRequest httpServletRequest;
 
   private Logger logger;
-
-  @Inject
-  public void setLogger(Logger logger) {
-    this.logger = logger;
-  }
-
-  private static final long MINUTES_DURATION = ApplicationProperties.getInstance()
-      .getRateLimitingMinutesDuration();
-  private static final int LIMIT_FOR_PERIOD = ApplicationProperties.getInstance()
-      .getRateLimitingRequestLimit();
 
   private Map<String, AtomicRateLimiter> rateLimitersMap = new HashMap<>();
   private final RateLimiterConfig rateLimiterConfig = RateLimiterConfig.custom()
@@ -53,6 +45,12 @@ public class RequestRateLimiterFilter implements ContainerRequestFilter {
       .limitForPeriod(LIMIT_FOR_PERIOD)
       .timeoutDuration(Duration.ofMillis(1))
       .build();
+
+
+  @Inject
+  public void setLogger(Logger logger) {
+    this.logger = logger;
+  }
 
 
   /**

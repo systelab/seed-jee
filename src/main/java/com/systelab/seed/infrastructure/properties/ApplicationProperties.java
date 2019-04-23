@@ -1,7 +1,5 @@
 package com.systelab.seed.infrastructure.properties;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -25,7 +23,8 @@ public class ApplicationProperties {
   private ApplicationProperties() {
 
     props = new Properties();
-    InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream("application.properties");
+    InputStream input = Thread.currentThread().getContextClassLoader()
+        .getResourceAsStream("application.properties");
     try {
       props.load(input);
     } catch (IOException ex) {
@@ -45,6 +44,7 @@ public class ApplicationProperties {
     try {
       value = getLongProperty(RATE_LIMITING_MINUTES_DURATION);
     } catch (Exception e) {
+      //do nothing, use the default value
     }
     return value;
   }
@@ -54,6 +54,7 @@ public class ApplicationProperties {
     try {
       value = getIntegerProperty(RATE_LIMITING_LIMIT_OF_REQUESTS);
     } catch (Exception e) {
+      //do nothing, use the default value
     }
     return value;
   }
