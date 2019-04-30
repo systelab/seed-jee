@@ -177,10 +177,10 @@
 			<plugin>
 				<groupId>org.codehaus.cargo</groupId>
 				<artifactId>cargo-maven2-plugin</artifactId>
-				<version>1.7.1</version>
+				<version>1.7.3</version>
 				<configuration>
 					<container>
-						<containerId>wildfly14x</containerId>
+						<containerId>wildfly16x</containerId>
 						<timeout>60000</timeout>
 						<dependencies>
 							<dependency>
@@ -442,6 +442,10 @@
 			<artifactId>slf4j-simple</artifactId>
 			<version>1.7.25</version>
 		</dependency>
+		<dependency>
+			<groupId>io.github.resilience4j</groupId>
+			<artifactId>resilience4j-ratelimiter</artifactId>
+			<version>0.13.2</version>
+		</dependency>
 	</dependencies>
-
 </project>
