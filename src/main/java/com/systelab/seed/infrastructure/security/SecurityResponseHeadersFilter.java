@@ -49,6 +49,7 @@ public class SecurityResponseHeadersFilter implements ContainerResponseFilter {
   private static final String CONTENT_SECURITY_POLICY_HEADER = "Content-Security-Policy";
   private static final String TRUE = "true";
   private static final String SELF_VALUE = "'self'";
+  public static final String X_CONTENT_TYPE_OPTIONS = "X-Content-Type-Options";
 
 
   @Override
@@ -59,6 +60,22 @@ public class SecurityResponseHeadersFilter implements ContainerResponseFilter {
     addXFrameOptionsHeader(response);
     addContentSecurityPolice(response);
     addHSTSHeader(response);
+    adContentTypeOptionsHeaders(response);
+
+
+  }
+
+
+  /**
+   This header prevents "mime" based attacks. This header prevents Internet Explorer from
+   MIME-sniffing a response away from the declared content-type as the header instructs the
+   browser not to override the response content type. With the nosniff option, if the server
+   says the content is text/html, the browser will render it as text/html.
+
+   https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Content-Type-Options
+   **/
+  private void adContentTypeOptionsHeaders(ContainerResponseContext response) {
+    response.getHeaders().add(X_CONTENT_TYPE_OPTIONS, "nosniff");
   }
 
   /**
