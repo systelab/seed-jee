@@ -25,14 +25,10 @@ import javax.websocket.server.ServerEndpoint;
 @Singleton
 @ServerEndpoint("/tracking")
 public class RealtimePatientTracking {
+    @Inject
     private Logger logger;
 
     private final Set<Session> sessions = new HashSet<>();
-
-    @Inject
-    public void setLogger(Logger logger) {
-        this.logger = logger;
-    }
 
     @OnOpen
     public void onOpen(final Session session) {

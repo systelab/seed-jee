@@ -31,21 +31,14 @@ import javax.ws.rs.ext.Provider;
 public class TokenAuthenticationFilter implements ContainerRequestFilter {
     private static final String AUTHORIZATION_PROPERTY = "Authorization";
 
+    @Inject
     private Logger logger;
+
+    @Inject
     private AuthenticationTokenGenerator tokenGenerator;
 
     @Context
     private ResourceInfo resourceInfo;
-
-    @Inject
-    public void setLogger(Logger logger) {
-        this.logger = logger;
-    }
-
-    @Inject
-    public void setAuthenticationTokenGenerator(AuthenticationTokenGenerator tokenGenerator) {
-        this.tokenGenerator = tokenGenerator;
-    }
 
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {

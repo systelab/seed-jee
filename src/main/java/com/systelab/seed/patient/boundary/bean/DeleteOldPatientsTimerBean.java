@@ -24,12 +24,8 @@ public class DeleteOldPatientsTimerBean {
     @Resource
     private TimerService timerService;
 
-    private Logger logger;
-
     @Inject
-    public void setLogger(Logger logger) {
-        this.logger = logger;
-    }
+    private Logger logger;
 
     @PostConstruct
     private void init() {

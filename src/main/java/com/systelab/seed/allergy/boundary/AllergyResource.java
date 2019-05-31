@@ -35,16 +35,11 @@ public class AllergyResource {
     private static final String INTERNAL_SERVER_ERROR_MESSAGE = "Internal Server Error";
     private static final String INVALID_ALLERGY_ERROR_MESSAGE = "Invalid Allergy";
 
+    @Inject
     private Logger logger;
-
 
     @EJB
     private AllergyService allergyService;
-
-    @Inject
-    public void setLogger(Logger logger) {
-        this.logger = logger;
-    }
 
     @Operation(description = "Get all Allergies", summary = "Get all Allergies")
     @ApiResponse(responseCode = "200", description = "A Page of Allergies", content = @Content(schema = @Schema(implementation = AllergiesPage.class)))

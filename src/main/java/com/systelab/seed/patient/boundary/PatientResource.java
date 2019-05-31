@@ -39,6 +39,7 @@ public class PatientResource {
     private static final String INTERNAL_SERVER_ERROR_MESSAGE = "Internal Server Error";
     private static final String INVALID_PATIENT_ERROR_MESSAGE = "Invalid Patient";
 
+    @Inject
     private Logger logger;
 
     @Inject
@@ -46,11 +47,6 @@ public class PatientResource {
 
     @EJB
     private PatientService patientService;
-
-    @Inject
-    public void setLogger(Logger logger) {
-        this.logger = logger;
-    }
 
     @Operation(description = "Get all Patients", summary = "Get all Patients")
     @ApiResponse(responseCode = "200", description = "A Page of Patients", content = @Content(schema = @Schema(implementation = PatientsPage.class)))
