@@ -2,9 +2,11 @@ package com.systelab.seed.user;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import com.systelab.seed.BaseEntity;
 import com.systelab.seed.BaseException;
+import com.systelab.seed.RESTResourceTest;
 import com.systelab.seed.infrastructure.LoggerProducer;
 import com.systelab.seed.infrastructure.auth.AuthenticationTokenGenerator;
 import com.systelab.seed.infrastructure.pagination.Page;
@@ -30,7 +32,8 @@ public class UserServiceTest {
 
       // Create deploy file
       return ShrinkWrap.create(WebArchive.class)
-          .addClasses(LoggerProducer.class, BaseException.class, BaseEntity.class, AuthenticationTokenGenerator.class, PasswordDigest.class, Pageable.class, Page.class, Logger.class)
+          .addClasses(LoggerProducer.class, BaseException.class, BaseEntity.class, AuthenticationTokenGenerator.class, PasswordDigest.class, Pageable.class, Page.class,
+              Logger.class, RESTResourceTest.class)
           .addAsResource("test-persistence.xml","META-INF/persistence.xml")
           .addAsWebInfResource("jbossas-ds.xml")
           .addAsResource("META-INF/beans.xml")
@@ -51,7 +54,7 @@ public class UserServiceTest {
 
       userService.create(user);
 
-      assertEquals(1,userService.getAllUsers(new Pageable()).getTotalElements());
+      assertNotNull(userService.getUser(user.getId()));
    }
 
 }
