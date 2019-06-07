@@ -1,8 +1,6 @@
 package com.systelab.seed.user;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 
 import com.systelab.seed.BaseEntity;
 import com.systelab.seed.BaseException;
@@ -27,6 +25,9 @@ import org.junit.runner.RunWith;
 @RunWith(Arquillian.class)
 public class UserServiceTest {
 
+   @Inject
+   private UserService userService;
+
    @Deployment
    public static WebArchive createDeployment() {
 
@@ -39,9 +40,6 @@ public class UserServiceTest {
           .addAsResource("META-INF/beans.xml")
           .addPackages(true, "com.systelab.seed.user", "org.apache.poi","com.systelab.seed.infrastructure.security", "com.systelab.seed.infrastructure.auth");
    }
-
-   @Inject
-   private UserService userService;
 
    @Test
    public void createUser() throws BaseException {
