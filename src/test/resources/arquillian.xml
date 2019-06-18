@@ -8,7 +8,7 @@
 
     <container qualifier="widlfly-managed" default="true">
         <configuration>
-            <property name="jbossHome">target/wildFly-16.0.0.Final</property>
+            <property name="jbossHome">target/wildfly-16.0.0.Final</property>
             <!--<property name="managementAddress">127.0.0.1</property>-->
             <!-- Port offset allows running the tests while a WildFly server is already running -->
             <property name="javaVmArguments">-Djboss.socket.binding.port-offset=10000 -Xms512m -Xmx1024m --add-modules=java.se</property>
