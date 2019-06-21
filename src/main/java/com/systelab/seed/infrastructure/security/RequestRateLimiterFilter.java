@@ -36,6 +36,7 @@ public class RequestRateLimiterFilter implements ContainerRequestFilter {
   @Context
   private HttpServletRequest httpServletRequest;
 
+  @Inject
   private Logger logger;
 
   private Map<String, AtomicRateLimiter> rateLimitersMap = new HashMap<>();
@@ -45,12 +46,6 @@ public class RequestRateLimiterFilter implements ContainerRequestFilter {
       .limitForPeriod(LIMIT_FOR_PERIOD)
       .timeoutDuration(Duration.ofMillis(1))
       .build();
-
-
-  @Inject
-  public void setLogger(Logger logger) {
-    this.logger = logger;
-  }
 
 
   /**

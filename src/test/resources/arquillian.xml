@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<arquillian xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns="http://jboss.org/schema/arquillian"
+            xsi:schemaLocation="http://jboss.org/schema/arquillian
+    http://jboss.org/schema/arquillian/arquillian_1_0.xsd">
+
+    <defaultProtocol type="Servlet 3.0"/>
+
+    <container qualifier="widlfly-managed" default="true">
+        <configuration>
+            <property name="jbossHome">target/wildfly-16.0.0.Final</property>
+            <!--<property name="managementAddress">127.0.0.1</property>-->
+            <!-- Port offset allows running the tests while a WildFly server is already running -->
+            <property name="javaVmArguments">-Djboss.socket.binding.port-offset=10000 -Xms512m -Xmx1024m --add-modules=java.se</property>
+            <property name="managementPort">19990</property>
+            <property name="username">admin</property>
+            <property name="password">admin</property>
+        </configuration>
+    </container>
+</arquillian>

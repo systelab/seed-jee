@@ -24,18 +24,11 @@ public class UserServiceBean implements UserService {
     @PersistenceContext(unitName = "SEED")
     private EntityManager em;
 
+    @Inject
     private AuthenticationTokenGenerator tokenGenerator;
+
+    @Inject
     private PasswordDigest passwordDigest;
-
-    @Inject
-    public void setAuthenticationTokenGenerator(AuthenticationTokenGenerator tokenGenerator) {
-        this.tokenGenerator = tokenGenerator;
-    }
-
-    @Inject
-    public void setPasswordDigest(PasswordDigest passwordDigest) {
-        this.passwordDigest = passwordDigest;
-    }
 
     @Override
     public User getUser(UUID id) {

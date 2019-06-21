@@ -38,6 +38,7 @@ import static javax.ws.rs.core.Response.Status.UNAUTHORIZED;
 public class UserResource {
     private static final String INTERNAL_SERVER_ERROR_MESSAGE = "Internal Server Error";
 
+    @Inject
     private Logger logger;
 
     @Context
@@ -45,11 +46,6 @@ public class UserResource {
 
     @EJB
     private UserService userService;
-
-    @Inject
-    public void setLogger(Logger logger) {
-        this.logger = logger;
-    }
 
     @Operation(description = "User Login", summary = "User Login")
     @ApiResponse(responseCode = "200", description = "An authorization key in the header")

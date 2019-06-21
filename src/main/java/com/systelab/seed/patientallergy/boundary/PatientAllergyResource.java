@@ -34,15 +34,11 @@ public class PatientAllergyResource {
     private static final String INVALID_PATIENT_ERROR_MESSAGE = "Invalid Patient";
     private static final String INVALID_ALLERGY_ERROR_MESSAGE = "Invalid Allergy";
 
+    @Inject
     private Logger logger;
 
     @EJB
     private PatientAllergyService patientAllergyService;
-
-    @Inject
-    public void setLogger(Logger logger) {
-        this.logger = logger;
-    }
 
     @Operation(description = "Get Patient allergies", summary = "Get Patient allergies")
     @ApiResponse(responseCode = "200", description = "A Set of Allergies", content = @Content(schema = @Schema(implementation = PatientAllergySet.class)))
