@@ -22,7 +22,7 @@
 		<!-- The debug arguments used to enable debugging on the forked JVM. -->
 		<cargo.container.debug.jvmargs>-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=${cargo.container.debug.suspend},address=${cargo.container.debug.port} -Xnoagent -Djava.compiler=NONE</cargo.container.debug.jvmargs>
 		<version.arquillian>1.4.0.Final</version.arquillian>
-		<version.wildfly>16.0.0.Final</version.wildfly>
+		<version.wildfly>17.0.0.Final</version.wildfly>
 		<version.junit>5.5.1</version.junit>
 		<version.restassured>4.0.0</version.restassured>
 		<version.feign>10.2.3</version.feign>
@@ -182,10 +182,10 @@
 			<plugin>
 				<groupId>org.codehaus.cargo</groupId>
 				<artifactId>cargo-maven2-plugin</artifactId>
-				<version>1.7.3</version>
+				<version>1.7.7</version>
 				<configuration>
 					<container>
-						<containerId>wildfly16x</containerId>
+						<containerId>wildfly17x</containerId>
 						<timeout>60000</timeout>
 						<dependencies>
 							<dependency>
@@ -304,7 +304,7 @@
 			<groupId>org.jboss.arquillian</groupId>
 			<artifactId>arquillian-bom</artifactId>
 			<version>${version.arquillian}</version>
-			<scope>import</scope>
+			<scope>test</scope>
 			<type>pom</type>
 		</dependency>
 		<dependency>
@@ -349,12 +349,32 @@
 			<artifactId>jjwt</artifactId>
 			<version>0.9.1</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.jboss.spec/jboss-javaee-8.0 -->
 		<dependency>
 			<groupId>org.jboss.spec</groupId>
-			<artifactId>jboss-javaee-7.0</artifactId>
+			<artifactId>jboss-javaee-8.0</artifactId>
 			<scope>provided</scope>
 			<type>pom</type>
-			<version>1.1.1.Final</version>
+			<version>1.0.4.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.taglibs</groupId>
+			<artifactId>taglibs-standard-spec</artifactId>
+			<version>1.2.5</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.taglibs</groupId>
+			<artifactId>taglibs-standard-impl</artifactId>
+			<version>1.2.5</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.microprofile</groupId>
+			<artifactId>microprofile</artifactId>
+			<version>2.1</version>
+			<type>pom</type>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>io.swagger.core.v3</groupId>
