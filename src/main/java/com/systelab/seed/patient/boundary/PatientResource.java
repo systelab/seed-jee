@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.eclipse.microprofile.metrics.annotation.Counted;
 
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
@@ -70,6 +71,7 @@ public class PatientResource {
     @ApiResponse(responseCode = "200", description = "A Patient", content = @Content(schema = @Schema(implementation = Patient.class)))
     @ApiResponse(responseCode = "400", description = "Validation exception")
     @ApiResponse(responseCode = "500", description = "Internal Server Error")
+    @Counted(monotonic=true, name="patients", displayName="Patients", description="Number of patients created in the application")
     @POST
     @Path("patient")
     @AuthenticationTokenNeeded

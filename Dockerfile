@@ -15,7 +15,7 @@ RUN mvn package
 
 ### STAGE 2: Setup ###
 
-FROM jboss/wildfly:15.0.0.Final
+FROM jboss/wildfly:17.0.1.Final
 
 COPY docker/customization /opt/jboss/wildfly/customization/
 
