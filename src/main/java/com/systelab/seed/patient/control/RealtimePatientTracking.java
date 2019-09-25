@@ -3,14 +3,6 @@ package com.systelab.seed.patient.control;
 import com.systelab.seed.patient.control.cdi.PatientCreated;
 import com.systelab.seed.patient.entity.Patient;
 
-import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import javax.ejb.Singleton;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
@@ -21,6 +13,13 @@ import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Singleton
 @ServerEndpoint("/tracking")
@@ -48,14 +47,8 @@ public class RealtimePatientTracking {
 
         try (JsonGenerator generator = Json.createGenerator(writer)) {
             generator.writeStartObject().write("patientid", "papaaa").write("patientname", "asdsdasd").writeEnd();
-        }
-
-        String jsonValue = writer.toString();
-
-        try {
-            session.getBasicRemote().sendText(jsonValue);
+            session.getBasicRemote().sendText(writer.toString());
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -66,16 +59,14 @@ public class RealtimePatientTracking {
         try (JsonGenerator generator = Json.createGenerator(writer)) {
             generator.writeStartObject().write("patientid", patient.getId().toString()).write("patientname", patient.getName()).writeEnd();
         }
+        sessions.forEach((session) -> sendMessageToSession(session, writer.toString()));
+    }
 
-        String jsonValue = writer.toString();
-
-        sessions.forEach((session)-> {
-            try {
-                session.getBasicRemote().sendText(jsonValue);
-            } catch (IOException ex) {
-                logger.log(Level.WARNING, "Unable to publish WebSocket message", ex);
-            }
-        });
-
+    private void sendMessageToSession(Session session, String json) {
+        try {
+            session.getBasicRemote().sendText(json);
+        } catch (IOException ex) {
+            logger.log(Level.WARNING, "Unable to publish WebSocket message", ex);
+        }
     }
 }

@@ -4,11 +4,9 @@ import com.systelab.seed.infrastructure.pagination.Page;
 import com.systelab.seed.infrastructure.pagination.Pageable;
 import com.systelab.seed.patient.boundary.PatientNotFoundException;
 import com.systelab.seed.patient.boundary.PatientService;
+import com.systelab.seed.patient.control.PatientWorkbookGenerator;
 import com.systelab.seed.patient.control.cdi.PatientCreated;
 import com.systelab.seed.patient.entity.Patient;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import javax.ejb.Stateless;
@@ -19,7 +17,6 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import java.util.List;
 import java.util.UUID;
 
 @Stateless
@@ -28,10 +25,12 @@ public class PatientServiceBean implements PatientService {
     @PersistenceContext(unitName = "SEED")
     private EntityManager em;
 
-
     @Inject
     @PatientCreated
     private Event<Patient> patientCreated;
+
+    @Inject
+    private PatientWorkbookGenerator workBookGenerator;
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
@@ -68,33 +67,12 @@ public class PatientServiceBean implements PatientService {
         query.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
         query.setMaxResults(pageable.getPageSize());
 
-        List<Patient> patients = query.getResultList();
-        long totalElements = queryTotal.getSingleResult();
-
-        return new Page<>(patients, totalElements);
+        return new Page<>(query.getResultList(), queryTotal.getSingleResult());
     }
-
 
     @Override
     public XSSFWorkbook getPatientsWorkbook() {
-        final XSSFWorkbook wb = new XSSFWorkbook();
-
-        Sheet sheet = wb.createSheet("Patients");
-        Page<Patient> patients = getAllPatients(new Pageable());
-
-        int rowNum = 0;
-
-        for (int i = 0; i < patients.getContent().size(); i++) {
-            Row row = sheet.createRow(rowNum++);
-            int colNum = 0;
-            Cell cell1 = row.createCell(colNum++);
-            cell1.setCellValue(patients.getContent().get(i).getName());
-            Cell cell2 = row.createCell(colNum++);
-            cell2.setCellValue(patients.getContent().get(i).getSurname());
-            Cell cell3 = row.createCell(colNum++);
-            cell3.setCellValue(patients.getContent().get(i).getEmail());
-        }
-        return wb;
+        return workBookGenerator.getWorkbook(getAllPatients(new Pageable()));
     }
 
     @Override

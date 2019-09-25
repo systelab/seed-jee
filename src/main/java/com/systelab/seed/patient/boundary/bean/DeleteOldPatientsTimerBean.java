@@ -29,16 +29,8 @@ public class DeleteOldPatientsTimerBean {
 
     @PostConstruct
     private void init() {
-        timerService.getTimers().stream().forEach((timer)-> {
-            logger.log(Level.INFO, "Found running timer with info: " + timer.getInfo() + ", cancelling it");
-            timer.cancel();
-        });
-
-        TimerConfig timerConfig = new TimerConfig();
-        timerConfig.setInfo("DeleteOldPatientsTimer");
-        ScheduleExpression schedule = new ScheduleExpression();
-        schedule.hour("*").minute("10");
-        timerService.createCalendarTimer(schedule, timerConfig);
+        cancelAnyRunningTimer();
+        createTimer();
     }
 
     @Timeout
@@ -51,4 +43,17 @@ public class DeleteOldPatientsTimerBean {
         logger.log(Level.INFO, "TODO: Delete Patients where lastupdate<" + sqlDate + " and status is blank");
     }
 
+    private void createTimer() {
+        TimerConfig timerConfig = new TimerConfig();
+        timerConfig.setInfo("DeleteOldPatientsTimer");
+        ScheduleExpression schedule = new ScheduleExpression();
+        schedule.hour("*").minute("10");
+        timerService.createCalendarTimer(schedule, timerConfig);
+    }
+    private void cancelAnyRunningTimer() {
+        timerService.getTimers().stream().forEach((timer)-> {
+            logger.log(Level.INFO, "Found running timer with info: " + timer.getInfo() + ", cancelling it");
+            timer.cancel();
+        });
+    }
 }

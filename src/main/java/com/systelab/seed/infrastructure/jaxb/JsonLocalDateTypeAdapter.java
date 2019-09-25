@@ -8,8 +8,7 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 public class JsonLocalDateTypeAdapter extends XmlAdapter<String, LocalDate> {
 
-    public static final String JSON_ISO_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
-
+    private static final String JSON_ISO_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 
     @Override
     public LocalDate unmarshal(final String value) {
