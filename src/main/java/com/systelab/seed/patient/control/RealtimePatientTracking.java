@@ -43,14 +43,7 @@ public class RealtimePatientTracking {
 
     @OnMessage
     public void onMessage(String message, final Session session) {
-        Writer writer = new StringWriter();
-
-        try (JsonGenerator generator = Json.createGenerator(writer)) {
-            generator.writeStartObject().write("patientid", "papaaa").write("patientname", "asdsdasd").writeEnd();
-            session.getBasicRemote().sendText(writer.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        logger.info("Message received from Web socket");
     }
 
     public void onPatientCreated(@Observes @PatientCreated Patient patient) {
