@@ -27,7 +27,7 @@ public class JWTAuthenticationTokenGenerator implements AuthenticationTokenGener
     }
 
     @Override
-    public String validateToken(String token) {
+    public String getRoleFromToken(String token) {
         return Jwts.parser()
                 .setSigningKey(generateKey())
                 .parseClaimsJws(token)
@@ -36,7 +36,6 @@ public class JWTAuthenticationTokenGenerator implements AuthenticationTokenGener
                 .toString();
     }
 
-    @Override
     public Key generateKey() {
         // TODO: Move to external configuration
         String keyString = "simplekey";

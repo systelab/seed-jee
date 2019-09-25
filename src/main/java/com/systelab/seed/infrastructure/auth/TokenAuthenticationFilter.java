@@ -44,7 +44,7 @@ public class TokenAuthenticationFilter implements ContainerRequestFilter {
         String token = getTokenFromHeader(requestContext);
         if (token != null) {
             try {
-                String userRole = tokenGenerator.validateToken(token);
+                String userRole = tokenGenerator.getRoleFromToken(token);
                 if (!methodIsAllowed(resourceInfo.getResourceMethod(), userRole)) {
                     requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
                 }
