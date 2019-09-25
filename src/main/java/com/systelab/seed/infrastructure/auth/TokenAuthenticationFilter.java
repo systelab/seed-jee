@@ -26,6 +26,8 @@ import java.util.logging.Logger;
 @Priority(Priorities.AUTHENTICATION)
 public class TokenAuthenticationFilter implements ContainerRequestFilter {
 
+    public static final String TOKEN_PREFIX = "Bearer ";
+
     @Inject
     private Logger logger;
 
@@ -53,8 +55,8 @@ public class TokenAuthenticationFilter implements ContainerRequestFilter {
     private String getTokenFromHeader(ContainerRequestContext requestContext) throws GeneralSecurityException {
         String authorizationHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
 
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            return authorizationHeader.substring("Bearer".length()).trim();
+        if (authorizationHeader != null && authorizationHeader.startsWith(TokenAuthenticationFilter.TOKEN_PREFIX)) {
+            return authorizationHeader.substring(TokenAuthenticationFilter.TOKEN_PREFIX.length()).trim();
         } else {
             throw new GeneralSecurityException();
         }
