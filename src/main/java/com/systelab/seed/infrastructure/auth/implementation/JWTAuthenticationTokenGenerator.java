@@ -17,12 +17,9 @@ public class JWTAuthenticationTokenGenerator implements AuthenticationTokenGener
 
     @Override
     public String issueToken(String username, String role, String uri) {
-        Claims claims = Jwts.claims();
-        claims.put(ROLE_CLAIM_NAME, role);
-
         return Jwts.builder()
                 .setSubject(username)
-                .setClaims(claims)
+                .setClaims(getClaimsWithRole(role))
                 .setIssuer(uri)
                 .setIssuedAt(getIssuedAt())
                 .setExpiration(getExpirationAt())
@@ -53,5 +50,11 @@ public class JWTAuthenticationTokenGenerator implements AuthenticationTokenGener
     private Date getExpirationAt() {
         LocalDateTime localDateTime = LocalDateTime.now().plusMinutes(15L);
         return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    private Claims getClaimsWithRole(String role) {
+        Claims claims = Jwts.claims();
+        claims.put(ROLE_CLAIM_NAME, role);
+        return claims;
     }
 }
