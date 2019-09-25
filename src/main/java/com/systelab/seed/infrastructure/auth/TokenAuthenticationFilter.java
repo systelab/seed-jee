@@ -5,7 +5,6 @@ import javax.annotation.security.DenyAll;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
-import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.Priorities;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
@@ -14,8 +13,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
-import java.io.IOException;
 import java.lang.reflect.Method;
+import java.security.GeneralSecurityException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -39,32 +38,25 @@ public class TokenAuthenticationFilter implements ContainerRequestFilter {
     @Override
     public void filter(ContainerRequestContext requestContext) {
 
-        logger.info(requestContext.getUriInfo().getRequestUri().toString());
-
-        String token = getTokenFromHeader(requestContext);
-        if (token != null) {
-            try {
-                String userRole = tokenGenerator.getRoleFromToken(token);
-                if (!methodIsAllowed(resourceInfo.getResourceMethod(), userRole)) {
-                    requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
-                }
-            } catch (Exception ex) {
-                logger.log(Level.SEVERE, "Invalid token : " + token, ex);
+        try {
+            logger.info(requestContext.getUriInfo().getRequestUri().toString());
+            String userRole = tokenGenerator.getRoleFromToken(getTokenFromHeader(requestContext));
+            if (!methodIsAllowed(resourceInfo.getResourceMethod(), userRole)) {
                 requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
             }
-        } else {
-            logger.severe("Invalid authorizationHeader");
-            throw new NotAuthorizedException("Valid authorization header must be provided");
+        } catch (Exception ex) {
+            logger.log(Level.SEVERE, "Unauthorized", ex);
+            requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
         }
     }
 
-    private String getTokenFromHeader(ContainerRequestContext requestContext) {
+    private String getTokenFromHeader(ContainerRequestContext requestContext) throws GeneralSecurityException {
         String authorizationHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             return authorizationHeader.substring("Bearer".length()).trim();
         } else {
-            return null;
+            throw new GeneralSecurityException();
         }
     }
 
