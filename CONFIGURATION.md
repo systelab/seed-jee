@@ -36,5 +36,9 @@ Note: The Config instance can be used if we have CDI using using injection:
 final Config config;
 ```
 
+## Config Sources
+In order to change the configuration, whether the default value or the one set in /META-INF/microprofile-config.properties, it is possible to
+set the configuration as a **System Property** (key-value pair passed down to the JVM startup prefixed with -D) or as an **OS Environment Variable**.
+
 For more details you can check out the following blog entry: https://www.tomitribe.com/blog/an-overview-of-microprofile-configuration/
 
