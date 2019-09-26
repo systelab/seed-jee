@@ -1,8 +1,10 @@
 # External Configuration
 
+## API
+
 The Microfile Configuration API allows to externalize the parameters of an application in two different ways depending on whether you have CDI available.
 
-## If CDI is available
+### If CDI is available
 
 In this situation you can use the ConfigProperty annotation which allows you to use CDI to inject a configuration value into a CDI aware bean. To do so, you need to add the @Inject annotation, too.
 
@@ -16,7 +18,7 @@ Below we show the examples implemented in the class MedicalRecordNumberService:
 
 Please note that a default value can be specified.
 
-## If CDI is NOT available
+### If CDI is NOT available
 
 In that case you can use the static method of org.eclipse.microprofile.config.ConfigProvider, "getConfig()", which returns you an instance of org.eclipse.microprofile.config.Config and then invoke the methods "getValue" and "getOptionalValue" to retrieve configuration values.
 
