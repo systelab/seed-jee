@@ -36,6 +36,10 @@ public class RequestRateLimiterFilter implements ContainerRequestFilter {
   @ConfigProperty(name = "rateLimiter.limit", defaultValue = "100")
   private int periodToLimit;
 
+  @Inject
+  @ConfigProperty(name = "rateLimiter.timeout.millis", defaultValue = "1")
+  private int timeout;
+
   @Context
   private HttpServletRequest httpServletRequest;
 
@@ -67,7 +71,7 @@ public class RequestRateLimiterFilter implements ContainerRequestFilter {
       rateLimiterConfig = RateLimiterConfig.custom()
           .limitRefreshPeriod(Duration.ofMinutes(refreshPeriodInMinutes))
           .limitForPeriod(periodToLimit)
-          .timeoutDuration(Duration.ofMillis(1))
+          .timeoutDuration(Duration.ofMillis(timeout))
           .build();
     }
     return rateLimitersMap.computeIfAbsent(key, k -> new AtomicRateLimiter(k, rateLimiterConfig));
