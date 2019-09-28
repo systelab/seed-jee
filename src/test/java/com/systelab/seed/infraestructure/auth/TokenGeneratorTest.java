@@ -18,7 +18,7 @@ public class TokenGeneratorTest {
 
     @BeforeEach
     public void initialize() {
-        jwtTokenGenerator = new JWTAuthenticationTokenGenerator();
+        jwtTokenGenerator = new JWTAuthenticationTokenGenerator("simplekey", "DES");
     }
 
     @Test

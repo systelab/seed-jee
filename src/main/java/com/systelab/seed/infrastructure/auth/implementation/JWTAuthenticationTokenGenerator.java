@@ -4,27 +4,28 @@ import com.systelab.seed.infrastructure.auth.AuthenticationTokenGenerator;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.crypto.spec.SecretKeySpec;
+import javax.inject.Inject;
 import java.security.Key;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
-import javax.inject.Inject;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 public class JWTAuthenticationTokenGenerator implements AuthenticationTokenGenerator {
 
-
-    @Inject
-    @ConfigProperty(name = "jwt.key", defaultValue = "simplekey")
     private String jwtKey;
-
-    @Inject
-    @ConfigProperty(name = "jwt.algorithm", defaultValue = "DES")
     private String jwtAlgorithm;
 
     private static final String ROLE_CLAIM_NAME = "role";
+
+    @Inject
+    public JWTAuthenticationTokenGenerator(@ConfigProperty(name = "jwt.key", defaultValue = "simplekey") String jwtKey,
+                                           @ConfigProperty(name = "jwt.algorithm", defaultValue = "DES") String jwtAlgorithm) {
+        this.jwtKey = jwtKey;
+        this.jwtAlgorithm = jwtAlgorithm;
+    }
 
     @Override
     public String issueToken(String username, String role, String uri) {
