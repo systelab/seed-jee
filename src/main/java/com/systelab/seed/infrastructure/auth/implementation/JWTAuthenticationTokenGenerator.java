@@ -10,8 +10,19 @@ import java.security.Key;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import javax.inject.Inject;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 public class JWTAuthenticationTokenGenerator implements AuthenticationTokenGenerator {
+
+
+    @Inject
+    @ConfigProperty(name = "jwt.key", defaultValue = "simplekey")
+    private String jwtKey;
+
+    @Inject
+    @ConfigProperty(name = "jwt.algorithm", defaultValue = "DES")
+    private String jwtAlgorithm;
 
     private static final String ROLE_CLAIM_NAME = "role";
 
@@ -37,9 +48,7 @@ public class JWTAuthenticationTokenGenerator implements AuthenticationTokenGener
     }
 
     public Key generateKey() {
-        // TODO: Move to external configuration
-        String keyString = "simplekey";
-        return new SecretKeySpec(keyString.getBytes(), 0, keyString.getBytes().length, "DES");
+        return new SecretKeySpec(jwtKey.getBytes(), 0, jwtKey.getBytes().length, jwtAlgorithm);
     }
 
     private Date getIssuedAt() {
