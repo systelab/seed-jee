@@ -2,7 +2,6 @@ package com.systelab.seed.infrastructure.security;
 
 import io.github.resilience4j.ratelimiter.RateLimiterConfig;
 import io.github.resilience4j.ratelimiter.internal.AtomicRateLimiter;
-import java.io.IOException;
 import java.security.Principal;
 import java.time.Duration;
 import java.util.HashMap;
@@ -33,7 +32,7 @@ public class RequestRateLimiterFilter implements ContainerRequestFilter {
   private long refreshPeriodInMinutes;
 
   @Inject
-  @ConfigProperty(name = "rateLimiter.limit", defaultValue = "100")
+  @ConfigProperty(name = "rateLimiter.limit", defaultValue = "200")
   private int periodToLimit;
 
   @Inject
