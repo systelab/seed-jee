@@ -71,7 +71,7 @@ public class PatientResource {
     @ApiResponse(responseCode = "200", description = "A Patient", content = @Content(schema = @Schema(implementation = Patient.class)))
     @ApiResponse(responseCode = "400", description = "Validation exception")
     @ApiResponse(responseCode = "500", description = "Internal Server Error")
-    @Counted(monotonic=true, name="patients", displayName="Patients", description="Number of patients created in the application")
+    @Counted(monotonic = true, name = "patients", displayName = "Patients", description = "Number of patients created in the application")
     @POST
     @Path("patient")
     @AuthenticationTokenNeeded
@@ -140,14 +140,18 @@ public class PatientResource {
     @ApiResponse(responseCode = "200", description = "An Excel file")
     @ApiResponse(responseCode = "500", description = "Internal Server Error")
     @GET
-    @Path("/report")
+    @Path("report")
     @PermitAll
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public Response getAllPatientsInExcel() {
 
         String fileName = "patients.xlsx";
-        try (final XSSFWorkbook wb = patientService.getPatientsWorkbook()) {
-            StreamingOutput stream = (OutputStream output) -> wb.write(output);
+        try {
+            final XSSFWorkbook wb = patientService.getPatientsWorkbook();
+            StreamingOutput stream = (OutputStream output) -> {
+                wb.write(output);
+                wb.close();
+            };
             return Response.ok(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
                     .header("content-disposition", "attachment; filename=" + fileName).build();
         } catch (Exception ex) {

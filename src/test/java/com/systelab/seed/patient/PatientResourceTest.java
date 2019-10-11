@@ -224,6 +224,16 @@ public class PatientResourceTest extends RESTResourceTest {
         }
     }
 
+    @Description("Get an Excel file with patients")
+    @Test
+    public void testGetPatientsExcel() {
+        int statusCode = given().accept("*/*")
+                .when().get("/patients/report")
+                .then()
+                .extract().statusCode();
+        TestUtil.checkANumber("Status Code",200,statusCode);
+    }
+
     @Description("Get a patient with an non-existing id")
     @Test
     public void testGetUnexistingPatient() {

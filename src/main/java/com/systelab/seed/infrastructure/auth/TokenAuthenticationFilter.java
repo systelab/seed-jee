@@ -1,35 +1,32 @@
 package com.systelab.seed.infrastructure.auth;
 
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import javax.annotation.Priority;
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
-import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.Priorities;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.container.ResourceInfo;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
+import java.lang.reflect.Method;
+import java.security.GeneralSecurityException;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Provider
 @AuthenticationTokenNeeded
 @Priority(Priorities.AUTHENTICATION)
 public class TokenAuthenticationFilter implements ContainerRequestFilter {
-    private static final String AUTHORIZATION_PROPERTY = "Authorization";
+
+    public static final String TOKEN_PREFIX = "Bearer ";
 
     @Inject
     private Logger logger;
@@ -41,53 +38,41 @@ public class TokenAuthenticationFilter implements ContainerRequestFilter {
     private ResourceInfo resourceInfo;
 
     @Override
-    public void filter(ContainerRequestContext requestContext) throws IOException {
-        String userRole = "";
-
-        logger.info(requestContext.getUriInfo().getRequestUri().toString());
-        String authorizationHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
-
-        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            logger.severe("Invalid authorizationHeader : " + authorizationHeader);
-            throw new NotAuthorizedException("Authorization header must be provided");
-        }
-
-        String token = authorizationHeader.substring("Bearer".length()).trim();
+    public void filter(ContainerRequestContext requestContext) {
 
         try {
-            userRole = tokenGenerator.validateToken(token);
+            logger.info(requestContext.getUriInfo().getRequestUri().toString());
+            String userRole = tokenGenerator.getRoleFromToken(getTokenFromHeader(requestContext));
+            if (!methodIsAllowed(resourceInfo.getResourceMethod(), userRole)) {
+                requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
+            }
         } catch (Exception ex) {
-            logger.log(Level.SEVERE, "Invalid token : " + token, ex);
+            logger.log(Level.SEVERE, "Unauthorized", ex);
             requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
         }
+    }
 
-        Method method = resourceInfo.getResourceMethod();
-        // Access allowed for all
-        if (!method.isAnnotationPresent(PermitAll.class)) {
-            // Access denied for all
-            if (method.isAnnotationPresent(DenyAll.class)) {
-                requestContext.abortWith(Response.status(Response.Status.FORBIDDEN).build());
-                return;
-            }
+    private String getTokenFromHeader(ContainerRequestContext requestContext) throws GeneralSecurityException {
+        String authorizationHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
 
-            final MultivaluedMap<String, String> headers = requestContext.getHeaders();
+        if (authorizationHeader != null && authorizationHeader.startsWith(TokenAuthenticationFilter.TOKEN_PREFIX)) {
+            return authorizationHeader.substring(TokenAuthenticationFilter.TOKEN_PREFIX.length()).trim();
+        } else {
+            throw new GeneralSecurityException();
+        }
+    }
 
-            final List<String> authorization = headers.get(AUTHORIZATION_PROPERTY);
-
-            if (authorization == null || authorization.isEmpty()) {
-                requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
-                return;
-            }
-
-            if (method.isAnnotationPresent(RolesAllowed.class)) {
-                RolesAllowed rolesAnnotation = method.getAnnotation(RolesAllowed.class);
-                Set<String> rolesSet = new HashSet<>(Arrays.asList(rolesAnnotation.value()));
-
-                if (!rolesSet.contains(userRole)) {
-                    requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
-                    return;
-                }
-            }
+    private boolean methodIsAllowed(Method method, String userRole) {
+        if (method.isAnnotationPresent(DenyAll.class)) {
+            return false;
+        } else if (method.isAnnotationPresent(PermitAll.class)) {
+            return true;
+        } else if (method.isAnnotationPresent(RolesAllowed.class)) {
+            RolesAllowed rolesAnnotation = method.getAnnotation(RolesAllowed.class);
+            Set<String> rolesSet = new HashSet<>(Arrays.asList(rolesAnnotation.value()));
+            return rolesSet.contains(userRole);
+        } else {
+            return true;
         }
     }
 }

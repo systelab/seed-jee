@@ -10,22 +10,17 @@ import java.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class SHA256PasswordDigest implements PasswordDigest
-{
+public class SHA256PasswordDigest implements PasswordDigest {
     private Logger logger;
 
     @Override
     public String digest(String plainTextPassword) throws BaseException {
-        MessageDigest md = null;
         try {
-            md = MessageDigest.getInstance("SHA-256");
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
             md.update(plainTextPassword.getBytes("UTF-8"));
             byte[] passwordDigest = md.digest();
             return new String(Base64.getEncoder().encode(passwordDigest));
-        } catch (NoSuchAlgorithmException e) {
-            logger.log(Level.SEVERE, e.getMessage(), e);
-            throw new BaseException("Incorrect algorithm implementation", e, BaseException.ErrorCode.DEFAULT_ERROR);
-        } catch (UnsupportedEncodingException e) {
+        } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
             throw new BaseException("Incorrect algorithm implementation", e, BaseException.ErrorCode.DEFAULT_ERROR);
         }

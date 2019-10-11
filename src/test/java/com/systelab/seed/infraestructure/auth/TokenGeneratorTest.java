@@ -18,7 +18,7 @@ public class TokenGeneratorTest {
 
     @BeforeEach
     public void initialize() {
-        jwtTokenGenerator = new JWTAuthenticationTokenGenerator();
+        jwtTokenGenerator = new JWTAuthenticationTokenGenerator("simplekey", "DES");
     }
 
     @Test
@@ -36,7 +36,7 @@ public class TokenGeneratorTest {
     @Test
     public void givenARandomTokenWhenIsInvalidThenExceptionThrown() {
         Assertions.assertThrows(MalformedJwtException.class, () -> {
-            jwtTokenGenerator.validateToken(generateRandomToken());
+            jwtTokenGenerator.getRoleFromToken(generateRandomToken());
         });
     }
 
@@ -49,17 +49,17 @@ public class TokenGeneratorTest {
     @Test
     public void givenUserRoleUriWhenTokenGeneratedThenValidated() throws Exception {
         String token = jwtTokenGenerator.issueToken("Systelab", "ADMIN", "http://127.0.0.1:13080/seed/v1/");
-        String validated = jwtTokenGenerator.validateToken(token);
+        String role = jwtTokenGenerator.getRoleFromToken(token);
 
-        Assertions.assertEquals("ADMIN", validated, "Unexpected Role for Validated Token");
+        Assertions.assertEquals("ADMIN", role, "Unexpected Role for Validated Token");
     }
 
     @Test
     public void givenIncorrectDataWhenTokenGeneratedThenValidated() throws Exception {
         String token = jwtTokenGenerator.issueToken("Systelab", "USER", "http://127.0.0.1:13080/seed/v1/");
-        String validated = jwtTokenGenerator.validateToken(token);
+        String role = jwtTokenGenerator.getRoleFromToken(token);
 
-        Assertions.assertNotEquals("ADMIN", validated, "Unexpected Role for Validated Token");
+        Assertions.assertNotEquals("ADMIN", role, "Unexpected Role for Validated Token");
     }
 
     private static String generateRandomToken() {

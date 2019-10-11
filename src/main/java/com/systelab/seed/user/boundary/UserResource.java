@@ -1,6 +1,7 @@
 package com.systelab.seed.user.boundary;
 
 import com.systelab.seed.infrastructure.auth.AuthenticationTokenNeeded;
+import com.systelab.seed.infrastructure.auth.TokenAuthenticationFilter;
 import com.systelab.seed.user.entity.UsersPage;
 import com.systelab.seed.user.entity.User;
 import com.systelab.seed.infrastructure.pagination.Page;
@@ -59,7 +60,7 @@ public class UserResource {
         try {
             String token = userService.getToken(uriInfo.getAbsolutePath().toString(), login, password);
 
-            return Response.ok().header(AUTHORIZATION, "Bearer " + token).build();
+            return Response.ok().header(AUTHORIZATION, TokenAuthenticationFilter.TOKEN_PREFIX + token).build();
         } catch (SecurityException ex) {
             logger.log(Level.SEVERE, "Security Exception", ex);
             return Response.status(UNAUTHORIZED).build();
