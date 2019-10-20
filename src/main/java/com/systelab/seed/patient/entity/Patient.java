@@ -32,10 +32,12 @@ import java.util.Set;
 @AllArgsConstructor
 @Table(name = "patient")
 @NamedQueries({@NamedQuery(name = Patient.FIND_ALL, query = "SELECT p FROM Patient p ORDER BY p.surname"),
-        @NamedQuery(name = Patient.ALL_COUNT, query = "SELECT COUNT(p.id) FROM Patient p")})
+        @NamedQuery(name = Patient.ALL_COUNT, query = "SELECT COUNT(p.id) FROM Patient p"),
+        @NamedQuery(name = Patient.DEACTIVATE, query = "UPDATE Patient p SET p.active = FALSE WHERE p.modificationTime < :modificationTime")})
 public class Patient extends BaseEntity implements Serializable {
     public static final String FIND_ALL = "Patient.findAll";
     public static final String ALL_COUNT = "Patient.allCount";
+    public static final String DEACTIVATE = "Patient.deactivate";
 
     @NotNull
     @Size(min = 1, max = 255)

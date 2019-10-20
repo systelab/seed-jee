@@ -16,7 +16,9 @@ import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Stateless
@@ -68,6 +70,13 @@ public class PatientServiceBean implements PatientService {
         query.setMaxResults(pageable.getPageSize());
 
         return new Page<>(query.getResultList(), queryTotal.getSingleResult());
+    }
+
+    @Override
+    public void deactivatePatientsBefore(LocalDateTime modificationTime) {
+        Query query = em.createNamedQuery(Patient.DEACTIVATE);
+        query.setParameter("modificationTime", modificationTime);
+        query.executeUpdate();
     }
 
     @Override

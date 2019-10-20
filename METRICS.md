@@ -10,6 +10,8 @@ Metrics are generated in OpenMetrics text format to be compatible with Prometheu
 
 ## REST endpoints
 
+Head to http://127.0.0.1:13990/metrics for metrics.
+
 ### Required Base metrics
 Required base metrics are exposed under /metrics/base.
 
