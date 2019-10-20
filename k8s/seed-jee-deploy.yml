@@ -42,8 +42,8 @@ spec:
         - containerPort: 8080
         livenessProbe:
           httpGet:
-            path: /seed/v1/health
-            port: 8080
+            path: /health
+            port: 13990
           initialDelaySeconds: 30
           timeoutSeconds: 1
           periodSeconds: 10
