@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import java.util.logging.Level;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
@@ -24,8 +25,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
 
 @Tag(name = "Allergy")
 @Path("allergies")
@@ -53,7 +53,7 @@ public class AllergyResource {
             return Response.ok().entity(new GenericEntity<Page<Allergy>>(allergies) {
             }).build();
         } catch (Exception ex) {
-            logger.log(Level.SEVERE, AllergyResource.INTERNAL_SERVER_ERROR_MESSAGE, ex);
+            logger.error(AllergyResource.INTERNAL_SERVER_ERROR_MESSAGE, ex);
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -74,7 +74,7 @@ public class AllergyResource {
             allergyService.create(allergy);
             return Response.ok().entity(allergy).build();
         } catch (Exception ex) {
-            logger.log(Level.SEVERE, AllergyResource.INTERNAL_SERVER_ERROR_MESSAGE, ex);
+            logger.error(AllergyResource.INTERNAL_SERVER_ERROR_MESSAGE, ex);
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -97,7 +97,7 @@ public class AllergyResource {
             Allergy updatedAllergy = allergyService.update(id, allergy);
             return Response.ok().entity(updatedAllergy).build();
         } catch (Exception ex) {
-            logger.log(Level.SEVERE, AllergyResource.INTERNAL_SERVER_ERROR_MESSAGE, ex);
+            logger.error(AllergyResource.INTERNAL_SERVER_ERROR_MESSAGE, ex);
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -119,7 +119,7 @@ public class AllergyResource {
             }
             return Response.ok().entity(allergy).build();
         } catch (Exception ex) {
-            logger.log(Level.SEVERE, AllergyResource.INTERNAL_SERVER_ERROR_MESSAGE, ex);
+            logger.error(AllergyResource.INTERNAL_SERVER_ERROR_MESSAGE, ex);
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -138,10 +138,10 @@ public class AllergyResource {
             allergyService.delete(id);
             return Response.ok().build();
         } catch (AllergyNotFoundException ex) {
-            logger.log(Level.SEVERE, AllergyResource.INVALID_ALLERGY_ERROR_MESSAGE, ex);
+            logger.error(AllergyResource.INVALID_ALLERGY_ERROR_MESSAGE, ex);
             return Response.status(Status.NOT_FOUND).build();
         } catch (Exception ex) {
-            logger.log(Level.SEVERE, AllergyResource.INTERNAL_SERVER_ERROR_MESSAGE, ex);
+            logger.error(AllergyResource.INTERNAL_SERVER_ERROR_MESSAGE, ex);
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         }
     }

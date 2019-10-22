@@ -30,7 +30,7 @@ import javax.ws.rs.core.StreamingOutput;
 import java.io.OutputStream;
 import java.util.UUID;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
 
 @Tag(name = "Patient")
 @Path("patients")
@@ -61,7 +61,7 @@ public class PatientResource {
             return Response.ok().entity(new GenericEntity<Page<Patient>>(patients) {
             }).build();
         } catch (Exception ex) {
-            logger.log(Level.SEVERE, PatientResource.INTERNAL_SERVER_ERROR_MESSAGE, ex);
+            logger.error(PatientResource.INTERNAL_SERVER_ERROR_MESSAGE, ex);
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -86,7 +86,7 @@ public class PatientResource {
             patientService.create(patient);
             return Response.ok().entity(patient).build();
         } catch (Exception ex) {
-            logger.log(Level.SEVERE, PatientResource.INTERNAL_SERVER_ERROR_MESSAGE, ex);
+            logger.error(PatientResource.INTERNAL_SERVER_ERROR_MESSAGE, ex);
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -109,7 +109,7 @@ public class PatientResource {
             Patient updatedPatient = patientService.update(id, patient);
             return Response.ok().entity(updatedPatient).build();
         } catch (Exception ex) {
-            logger.log(Level.SEVERE, PatientResource.INTERNAL_SERVER_ERROR_MESSAGE, ex);
+            logger.error(PatientResource.INTERNAL_SERVER_ERROR_MESSAGE, ex);
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -131,7 +131,7 @@ public class PatientResource {
             }
             return Response.ok().entity(patient).build();
         } catch (Exception ex) {
-            logger.log(Level.SEVERE, PatientResource.INTERNAL_SERVER_ERROR_MESSAGE, ex);
+            logger.error(PatientResource.INTERNAL_SERVER_ERROR_MESSAGE, ex);
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -155,7 +155,7 @@ public class PatientResource {
             return Response.ok(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
                     .header("content-disposition", "attachment; filename=" + fileName).build();
         } catch (Exception ex) {
-            logger.log(Level.SEVERE, PatientResource.INTERNAL_SERVER_ERROR_MESSAGE, ex);
+            logger.error(PatientResource.INTERNAL_SERVER_ERROR_MESSAGE, ex);
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -175,10 +175,10 @@ public class PatientResource {
             patientService.delete(id);
             return Response.ok().build();
         } catch (PatientNotFoundException ex) {
-            logger.log(Level.SEVERE, PatientResource.INVALID_PATIENT_ERROR_MESSAGE, ex);
+            logger.error(PatientResource.INVALID_PATIENT_ERROR_MESSAGE, ex);
             return Response.status(Status.NOT_FOUND).build();
         } catch (Exception ex) {
-            logger.log(Level.SEVERE, PatientResource.INTERNAL_SERVER_ERROR_MESSAGE, ex);
+            logger.error(PatientResource.INTERNAL_SERVER_ERROR_MESSAGE, ex);
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         }
     }

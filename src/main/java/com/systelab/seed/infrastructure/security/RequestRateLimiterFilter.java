@@ -6,8 +6,6 @@ import java.security.Principal;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.WebApplicationException;
@@ -18,6 +16,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.Provider;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.slf4j.Logger;
 
 @Provider
 /**
@@ -78,7 +77,7 @@ public class RequestRateLimiterFilter implements ContainerRequestFilter {
 
   private void logLimitExceeded(UriInfo uriInfo, String byAddress) {
     String path = uriInfo.getAbsolutePath().getPath();
-    logger.log(Level.WARNING, "Overloaded {0} request {1}; discarding it", new Object[]{byAddress, path});
+    logger.warn("Overloaded {0} request {1}; discarding it", new Object[]{byAddress, path});
   }
 
   private String getRateExceededMessage(AtomicRateLimiter rateLimiter) {

@@ -18,8 +18,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
 
 @Singleton
 @ServerEndpoint("/tracking")
@@ -59,7 +58,7 @@ public class RealtimePatientTracking {
         try {
             session.getBasicRemote().sendText(json);
         } catch (IOException ex) {
-            logger.log(Level.WARNING, "Unable to publish WebSocket message", ex);
+            logger.warn("Unable to publish WebSocket message", ex);
         }
     }
 }

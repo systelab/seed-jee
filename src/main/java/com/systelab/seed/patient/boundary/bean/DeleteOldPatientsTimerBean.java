@@ -8,8 +8,7 @@ import javax.annotation.Resource;
 import javax.ejb.*;
 import javax.inject.Inject;
 import java.time.LocalDateTime;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
 
 @Singleton
 @Startup
@@ -41,7 +40,7 @@ public class DeleteOldPatientsTimerBean {
             healthCheck.setLastExecution(LocalDateTime.now());
             healthCheck.setWorking(true);
         } catch (Exception ex) {
-            logger.log(Level.INFO, "Patients DB not purged!", ex);
+            logger.info("Patients DB not purged!", ex);
             healthCheck.setWorking(false);
         }
     }
@@ -56,7 +55,7 @@ public class DeleteOldPatientsTimerBean {
 
     private void cancelAnyRunningTimer() {
         timerService.getTimers().stream().forEach((timer) -> {
-            logger.log(Level.INFO, "Found running timer with info: " + timer.getInfo() + ", cancelling it");
+            logger.info("Found running timer with info: {}, cancelling it", timer.getInfo());
             timer.cancel();
         });
     }
