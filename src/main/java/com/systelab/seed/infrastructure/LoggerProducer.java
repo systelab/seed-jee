@@ -7,6 +7,7 @@ import javax.enterprise.inject.spi.InjectionPoint;
 
 public class LoggerProducer {
     @Produces
+    @SLF4JLogger
     public Logger produceLogger(InjectionPoint injectionPoint) {
         return Logger.getLogger(injectionPoint.getMember().getDeclaringClass().getName());
     }

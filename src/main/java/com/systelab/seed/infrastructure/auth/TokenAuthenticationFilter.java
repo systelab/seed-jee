@@ -1,5 +1,6 @@
 package com.systelab.seed.infrastructure.auth;
 
+import com.systelab.seed.infrastructure.SLF4JLogger;
 import java.util.logging.Level;
 import javax.annotation.Priority;
 import javax.annotation.security.DenyAll;
@@ -29,6 +30,7 @@ public class TokenAuthenticationFilter implements ContainerRequestFilter {
     public static final String TOKEN_PREFIX = "Bearer ";
 
     @Inject
+    @SLF4JLogger
     private Logger logger;
 
     @Inject

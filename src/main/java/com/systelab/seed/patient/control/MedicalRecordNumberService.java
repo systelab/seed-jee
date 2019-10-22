@@ -1,5 +1,6 @@
 package com.systelab.seed.patient.control;
 
+import com.systelab.seed.infrastructure.SLF4JLogger;
 import feign.RequestLine;
 import feign.hystrix.HystrixFeign;
 
@@ -18,6 +19,7 @@ interface IdentityClient {
 public class MedicalRecordNumberService {
 
     @Inject
+    @SLF4JLogger
     private Logger logger;
 
     @Inject

@@ -1,6 +1,7 @@
 package com.systelab.seed.infrastructure.security.implementation;
 
 import com.systelab.seed.BaseException;
+import com.systelab.seed.infrastructure.SLF4JLogger;
 import com.systelab.seed.infrastructure.security.PasswordDigest;
 
 import java.io.UnsupportedEncodingException;
@@ -13,6 +14,7 @@ import org.slf4j.Logger;
 
 public class SHA256PasswordDigest implements PasswordDigest {
     @Inject
+    @SLF4JLogger
     private Logger logger;
 
     @Override
