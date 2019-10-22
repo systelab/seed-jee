@@ -24,8 +24,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
         },
         tags = {@Tag(name = "Patient", description = "Patient Management"),
                 @Tag(name = "Allergy", description = "Allergy Management"),
-                @Tag(name = "User", description = "User Management"),
-                @Tag(name = "Health", description = "Health checking")})
+                @Tag(name = "User", description = "User Management")})
 @SecurityScheme(
         name = "Authorization",
         type = SecuritySchemeType.HTTP,

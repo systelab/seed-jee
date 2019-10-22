@@ -1,5 +1,6 @@
 package com.systelab.seed;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
@@ -9,8 +10,7 @@ import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
-import javax.xml.bind.annotation.XmlTransient;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @MappedSuperclass
@@ -24,11 +24,13 @@ public abstract class BaseEntity {
     protected UUID id;
 
     @CreationTimestamp
-    @XmlTransient
-    protected Timestamp creationTime;
+    @JsonIgnore
+    protected LocalDateTime creationTime;
 
     @UpdateTimestamp
-    @XmlTransient
-    protected Timestamp updateTime;
+    @JsonIgnore
+    protected LocalDateTime modificationTime;
+
+    protected Boolean active = Boolean.TRUE;
 
 }
