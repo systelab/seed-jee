@@ -1,0 +1,13 @@
+<configuration>
+  <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+    <file>./standalone/log/seed_slf4j_logback.log</file>
+    <append>true</append>
+    <encoder>
+      <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{52} - %msg%n</Pattern>
+    </encoder>
+  </appender>
+  <root>
+    <level value="TRACE"/>
+    <appender-ref ref="FILE"/>
+  </root>
+</configuration>
