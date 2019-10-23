@@ -10,15 +10,16 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.logging.Logger;
 
 import static io.restassured.RestAssured.given;
 
 @TmsLink("TC0002_LoginManagement_IntegrationTest")
 @Feature("User Test Suite.\n\nGoal:\nThis test case is intended to verify the correct ....\n\nEnvironment:\n...\nPreconditions:\nN/A.")
 public class UserResourceTest extends RESTResourceTest {
-    private static final Logger logger = Logger.getLogger(UserResourceTest.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(UserResourceTest.class.getName());
 
     private User getUserData(String name, String surname, String login, String password) {
         User user = new User();
