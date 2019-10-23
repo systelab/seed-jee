@@ -3,7 +3,6 @@ package com.systelab.seed.user;
 import com.systelab.seed.BaseEntity;
 import com.systelab.seed.BaseException;
 import com.systelab.seed.RESTResourceTest;
-import com.systelab.seed.infrastructure.SLF4JProducer;
 import com.systelab.seed.infrastructure.auth.AuthenticationTokenGenerator;
 import com.systelab.seed.infrastructure.pagination.Page;
 import com.systelab.seed.infrastructure.pagination.Pageable;
@@ -17,7 +16,6 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
 
 import javax.inject.Inject;
 
@@ -34,8 +32,8 @@ public class UserServiceTest {
 
         // Create deploy file
         return ShrinkWrap.create(WebArchive.class)
-                .addClasses(SLF4JProducer.class, BaseException.class, BaseEntity.class, AuthenticationTokenGenerator.class, PasswordDigest.class, Pageable.class, Page.class,
-                        Logger.class, RESTResourceTest.class)
+                .addClasses(BaseException.class, BaseEntity.class, AuthenticationTokenGenerator.class, PasswordDigest.class, Pageable.class, Page.class,
+                        RESTResourceTest.class)
                 .addAsResource("test-persistence.xml", "META-INF/persistence.xml")
                 .addAsWebInfResource("jbossas-ds.xml")
                 .addAsResource("META-INF/beans.xml")
