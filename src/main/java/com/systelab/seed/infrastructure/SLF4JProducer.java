@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 public class SLF4JProducer {
 
    @Produces
-   @SLF4JLogger
    public Logger producer(InjectionPoint ip) {
       return LoggerFactory.getLogger(ip.getMember().getDeclaringClass().getName());
    }

@@ -2,7 +2,6 @@ package com.systelab.seed.allergy.boundary;
 
 import com.systelab.seed.allergy.entity.AllergiesPage;
 import com.systelab.seed.allergy.entity.Allergy;
-import com.systelab.seed.infrastructure.SLF4JLogger;
 import com.systelab.seed.infrastructure.auth.AuthenticationTokenNeeded;
 import com.systelab.seed.infrastructure.pagination.Page;
 import com.systelab.seed.infrastructure.pagination.Pageable;
@@ -14,7 +13,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-import java.util.logging.Level;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
@@ -37,7 +35,6 @@ public class AllergyResource {
     private static final String INVALID_ALLERGY_ERROR_MESSAGE = "Invalid Allergy";
 
     @Inject
-    @SLF4JLogger
     private Logger logger;
 
     @EJB

@@ -1,6 +1,5 @@
 package com.systelab.seed.user.boundary;
 
-import com.systelab.seed.infrastructure.SLF4JLogger;
 import com.systelab.seed.infrastructure.auth.AuthenticationTokenNeeded;
 import com.systelab.seed.infrastructure.auth.TokenAuthenticationFilter;
 import com.systelab.seed.user.entity.UsersPage;
@@ -15,7 +14,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-import java.util.logging.Level;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
@@ -41,7 +39,6 @@ public class UserResource {
     private static final String INTERNAL_SERVER_ERROR_MESSAGE = "Internal Server Error";
 
     @Inject
-    @SLF4JLogger
     private Logger logger;
 
     @Context

@@ -1,6 +1,5 @@
 package com.systelab.seed.patient.boundary.bean;
 
-import com.systelab.seed.infrastructure.SLF4JLogger;
 import com.systelab.seed.patient.boundary.health.PatientMaintenanceServiceHealthCheck;
 import com.systelab.seed.patient.boundary.PatientService;
 
@@ -18,7 +17,6 @@ public class DeleteOldPatientsTimerBean {
     private TimerService timerService;
 
     @Inject
-    @SLF4JLogger
     private Logger logger;
 
     @Inject

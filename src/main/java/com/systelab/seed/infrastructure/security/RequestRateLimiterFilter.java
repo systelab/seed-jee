@@ -1,6 +1,5 @@
 package com.systelab.seed.infrastructure.security;
 
-import com.systelab.seed.infrastructure.SLF4JLogger;
 import io.github.resilience4j.ratelimiter.RateLimiterConfig;
 import io.github.resilience4j.ratelimiter.internal.AtomicRateLimiter;
 import java.security.Principal;
@@ -43,7 +42,6 @@ public class RequestRateLimiterFilter implements ContainerRequestFilter {
   private HttpServletRequest httpServletRequest;
 
   @Inject
-  @SLF4JLogger
   private Logger logger;
 
   private Map<String, AtomicRateLimiter> rateLimitersMap = new HashMap<>();

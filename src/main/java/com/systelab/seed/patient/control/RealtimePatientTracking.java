@@ -1,6 +1,5 @@
 package com.systelab.seed.patient.control;
 
-import com.systelab.seed.infrastructure.SLF4JLogger;
 import com.systelab.seed.patient.control.cdi.PatientCreated;
 import com.systelab.seed.patient.entity.Patient;
 
@@ -25,7 +24,6 @@ import org.slf4j.Logger;
 @ServerEndpoint("/tracking")
 public class RealtimePatientTracking {
     @Inject
-    @SLF4JLogger
     private Logger logger;
 
     private final Set<Session> sessions = new HashSet<>();

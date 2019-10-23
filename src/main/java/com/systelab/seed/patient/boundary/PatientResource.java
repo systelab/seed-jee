@@ -1,6 +1,5 @@
 package com.systelab.seed.patient.boundary;
 
-import com.systelab.seed.infrastructure.SLF4JLogger;
 import com.systelab.seed.infrastructure.auth.AuthenticationTokenNeeded;
 import com.systelab.seed.infrastructure.pagination.Page;
 import com.systelab.seed.infrastructure.pagination.Pageable;
@@ -30,7 +29,6 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.StreamingOutput;
 import java.io.OutputStream;
 import java.util.UUID;
-import java.util.logging.Level;
 import org.slf4j.Logger;
 
 @Tag(name = "Patient")
@@ -42,7 +40,6 @@ public class PatientResource {
     private static final String INVALID_PATIENT_ERROR_MESSAGE = "Invalid Patient";
 
     @Inject
-    @SLF4JLogger
     private Logger logger;
 
     @Inject

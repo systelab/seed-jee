@@ -1,14 +1,13 @@
 package com.systelab.seed.patient.control;
 
-import com.systelab.seed.infrastructure.SLF4JLogger;
 import feign.RequestLine;
 import feign.hystrix.HystrixFeign;
 
-import java.util.logging.Logger;
 
 import javax.inject.Inject;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.slf4j.Logger;
 
 interface IdentityClient {
 
@@ -19,7 +18,6 @@ interface IdentityClient {
 public class MedicalRecordNumberService {
 
     @Inject
-    @SLF4JLogger
     private Logger logger;
 
     @Inject

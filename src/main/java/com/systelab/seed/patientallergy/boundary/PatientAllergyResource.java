@@ -2,7 +2,6 @@ package com.systelab.seed.patientallergy.boundary;
 
 import com.systelab.seed.allergy.boundary.AllergyAlreadyExistException;
 import com.systelab.seed.allergy.boundary.AllergyNotFoundException;
-import com.systelab.seed.infrastructure.SLF4JLogger;
 import com.systelab.seed.patient.boundary.PatientNotFoundException;
 import com.systelab.seed.patientallergy.entity.PatientAllergy;
 import com.systelab.seed.patientallergy.entity.PatientAllergySet;
@@ -23,7 +22,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.util.Set;
 import java.util.UUID;
-import java.util.logging.Level;
 import org.slf4j.Logger;
 
 @Tag(name = "Patient")
@@ -36,7 +34,6 @@ public class PatientAllergyResource {
     private static final String INVALID_ALLERGY_ERROR_MESSAGE = "Invalid Allergy";
 
     @Inject
-    @SLF4JLogger
     private Logger logger;
 
     @EJB
