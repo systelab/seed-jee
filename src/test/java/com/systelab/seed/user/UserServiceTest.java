@@ -17,10 +17,9 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import javax.inject.Inject;
 import org.slf4j.Logger;
 
+import javax.inject.Inject;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -40,7 +39,7 @@ public class UserServiceTest {
                 .addAsResource("test-persistence.xml", "META-INF/persistence.xml")
                 .addAsWebInfResource("jbossas-ds.xml")
                 .addAsResource("META-INF/beans.xml")
-                .addPackages(true, "com.systelab.seed.user", "org.apache.poi", "com.systelab.seed.infrastructure.security", "io.jsonwebtoken", "com.systelab.seed.infrastructure.auth");
+                .addPackages(true, "com.systelab.seed.user", "org.apache.poi", "com.systelab.seed.infrastructure.security", "io.jsonwebtoken", "org.slf4j", "com.systelab.seed.infrastructure.auth");
     }
 
     @Test
