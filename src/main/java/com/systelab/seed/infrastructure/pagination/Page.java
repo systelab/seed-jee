@@ -1,18 +1,18 @@
 package com.systelab.seed.infrastructure.pagination;
 
 import lombok.Data;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 @Data
-public class Page<T> implements Serializable {
+public class Page<T> {
 
     private long totalElements;
 
