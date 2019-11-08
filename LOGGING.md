@@ -159,11 +159,11 @@ If you have the error: **SLF4J: Class path contains multiple SLF4J bindings**
 The solution is to remove the following dependency from pom.xml:
 
 ```xml
-	<dependency>
-		<groupId>org.slf4j</groupId>
-		<artifactId>slf4j-simple</artifactId>
-		<version>1.7.26</version>
-	</dependency>
+<dependency>
+	<groupId>org.slf4j</groupId>
+	<artifactId>slf4j-simple</artifactId>
+	<version>1.7.26</version>
+</dependency>
 ```
 
 
