@@ -6,14 +6,13 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Embeddable;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.io.Serializable;
 
 @XmlRootElement
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Embeddable
-public class Address implements Serializable {
+public class Address {
 
     private String coordinates;
     private String street;
