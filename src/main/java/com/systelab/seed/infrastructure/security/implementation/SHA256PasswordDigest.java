@@ -7,10 +7,12 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.inject.Inject;
+import org.slf4j.Logger;
+
 
 public class SHA256PasswordDigest implements PasswordDigest {
+    @Inject
     private Logger logger;
 
     @Override
@@ -21,7 +23,7 @@ public class SHA256PasswordDigest implements PasswordDigest {
             byte[] passwordDigest = md.digest();
             return new String(Base64.getEncoder().encode(passwordDigest));
         } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
-            logger.log(Level.SEVERE, e.getMessage(), e);
+            logger.error(e.getMessage(), e);
             throw new BaseException("Incorrect algorithm implementation", e, BaseException.ErrorCode.DEFAULT_ERROR);
         }
     }

@@ -23,8 +23,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import javax.ws.rs.core.Response.Status;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
 
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.MediaType.APPLICATION_FORM_URLENCODED;
@@ -62,10 +61,10 @@ public class UserResource {
 
             return Response.ok().header(AUTHORIZATION, TokenAuthenticationFilter.TOKEN_PREFIX + token).build();
         } catch (SecurityException ex) {
-            logger.log(Level.SEVERE, "Security Exception", ex);
+            logger.error("Security Exception", ex);
             return Response.status(UNAUTHORIZED).build();
         } catch (Exception ex) {
-            logger.log(Level.SEVERE, UserResource.INTERNAL_SERVER_ERROR_MESSAGE, ex);
+            logger.error(UserResource.INTERNAL_SERVER_ERROR_MESSAGE, ex);
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -86,7 +85,7 @@ public class UserResource {
             userService.create(user);
             return Response.ok().entity(user).build();
         } catch (Exception ex) {
-            logger.log(Level.SEVERE, UserResource.INTERNAL_SERVER_ERROR_MESSAGE, ex);
+            logger.error(UserResource.INTERNAL_SERVER_ERROR_MESSAGE, ex);
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -110,7 +109,7 @@ public class UserResource {
             }
             return Response.ok().entity(user).build();
         } catch (Exception ex) {
-            logger.log(Level.SEVERE, UserResource.INTERNAL_SERVER_ERROR_MESSAGE, ex);
+            logger.error(UserResource.INTERNAL_SERVER_ERROR_MESSAGE, ex);
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -128,7 +127,7 @@ public class UserResource {
             return Response.ok().entity(new GenericEntity<Page<User>>(users) {
             }).build();
         } catch (Exception ex) {
-            logger.log(Level.SEVERE, UserResource.INTERNAL_SERVER_ERROR_MESSAGE, ex);
+            logger.error(UserResource.INTERNAL_SERVER_ERROR_MESSAGE, ex);
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -147,10 +146,10 @@ public class UserResource {
             userService.delete(id);
             return Response.ok().build();
         } catch (UserNotFoundException ex) {
-            logger.log(Level.SEVERE, "Invalid User", ex);
+            logger.error("Invalid User", ex);
             return Response.status(Status.NOT_FOUND).build();
         } catch (Exception ex) {
-            logger.log(Level.SEVERE, UserResource.INTERNAL_SERVER_ERROR_MESSAGE, ex);
+            logger.error(UserResource.INTERNAL_SERVER_ERROR_MESSAGE, ex);
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         }
     }

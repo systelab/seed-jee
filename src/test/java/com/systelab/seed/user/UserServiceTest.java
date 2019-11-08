@@ -3,7 +3,6 @@ package com.systelab.seed.user;
 import com.systelab.seed.BaseEntity;
 import com.systelab.seed.BaseException;
 import com.systelab.seed.RESTResourceTest;
-import com.systelab.seed.infrastructure.LoggerProducer;
 import com.systelab.seed.infrastructure.auth.AuthenticationTokenGenerator;
 import com.systelab.seed.infrastructure.pagination.Page;
 import com.systelab.seed.infrastructure.pagination.Pageable;
@@ -19,7 +18,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
-import java.util.logging.Logger;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -34,12 +32,12 @@ public class UserServiceTest {
 
         // Create deploy file
         return ShrinkWrap.create(WebArchive.class)
-                .addClasses(LoggerProducer.class, BaseException.class, BaseEntity.class, AuthenticationTokenGenerator.class, PasswordDigest.class, Pageable.class, Page.class,
-                        Logger.class, RESTResourceTest.class)
+                .addClasses(BaseException.class, BaseEntity.class, AuthenticationTokenGenerator.class, PasswordDigest.class, Pageable.class, Page.class,
+                        RESTResourceTest.class)
                 .addAsResource("test-persistence.xml", "META-INF/persistence.xml")
                 .addAsWebInfResource("jbossas-ds.xml")
                 .addAsResource("META-INF/beans.xml")
-                .addPackages(true, "com.systelab.seed.user", "org.apache.poi", "com.systelab.seed.infrastructure.security", "io.jsonwebtoken", "com.systelab.seed.infrastructure.auth");
+                .addPackages(true, "com.systelab.seed.user", "org.apache.poi", "com.systelab.seed.infrastructure.security", "io.jsonwebtoken", "org.slf4j", "com.systelab.seed.infrastructure.auth");
     }
 
     @Test

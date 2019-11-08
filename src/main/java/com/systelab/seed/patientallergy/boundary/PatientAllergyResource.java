@@ -22,8 +22,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.util.Set;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
 
 @Tag(name = "Patient")
 @Path("patients")
@@ -52,10 +51,10 @@ public class PatientAllergyResource {
             Set<PatientAllergy> allergies = patientAllergyService.getPatientAllergies(UUID.fromString(uid));
             return Response.ok().entity(allergies).build();
         } catch (PatientNotFoundException ex) {
-            logger.log(Level.SEVERE, PatientAllergyResource.INVALID_PATIENT_ERROR_MESSAGE, ex);
+            logger.error(PatientAllergyResource.INVALID_PATIENT_ERROR_MESSAGE, ex);
             return Response.status(Status.NOT_FOUND).build();
         } catch (Exception ex) {
-            logger.log(Level.SEVERE, PatientAllergyResource.INTERNAL_SERVER_ERROR_MESSAGE, ex);
+            logger.error(PatientAllergyResource.INTERNAL_SERVER_ERROR_MESSAGE, ex);
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -73,17 +72,17 @@ public class PatientAllergyResource {
             PatientAllergy savedPatientAllergy = patientAllergyService.addPatientAllergy(UUID.fromString(uid), patientAllergy);
             return Response.ok().entity(savedPatientAllergy).build();
         } catch (PatientNotFoundException ex) {
-            logger.log(Level.SEVERE, PatientAllergyResource.INVALID_PATIENT_ERROR_MESSAGE, ex);
+            logger.error(PatientAllergyResource.INVALID_PATIENT_ERROR_MESSAGE, ex);
             return Response.status(Status.NOT_FOUND).build();
         } catch (AllergyNotFoundException ex) {
-            logger.log(Level.SEVERE, PatientAllergyResource.INVALID_ALLERGY_ERROR_MESSAGE, ex);
+            logger.error(PatientAllergyResource.INVALID_ALLERGY_ERROR_MESSAGE, ex);
             return Response.status(Status.NOT_FOUND).build();
         } catch (AllergyAlreadyExistException ex) {
-            logger.log(Level.SEVERE, PatientAllergyResource.INVALID_ALLERGY_ERROR_MESSAGE, ex);
+            logger.error(PatientAllergyResource.INVALID_ALLERGY_ERROR_MESSAGE, ex);
             return Response.status(Status.NOT_FOUND).build();
         }
         catch (Exception ex) {
-            logger.log(Level.SEVERE, PatientAllergyResource.INTERNAL_SERVER_ERROR_MESSAGE, ex);
+            logger.error(PatientAllergyResource.INTERNAL_SERVER_ERROR_MESSAGE, ex);
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -101,13 +100,13 @@ public class PatientAllergyResource {
             PatientAllergy savedPatientAllergy = patientAllergyService.updatePatientAllergy(UUID.fromString(patientId), UUID.fromString(allergyId),patientAllergy);
             return Response.ok().entity(savedPatientAllergy).build();
         } catch (PatientNotFoundException ex) {
-            logger.log(Level.SEVERE, PatientAllergyResource.INVALID_PATIENT_ERROR_MESSAGE, ex);
+            logger.error(PatientAllergyResource.INVALID_PATIENT_ERROR_MESSAGE, ex);
             return Response.status(Status.NOT_FOUND).build();
         } catch (AllergyNotFoundException ex) {
-            logger.log(Level.SEVERE, PatientAllergyResource.INVALID_ALLERGY_ERROR_MESSAGE, ex);
+            logger.error(PatientAllergyResource.INVALID_ALLERGY_ERROR_MESSAGE, ex);
             return Response.status(Status.NOT_FOUND).build();
         } catch (Exception ex) {
-            logger.log(Level.SEVERE, PatientAllergyResource.INTERNAL_SERVER_ERROR_MESSAGE, ex);
+            logger.error(PatientAllergyResource.INTERNAL_SERVER_ERROR_MESSAGE, ex);
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -125,13 +124,13 @@ public class PatientAllergyResource {
             patientAllergyService.removePatientAllergy(UUID.fromString(patientId), UUID.fromString(allergyId));
             return Response.ok().build();
         } catch (PatientNotFoundException ex) {
-            logger.log(Level.SEVERE, PatientAllergyResource.INVALID_PATIENT_ERROR_MESSAGE, ex);
+            logger.error(PatientAllergyResource.INTERNAL_SERVER_ERROR_MESSAGE, ex);
             return Response.status(Status.NOT_FOUND).build();
         } catch (AllergyNotFoundException ex) {
-            logger.log(Level.SEVERE, PatientAllergyResource.INVALID_ALLERGY_ERROR_MESSAGE, ex);
+            logger.error(PatientAllergyResource.INVALID_ALLERGY_ERROR_MESSAGE, ex);
             return Response.status(Status.NOT_FOUND).build();
         } catch (Exception ex) {
-            logger.log(Level.SEVERE, PatientAllergyResource.INTERNAL_SERVER_ERROR_MESSAGE, ex);
+            logger.error(PatientAllergyResource.INTERNAL_SERVER_ERROR_MESSAGE, ex);
             return Response.status(Status.INTERNAL_SERVER_ERROR).build();
         }
     }

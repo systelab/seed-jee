@@ -18,8 +18,7 @@ import java.security.GeneralSecurityException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
 
 @Provider
 @AuthenticationTokenNeeded
@@ -47,7 +46,7 @@ public class TokenAuthenticationFilter implements ContainerRequestFilter {
                 requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
             }
         } catch (Exception ex) {
-            logger.log(Level.SEVERE, "Unauthorized", ex);
+            logger.error("Unauthorized", ex);
             requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
         }
     }
