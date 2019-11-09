@@ -116,6 +116,7 @@ public class SecurityResponseHeadersFilter implements ContainerResponseFilter {
      * https://www.w3.org/TR/cors/#access-control-allow-headers-response-header
      */
     private void addCORSHeaders(ContainerResponseContext response) {
+        // Bad idea to have that on production
         response.getHeaders().add(ACCESS_CONTROL_ALLOW_ORIGIN, "*");
         response.getHeaders().add(ACCESS_CONTROL_ALLOW_HEADERS, "origin, content-type, accept, authorization, Etag, if-none-match");
         response.getHeaders().add(ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
