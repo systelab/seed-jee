@@ -1,4 +1,4 @@
-# Seed Spring Boot Documentation
+# Seed JEE Documentation
 
 ## Specifications
 * [REST API specifications](https://github.com/systelab/systelab-doc/blob/master/SEED-API.md)
