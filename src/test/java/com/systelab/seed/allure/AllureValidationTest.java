@@ -82,7 +82,7 @@ public class AllureValidationTest
   @Step("{0}")
   private void dummyFunction(String message)
   {
-
+    // empty line
   }
 
   @Description("Allure-validation - Nested actions (pass)")
