@@ -15,50 +15,56 @@ import java.util.List;
 
 import static io.restassured.RestAssured.given;
 import static java.util.stream.Collectors.joining;
+import io.restassured.response.Response;
 
 @TmsLink("TC0001_PatientManagement_IntegrationTest")
 @Feature("Patient Test Suite.\n\nGoal:\nThe goal of this TC is to verify that the Patient management actions (CRUD) behave as expected according the specifications and the input values.\n\nEnvironment:\n...\nPreconditions:\nN/A.")
 public class PatientResourceTest extends RESTResourceTest {
 
-    private Patient getPatientData() {
-        Patient patient = new Patient();
-        patient.setName("Ralph"); // Not NULL
-        patient.setSurname("Burrows"); // Not NULL
-        patient.setEmail("rburrows@gmail.com"); // Format validated
-        patient.setMedicalNumber("123456");
-        patient.setDob(LocalDate.of(1948, 8, 11));
-        Address address = new Address();
-        address.setStreet("E-Street, 90");
-        address.setCity("Barcelona");
-        address.setZip("08021");
-        patient.setAddress(address);
-        return patient;
-    }
-
-    private Patient getPatientData(String name, String surname, String email) {
-        Patient patient = getPatientData();
-        patient.setName(name);
-        patient.setSurname(surname);
-        patient.setEmail(email);
-        return patient;
-    }
-
-    private Patient getPatientData(String name, String surname, String email, String medicalNumber) {
-        Patient patient = getPatientData();
-        patient.setName(name);
-        patient.setSurname(surname);
-        patient.setEmail(email);
-        patient.setMedicalNumber(medicalNumber);
-        return patient;
-    }
-
     private Patient getPatientData(String name, String surname, String email, String medicalNumber, LocalDate dob, String street, String city, String zip) {
-        Patient patient = getPatientData(name, surname, email, medicalNumber);
-        patient.setDob(dob);
-        patient.getAddress().setStreet(street);
-        patient.getAddress().setCity(city);
-        patient.getAddress().setZip(zip);
-        return patient;
+        Patient patient = new Patient();
+
+        patient.setName(name); //cannot be NULL
+        patient.setSurname(surname); //cannot be NULL
+        if (email != null)
+            patient.setEmail(email); //can be NULL
+        if (medicalNumber != null)
+            patient.setMedicalNumber(medicalNumber); //can be NULL
+        if (dob != null)
+            patient.setDob(dob); //can be NULL
+        if (street != null) {
+            patient.setAddress(new Address());
+            patient.getAddress().setStreet(street);
+        }//can be NULL
+            if (city != null)
+                patient.getAddress().setCity(city); //can be NULL
+            if (zip != null)
+                patient.getAddress().setZip(zip); //can be NULL
+            return patient;
+
+    }
+
+    private void checkPatientData(Patient expected, Patient actual){
+
+        TestUtil.checkObjectIsNotNull("Patient", actual);
+        TestUtil.checkField("Name", expected.getName(), actual.getName());
+        TestUtil.checkField("Surname", expected.getSurname(), actual.getSurname());
+        if (expected.getEmail() != null)
+            TestUtil.checkField("Email", expected.getEmail(), actual.getEmail());
+        if (expected.getMedicalNumber() != null)
+            TestUtil.checkField("Medical Number", expected.getMedicalNumber(), actual.getMedicalNumber());
+        if (expected.getDob() != null)
+            TestUtil.checkField("DOB", expected.getDob(), actual.getDob());
+        if (expected.getAddress() != null){
+            // TestUtil.checkField("Address", expected.getAddress(), actual.getAddress());
+            if (expected.getAddress().getStreet() != null)
+                TestUtil.checkField("Street", expected.getAddress().getStreet(), actual.getAddress().getStreet());
+            if (expected.getAddress().getCity() != null)
+                TestUtil.checkField("City", expected.getAddress().getCity(), actual.getAddress().getCity());
+            if (expected.getAddress().getZip() != null)
+                TestUtil.checkField("Zip", expected.getAddress().getZip(), actual.getAddress().getZip());
+        }
+
     }
 
     @Description("Create a new patient with name, surname, email and medical number")
@@ -68,25 +74,21 @@ public class PatientResourceTest extends RESTResourceTest {
         String expectedSurname = "Burrows";
         String expectedEmail = "jburrows@werfen.com";
         String expectedMedNumber = "112233";
-        LocalDate expectedDob = LocalDate.of(1948, 8, 11);
-        String expectedStreet = "E-Street, 90";
-        String expectedCity = "Barcelona";
-        String expectedZip = "08021";
-        Patient patient = getPatientData(expectedName, expectedSurname, expectedEmail, expectedMedNumber);
-        Patient patientCreated = given().body(patient)
-                .when().post("/patients/patient")
-                .then().assertThat().statusCode(200)
-                .extract().as(Patient.class);
-        TestUtil.checkObjectIsNotNull("Patient", patientCreated);
-        TestUtil.checkField("Name", expectedName, patientCreated.getName());
-        TestUtil.checkField("Surname", expectedSurname, patientCreated.getSurname());
-        TestUtil.checkField("Email", expectedEmail, patientCreated.getEmail());
-        TestUtil.checkField("Medical Number", expectedMedNumber, patientCreated.getMedicalNumber());
-        TestUtil.checkField("DOB", expectedDob, patientCreated.getDob());
-        TestUtil.checkField("Street", expectedStreet, patientCreated.getAddress().getStreet());
-        TestUtil.checkField("City", expectedCity, patientCreated.getAddress().getCity());
-        TestUtil.checkField("Zip", expectedZip, patientCreated.getAddress().getZip());
+        LocalDate expectedDob = null;
+        String expectedStreet = null;
+        String expectedCity = null;
+        String expectedZip = null;
+        Patient patient = getPatientData(expectedName, expectedSurname, expectedEmail, expectedMedNumber, expectedDob , expectedStreet, expectedCity, expectedZip);
+        Response response = given().body(patient)
+            .when().post("/patients/patient");
+
+        Patient patientCreated = response.then().extract().as(Patient.class);
+        int status = response.then().extract().statusCode();
+        TestUtil.checkField("Status Code", 200, status);
+        checkPatientData(patient, patientCreated);
+
     }
+
 
     @Description("Create a new patient with name, surname, email, medical number, dob, and complete address")
     @Test
@@ -100,19 +102,13 @@ public class PatientResourceTest extends RESTResourceTest {
         String expectedCity = "Madrid";
         String expectedZip = "28084";
         Patient patient = getPatientData(expectedName, expectedSurname, expectedEmail, expectedMedNumber, expectedDob, expectedStreet, expectedCity, expectedZip);
-        Patient patientCreated = given().body(patient)
-            .when().post("/patients/patient")
-            .then().assertThat().statusCode(200)
-            .extract().as(Patient.class);
-        TestUtil.checkObjectIsNotNull("Patient", patientCreated);
-        TestUtil.checkField("Name", expectedName, patientCreated.getName());
-        TestUtil.checkField("Surname", expectedSurname, patientCreated.getSurname());
-        TestUtil.checkField("Email", expectedEmail, patientCreated.getEmail());
-        TestUtil.checkField("Medical Number", expectedMedNumber, patientCreated.getMedicalNumber());
-        TestUtil.checkField("DoB", expectedDob, patientCreated.getDob());
-        TestUtil.checkField("Street", expectedStreet, patientCreated.getAddress().getStreet());
-        TestUtil.checkField("City", expectedCity, patientCreated.getAddress().getCity());
-        TestUtil.checkField("Zip", expectedZip, patientCreated.getAddress().getZip());
+        Response response = given().body(patient)
+            .when().post("/patients/patient");
+
+        Patient patientCreated = response.then().extract().as(Patient.class);
+        int status = response.then().extract().statusCode();
+        TestUtil.checkField("Status Code", 200, status);
+        checkPatientData(patient, patientCreated);
     }
 
     private void testCreateInvalidPatient(Patient patient) {
@@ -127,20 +123,20 @@ public class PatientResourceTest extends RESTResourceTest {
     @Description("Create a Patient with invalid data: mandatory fields empty (name, surname)")
     @Test
     public void testCreateInvalidPatientMandatoryFieldsEmpty() {
-        testCreateInvalidPatient(getPatientData("", "", "", ""));
-        testCreateInvalidPatient(getPatientData("", "Jameson", "jj@.", "333"));
-        testCreateInvalidPatient(getPatientData("John", "", "jburrows@test,com", "222"));
+        testCreateInvalidPatient(getPatientData("", "", "", "", null, null,null,null));
+        testCreateInvalidPatient(getPatientData("", "Jameson", "jj@.", "333",null, null,null,null));
+        testCreateInvalidPatient(getPatientData("John", "", "jburrows@test,com", "222",null, null,null,null));
     }
 
     @Description("Create a Patient with invalid data: email format")
     @Test
     public void testCreateInvalidPatientEmailFormat() {
-        testCreateInvalidPatient(getPatientData("John", "Jameson", "@test.com", "222"));
-        testCreateInvalidPatient(getPatientData("John", "Jameson", "user@", "222"));
-        testCreateInvalidPatient(getPatientData("John", "Jameson", "@.com", "222"));
-        testCreateInvalidPatient(getPatientData("John", "Jameson", "@.", "222"));
-        testCreateInvalidPatient(getPatientData("John", "Jameson", ".", "222"));
-        testCreateInvalidPatient(getPatientData("John", "Jameson", "@", "222"));
+        testCreateInvalidPatient(getPatientData("John", "Jameson", "@test.com", "222",null, null,null,null));
+        testCreateInvalidPatient(getPatientData("John", "Jameson", "user@", "222",null, null,null,null));
+        testCreateInvalidPatient(getPatientData("John", "Jameson", "@.com", "222",null, null,null,null));
+        testCreateInvalidPatient(getPatientData("John", "Jameson", "@.", "222",null, null,null,null));
+        testCreateInvalidPatient(getPatientData("John", "Jameson", ".", "222",null, null,null,null));
+        testCreateInvalidPatient(getPatientData("John", "Jameson", "@", "222",null, null,null,null));
     }
 
     @Description("Create a Patient with invalid data: name, surname or medicalNumber field too long")
@@ -148,9 +144,9 @@ public class PatientResourceTest extends RESTResourceTest {
     public void testCreateInvalidPatientTooLongText() {
         String tooLongString = "thisStringIsIntendedToCauseAnExceptionBecauseOfItsExcessiveLengthTheMostLongStringAllowedMustHaveLessThanTeoHundredAndFiftyFiveCharactersThisShouldBeVerifiedInEveryTextFieldToEnsureTheLimitationIsWorkingProperlyThisStringOnlyHasEnglishLettersButMoreScenarios";
 
-        testCreateInvalidPatient(getPatientData(tooLongString, "Jameson", "jj@test.com", "123"));
-        testCreateInvalidPatient(getPatientData("John", tooLongString, "jj@test.com", "123"));
-        testCreateInvalidPatient(getPatientData("John", "Jameson", "jj@test.com", tooLongString));
+        testCreateInvalidPatient(getPatientData(tooLongString, "Jameson", "jj@test.com", "123",null, null,null,null));
+        testCreateInvalidPatient(getPatientData("John", tooLongString, "jj@test.com", "123",null, null,null,null));
+        testCreateInvalidPatient(getPatientData("John", "Jameson", "jj@test.com", tooLongString,null, null,null,null));
         // use it in email field too?
     }
 
@@ -163,7 +159,7 @@ public class PatientResourceTest extends RESTResourceTest {
     private void createSomePatients(int numberOfPatients) {
         FakeNameGenerator aFakeNameGenerator = new FakeNameGenerator();
         for (int i = 0; i < numberOfPatients; i++) {
-            Patient patient = getPatientData(aFakeNameGenerator.generateName(true), aFakeNameGenerator.generateName(true), aFakeNameGenerator.generateName(false) + "@werfen.com");
+            Patient patient = getPatientData(aFakeNameGenerator.generateName(true), aFakeNameGenerator.generateName(true), aFakeNameGenerator.generateName(false) + "@werfen.com",null, null,null,null, null);
             Patient patientCreated = given().body(patient)
                     .when().post("/patients/patient")
                     .then().assertThat().statusCode(200)
@@ -202,7 +198,7 @@ public class PatientResourceTest extends RESTResourceTest {
     @Test
     public void testGetPatient() {
 
-        Patient patient = getPatientData("John", "Burrows", "jburrows@werfen.com");
+        Patient patient = getPatientData("John", "Burrows", "jburrows@werfen.com","123456", null,null,null, null);
         Patient patientCreated = given().body(patient)
                 .when().post("/patients/patient")
                 .then().assertThat().statusCode(200)
@@ -214,24 +210,21 @@ public class PatientResourceTest extends RESTResourceTest {
                 .then().assertThat().statusCode(200)
                 .extract().as(Patient.class);
         Assertions.assertNotNull(patientRetrieved, "Patient not retrieved");
-        if (patientRetrieved != null) {
-            TestUtil.checkField("Name", "John", patientRetrieved.getName());
-            TestUtil.checkField("Surname", "Burrows", patientRetrieved.getSurname());
-            TestUtil.checkField("Email", "jburrows@werfen.com", patientRetrieved.getEmail());
 
-            TestUtil.checkField("Medical Number", "123456", patientRetrieved.getMedicalNumber());
-            TestUtil.checkField("DOB", LocalDate.of(1948, 8, 11), patientRetrieved.getDob());
-        }
+        if (patientRetrieved != null)
+            checkPatientData(patientCreated, patientRetrieved);
+
     }
 
     @Description("Get an Excel file with patients")
     @Test
     public void testGetPatientsExcel() {
-        int statusCode = given().accept("*/*")
-                .when().get("/patients/report")
-                .then()
-                .extract().statusCode();
-        TestUtil.checkANumber("Status Code",200,statusCode);
+        Response response = given().accept("*/*")
+                .when().get("/patients/report");
+
+        int status = response.then().extract().statusCode();
+        TestUtil.checkANumber("Status Code",200,status);
+
     }
 
     @Description("Get a patient with an non-existing id")
@@ -247,7 +240,7 @@ public class PatientResourceTest extends RESTResourceTest {
     @Description("Delete a patient by id")
     @Test
     public void testDeletePatient() {
-        Patient patient = getPatientData("John", "Burrows", "jburrows@werfen.com");
+        Patient patient = getPatientData("John", "Burrows", "jburrows@werfen.com", null,null, null,null,null);
         Patient patientCreated = given().body(patient)
                 .when().post("/patients/patient")
                 .then().assertThat().statusCode(200)
@@ -279,7 +272,7 @@ public class PatientResourceTest extends RESTResourceTest {
     @Test
     public void testUpdatePatient()
     {
-        Patient patient = getPatientData("John", "Burrows", "jburrows@werfen.com");
+        Patient patient = getPatientData("John", "Burrows", "jburrows@werfen.com", null,null, null,null,null);
         Patient patientCreated = given().body(patient)
             .when().post("/patients/patient")
             .then().assertThat().statusCode(200)
@@ -292,34 +285,20 @@ public class PatientResourceTest extends RESTResourceTest {
             .extract().as(Patient.class);
         Assertions.assertNotNull(patientUpdated, "Patient not updated");
 
-        TestUtil.checkField("Email", patientCreated.getEmail(), patientUpdated.getEmail());
-        TestUtil.checkField("Name", patientCreated.getName(), patientUpdated.getName());
-        TestUtil.checkField("Surname", patientCreated.getSurname(), patientUpdated.getSurname());
-        TestUtil.checkField("Medical Number", patientCreated.getMedicalNumber(), patientUpdated.getMedicalNumber());
-        TestUtil.checkField("DoB", patientCreated.getDob(), patientUpdated.getDob());
-        TestUtil.checkField("Street", patientCreated.getAddress().getStreet(), patientUpdated.getAddress().getStreet());
-        TestUtil.checkField("City", patientCreated.getAddress().getCity(), patientUpdated.getAddress().getCity());
-        TestUtil.checkField("Zip", patientCreated.getAddress().getZip(), patientUpdated.getAddress().getZip());
+        checkPatientData(patientCreated, patientUpdated);
     }
 
     @Description("Update non-existent patient, that is Create new Patient")
     @Test
     public void testUpdateUnexistingPatient()
     {
-        Patient patient = getPatientData("John", "Burrows", "jburrows@werfen.com");
+        Patient patient = getPatientData("John", "Burrows", "jburrows@werfen.com",null,null, null,null,null);
         Patient patientCreated = given().body(patient)
             .when().put("/patients/38400000-8cf0-11bd-b23e-10b96e4ef00d")
             .then()
             .extract().as(Patient.class);
         Assertions.assertNotNull(patientCreated, "Patient not created");
 
-        TestUtil.checkField("Email", patientCreated.getEmail(), patient.getEmail());
-        TestUtil.checkField("Name", patientCreated.getName(), patient.getName());
-        TestUtil.checkField("Surname", patientCreated.getSurname(), patient.getSurname());
-        TestUtil.checkField("Medical Number", patientCreated.getMedicalNumber(), patient.getMedicalNumber());
-        TestUtil.checkField("DoB", patientCreated.getDob(), patient.getDob());
-        TestUtil.checkField("Street", patientCreated.getAddress().getStreet(), patient.getAddress().getStreet());
-        TestUtil.checkField("City", patientCreated.getAddress().getCity(), patient.getAddress().getCity());
-        TestUtil.checkField("Zip", patientCreated.getAddress().getZip(), patient.getAddress().getZip());
+        checkPatientData(patient, patientCreated);
     }
 }
