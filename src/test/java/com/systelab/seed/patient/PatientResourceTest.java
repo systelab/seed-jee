@@ -86,7 +86,6 @@ public class PatientResourceTest extends RESTResourceTest {
 
     }
 
-
     @Description("Create a new patient with name, surname, email, medical number, dob, and complete address")
     @Test
     public void testCreatePatientWithAllInfo() {
