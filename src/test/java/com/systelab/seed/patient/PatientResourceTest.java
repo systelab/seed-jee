@@ -41,7 +41,6 @@ public class PatientResourceTest extends RESTResourceTest {
             if (zip != null)
                 patient.getAddress().setZip(zip); //can be NULL
             return patient;
-
     }
 
     private void checkPatientData(Patient expected, Patient actual){
