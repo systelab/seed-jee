@@ -142,7 +142,7 @@ public class PatientResourceTest extends RESTResourceTest {
         testCreateInvalidPatient(getPatientData(tooLongString, "Jameson", "jj@test.com", "123",null, null,null,null));
         testCreateInvalidPatient(getPatientData("John", tooLongString, "jj@test.com", "123",null, null,null,null));
         testCreateInvalidPatient(getPatientData("John", "Jameson", "jj@test.com", tooLongString,null, null,null,null));
-        // use it in email field too ?
+        // use it in email field too?
     }
 
     @Attachment(value = "Patients Database")
