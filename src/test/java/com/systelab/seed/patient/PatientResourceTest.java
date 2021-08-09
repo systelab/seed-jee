@@ -61,7 +61,6 @@ public class PatientResourceTest extends RESTResourceTest {
             if (expected.getAddress().getZip() != null)
                 TestUtil.checkField("Zip", expected.getAddress().getZip(), actual.getAddress().getZip());
         }
-
     }
 
     @Description("Create a new patient with name, surname, email and medical number")
