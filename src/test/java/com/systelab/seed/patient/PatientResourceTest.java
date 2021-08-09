@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.util.List;
-
 import static io.restassured.RestAssured.given;
 import static java.util.stream.Collectors.joining;
 import io.restassured.response.Response;
