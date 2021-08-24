@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import io.restassured.response.Response;
 import java.util.List;
+import java.util.UUID;
 
 import static io.restassured.RestAssured.given;
 import static java.util.stream.Collectors.joining;
@@ -32,7 +33,7 @@ public class AllergyResourceTest extends RESTResourceTest {
         TestUtil.checkObjectIsNotNull("Allergy", actual);
         TestUtil.checkField("Name", expected.getName(), actual.getName());
         TestUtil.checkField("Sign", expected.getSigns(), actual.getSigns());
-        if (expected.getName() != null)
+        if (expected.getSymptoms() != null)
             TestUtil.checkField("Symptoms", expected.getSymptoms(), actual.getSymptoms());
     }
 
@@ -43,14 +44,12 @@ public class AllergyResourceTest extends RESTResourceTest {
         String expectedSigns = "Watering eyes";
 
         Allergy allergy = getAllergyData(expectedName, expectedSigns, null);
-        Response response = given().body(allergy)
-            .when().post("/allergies/allergy");
+        Response response = doCreateAllergy(allergy);
         Allergy allergyCreated = response.then().extract().as(Allergy.class);
         int status = response.then().extract().statusCode();
         TestUtil.checkField("Status Code", 200, status);
         checkAllergyData(allergy, allergyCreated);
     }
-
 
     @Description("Create a new allergy with all information")
     @Test
@@ -59,12 +58,15 @@ public class AllergyResourceTest extends RESTResourceTest {
         String expectedSigns = "Watering eyes";
         String expectedSymptoms = "Sneezing";
         Allergy allergy = getAllergyData(expectedName, expectedSigns, expectedSymptoms);
-        Response response = given().body(allergy)
-            .when().post("/allergies/allergy");
+        Response response = doCreateAllergy(allergy);
         Allergy allergyCreated = response.then().extract().as(Allergy.class);
         int status = response.then().extract().statusCode();
         TestUtil.checkField("Status Code", 200, status);
         checkAllergyData(allergy, allergyCreated);
+    }
+
+    private Response doCreateAllergy(Allergy allergy){
+        return given().body(allergy).when().post("/allergies/allergy");
     }
 
     private void testCreateInvalidAllergy(Allergy allergy) {
@@ -200,16 +202,22 @@ public class AllergyResourceTest extends RESTResourceTest {
     public void testUpdateAllergy() {
         Allergy allergy = getAllergyData("Tree pollen", "Watering eyes", "Dry, red and cracked skin");
         Allergy allergyCreated = given().body(allergy)
-                .when().post("/allergies/allergy")
-                .then().assertThat().statusCode(200)
-                .extract().as(Allergy.class);
+            .when().post("/allergies/allergy")
+            .then().assertThat().statusCode(200)
+            .extract().as(Allergy.class);
         Assertions.assertNotNull(allergyCreated, "Allergy not created");
         allergyCreated.setSymptoms("Sneezing");
+        UUID allergyCreatedId = allergyCreated.getId();
+        Response response = doUpdateAllergy(allergy, allergyCreatedId);
         Allergy allergyUpdated = given().body(allergyCreated)
-                .when().put("/allergies/" + allergyCreated.getId())
-                .then().assertThat().statusCode(200)
-                .extract().as(Allergy.class);
+            .when().put("/allergies/" + allergyCreated.getId())
+            .then().assertThat().statusCode(200)
+            .extract().as(Allergy.class);
         Assertions.assertNotNull(allergyUpdated, "Allergy not updated");
+    }
+    private Response doUpdateAllergy(Allergy allergy, UUID id){
+        return given().body(allergy)
+            .when().put("/patients/" + id);
     }
 
     @Description("Update non-existent allergy, that is Create new Allergy")
