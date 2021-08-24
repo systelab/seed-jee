@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
+
 import static io.restassured.RestAssured.given;
 import static java.util.stream.Collectors.joining;
 import io.restassured.response.Response;
@@ -75,14 +77,18 @@ public class PatientResourceTest extends RESTResourceTest {
         String expectedCity = null;
         String expectedZip = null;
         Patient patient = getPatientData(expectedName, expectedSurname, expectedEmail, expectedMedNumber, expectedDob , expectedStreet, expectedCity, expectedZip);
-        Response response = given().body(patient)
-            .when().post("/patients/patient");
+
+        Response response = doCreatePatient(patient);
 
         Patient patientCreated = response.then().extract().as(Patient.class);
         int status = response.then().extract().statusCode();
         TestUtil.checkField("Status Code", 200, status);
         checkPatientData(patient, patientCreated);
 
+    }
+
+    private Response doCreatePatient(Patient patient){
+        return given().body(patient).when().post("/patients/patient");
     }
 
     @Description("Create a new patient with name, surname, email, medical number, dob, and complete address")
@@ -97,13 +103,19 @@ public class PatientResourceTest extends RESTResourceTest {
         String expectedCity = "Madrid";
         String expectedZip = "28084";
         Patient patient = getPatientData(expectedName, expectedSurname, expectedEmail, expectedMedNumber, expectedDob, expectedStreet, expectedCity, expectedZip);
-        Response response = given().body(patient)
-            .when().post("/patients/patient");
+
+        //Response response = given().body(patient)
+        //    .when().post("/patients/patient");
+        Response response = doCreatePatientWithAllInfo(patient);
 
         Patient patientCreated = response.then().extract().as(Patient.class);
         int status = response.then().extract().statusCode();
         TestUtil.checkField("Status Code", 200, status);
         checkPatientData(patient, patientCreated);
+    }
+
+    private Response doCreatePatientWithAllInfo(Patient patient){
+        return given().body(patient).when().post("/patients/patient");
     }
 
     private void testCreateInvalidPatient(Patient patient) {
@@ -274,13 +286,24 @@ public class PatientResourceTest extends RESTResourceTest {
             .extract().as(Patient.class);
         Assertions.assertNotNull(patientCreated, "Patient not created");
         patientCreated.setEmail("new@emailchanged.com");
-        Patient patientUpdated = given().body(patientCreated)
-            .when().put("/patients/" + patientCreated.getId())
-            .then().assertThat().statusCode(200)
-            .extract().as(Patient.class);
-        Assertions.assertNotNull(patientUpdated, "Patient not updated");
+        UUID patientCreatedId = patientCreated.getId();
 
-        checkPatientData(patientCreated, patientUpdated);
+        Response response = doUpdatePatient(patient, patientCreatedId);
+
+        //Patient patientUpdated = given().body(patientCreated)
+         //   .when().put("/patients/" + patientCreated.getId())
+
+           Patient finalCheck = response.then().assertThat().statusCode(200)
+            .extract().as(Patient.class);
+
+        Assertions.assertNotNull(response, "Patient not updated");
+
+        checkPatientData(patientCreated, finalCheck);
+    }
+
+    private Response doUpdatePatient(Patient patientUpdated, UUID patientCreatedId)  {
+        return given().body(patientUpdated)
+            .when().put("/patients/" + patientCreatedId);
     }
 
     @Description("Update non-existent patient, that is Create new Patient")
