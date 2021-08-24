@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static io.restassured.RestAssured.given;
+import io.restassured.response.ValidatableResponse;
 import static java.util.stream.Collectors.joining;
 
 
@@ -106,9 +107,8 @@ public class AllergyResourceTest extends RESTResourceTest {
         FakeNameGenerator aFakeNameGenerator = new FakeNameGenerator();
         for (int i = 0; i < numberOfAllergies; i++) {
             Allergy allergy = getAllergyData(aFakeNameGenerator.generateName(true), aFakeNameGenerator.generateName(true), aFakeNameGenerator.generateName(true));
-            Allergy allergyCreated = given().body(allergy)
-                    .when().post("/allergies/allergy")
-                    .then().assertThat().statusCode(200)
+            Response response = doCreateAllergy(allergy);
+            Allergy allergyCreated = response.then().assertThat().statusCode(200)
                     .extract().as(Allergy.class);
 
             Assertions.assertNotNull(allergyCreated.getId(), "Allergy not created");
@@ -143,17 +143,22 @@ public class AllergyResourceTest extends RESTResourceTest {
     @Test
     public void testGetAllergy() {
         Allergy allergy = getAllergyData("Tree pollen", "Watering eyes", "Dry, red and cracked skin");
-        Allergy allergyCreated = given().body(allergy)
-                .when().post("/allergies/allergy")
-                .then().assertThat().statusCode(200)
-                .extract().as(Allergy.class);
-        TestUtil.checkObjectIsNotNull("Allergy ID " + allergyCreated.getId(), allergyCreated.getId());
-        Allergy allergyRetrieved = given()
-                .when().get("/allergies/" + allergyCreated.getId())
-                .then().assertThat().statusCode(200)
+        Response responseCre = doCreateAllergy(allergy);
+        Allergy allergyCreated = responseCre.then().assertThat().statusCode(200)
+            .extract().as(Allergy.class);
+
+        UUID allergyCreatedId = allergyCreated.getId();
+        TestUtil.checkObjectIsNotNull("Allergy ID " + allergyCreatedId, allergyCreatedId);
+
+        Response responseGet = doGetAllergy(allergyCreatedId);
+        Allergy allergyRetrieved = responseGet.then().assertThat().statusCode(200)
                 .extract().as(Allergy.class);
         Assertions.assertNotNull(allergyRetrieved, "Allergy not retrieved");
         checkAllergyData(allergy, allergyRetrieved);
+    }
+
+    private Response doGetAllergy(UUID id){
+        return given().when().get("/allergies/" + id);
     }
 
     @Description("Get a allergy with an non-existing id")
@@ -170,21 +175,25 @@ public class AllergyResourceTest extends RESTResourceTest {
     @Test
     public void testDeleteAllergy() {
         Allergy allergy = getAllergyData("Tree pollen", "Watering eyes", "Dry, red and cracked skin");
-        Allergy allergyCreated = given().body(allergy)
-                .when().post("/allergies/allergy")
-                .then().assertThat().statusCode(200)
-                .extract().as(Allergy.class);
+        Response responseCre = doCreateAllergy(allergy);
+        Allergy allergyCreated = responseCre.then().assertThat().statusCode(200)
+            .extract().as(Allergy.class);
 
         Assertions.assertNotNull(allergyCreated, "Allergy not created");
-        given()
-                .when().delete("/allergies/" + allergyCreated.getId())
-                .then().assertThat().statusCode(200);
+        UUID allergyCreatedId = allergyCreated.getId();
+        Response responseDel = doDeleteAllergy(allergyCreatedId);
+        int statusCodeDeleted = responseDel.then().extract().statusCode();
+        TestUtil.checkField("Status Code after a GET", 200, statusCodeDeleted);
 
         int statusCode = given()
                 .when().get("/allergies/" + allergyCreated.getId())
                 .then()
                 .extract().statusCode();
         TestUtil.checkField("Status Code after a GET", 404, statusCode);
+    }
+
+    private Response doDeleteAllergy(UUID id){
+        return given().when().delete("/allergies/" + id);
     }
 
     @Description("Delete non-existing Allergy")
@@ -201,23 +210,23 @@ public class AllergyResourceTest extends RESTResourceTest {
     @Test
     public void testUpdateAllergy() {
         Allergy allergy = getAllergyData("Tree pollen", "Watering eyes", "Dry, red and cracked skin");
-        Allergy allergyCreated = given().body(allergy)
-            .when().post("/allergies/allergy")
-            .then().assertThat().statusCode(200)
+        Response responseCre = doCreateAllergy(allergy);
+        Allergy allergyCreated = responseCre.then().assertThat().statusCode(200)
             .extract().as(Allergy.class);
         Assertions.assertNotNull(allergyCreated, "Allergy not created");
+
         allergyCreated.setSymptoms("Sneezing");
+
         UUID allergyCreatedId = allergyCreated.getId();
-        Response response = doUpdateAllergy(allergy, allergyCreatedId);
-        Allergy allergyUpdated = given().body(allergyCreated)
-            .when().put("/allergies/" + allergyCreated.getId())
-            .then().assertThat().statusCode(200)
+        Response responseUpd = doUpdateAllergy(allergyCreated, allergyCreatedId);
+        Allergy allergyUpdated = responseUpd.then().assertThat().statusCode(200)
             .extract().as(Allergy.class);
         Assertions.assertNotNull(allergyUpdated, "Allergy not updated");
+        checkAllergyData(allergyCreated, allergyUpdated);
     }
-    private Response doUpdateAllergy(Allergy allergy, UUID id){
-        return given().body(allergy)
-            .when().put("/patients/" + id);
+    private Response doUpdateAllergy(Allergy allergyCreated, UUID id){
+        return given().body(allergyCreated)
+            .when().put("/allergies/" + id);
     }
 
     @Description("Update non-existent allergy, that is Create new Allergy")
