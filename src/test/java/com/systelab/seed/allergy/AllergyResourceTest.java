@@ -21,6 +21,27 @@ import static java.util.stream.Collectors.joining;
 @Feature("Allergy Test Suite.\n\nGoal:\nThe goal of this TC is to verify that the Allergies management actions (CRUD) behave as expected according the specifications and the input values.\n\nEnvironment:\n...\nPreconditions:\nN/A.")
 public class AllergyResourceTest extends RESTResourceTest {
 
+    private Response doCreateAllergy(Allergy allergy){
+        return given().body(allergy).when().post("/allergies/allergy");
+    }
+
+    private Response doGetAllergy(UUID id){
+        return given().when().get("/allergies/" + id);
+    }
+
+    private Response doGetAllergyList(){
+        return given().when().get("/allergies/");
+    }
+
+    private Response doDeleteAllergy(UUID id){
+        return given().when().delete("/allergies/" + id);
+    }
+
+    private Response doUpdateAllergy(Allergy allergyCreated, UUID id){
+        return given().body(allergyCreated)
+            .when().put("/allergies/" + id);
+    }
+
     private Allergy getAllergyData(String name, String signs, String symptoms) {
         Allergy allergy = new Allergy();
         allergy.setName(name);
@@ -64,10 +85,6 @@ public class AllergyResourceTest extends RESTResourceTest {
         int status = response.then().extract().statusCode();
         TestUtil.checkField("Status Code", 200, status);
         checkAllergyData(allergy, allergyCreated);
-    }
-
-    private Response doCreateAllergy(Allergy allergy){
-        return given().body(allergy).when().post("/allergies/allergy");
     }
 
     private void testCreateInvalidAllergy(Allergy allergy) {
@@ -120,19 +137,17 @@ public class AllergyResourceTest extends RESTResourceTest {
     public void testGetAllergyList() {
         int numberOfAllergies = 5;
 
-        AllergiesPage allergiesBefore = given()
-                .when().get("/allergies")
-                .then().assertThat().statusCode(200)
-                .extract().as(AllergiesPage.class);
+        Response responseBefore = doGetAllergyList();
+        AllergiesPage allergiesBefore= responseBefore.then().assertThat().statusCode(200)
+            .extract().as(AllergiesPage.class);
         long initialSize = allergiesBefore.getTotalElements();
         saveAllergiesDatabase(allergiesBefore.getContent());
 
         createSomeAllergies(numberOfAllergies);
 
-        AllergiesPage allergiesAfter = given()
-                .when().get("/allergies")
-                .then().assertThat().statusCode(200)
-                .extract().as(AllergiesPage.class);
+        Response responseAfter = doGetAllergyList();
+        AllergiesPage allergiesAfter= responseAfter.then().assertThat().statusCode(200)
+            .extract().as(AllergiesPage.class);
         long finalSize = allergiesAfter.getTotalElements();
         saveAllergiesDatabase(allergiesAfter.getContent());
 
@@ -155,10 +170,6 @@ public class AllergyResourceTest extends RESTResourceTest {
                 .extract().as(Allergy.class);
         Assertions.assertNotNull(allergyRetrieved, "Allergy not retrieved");
         checkAllergyData(allergy, allergyRetrieved);
-    }
-
-    private Response doGetAllergy(UUID id){
-        return given().when().get("/allergies/" + id);
     }
 
     @Description("Get a allergy with an non-existing id")
@@ -192,10 +203,6 @@ public class AllergyResourceTest extends RESTResourceTest {
         TestUtil.checkField("Status Code after a GET", 404, statusCode);
     }
 
-    private Response doDeleteAllergy(UUID id){
-        return given().when().delete("/allergies/" + id);
-    }
-
     @Description("Delete non-existing Allergy")
     @Test
     public void testDeleteUnexistingAllergy() {
@@ -223,10 +230,6 @@ public class AllergyResourceTest extends RESTResourceTest {
             .extract().as(Allergy.class);
         Assertions.assertNotNull(allergyUpdated, "Allergy not updated");
         checkAllergyData(allergyCreated, allergyUpdated);
-    }
-    private Response doUpdateAllergy(Allergy allergyCreated, UUID id){
-        return given().body(allergyCreated)
-            .when().put("/allergies/" + id);
     }
 
     @Description("Update non-existent allergy, that is Create new Allergy")
