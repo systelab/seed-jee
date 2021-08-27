@@ -23,8 +23,6 @@ public class PatientResourceTest extends RESTResourceTest {
 
     private Response doCreatePatient(Patient patient){ return given().body(patient).when().post("/patients/patient"); }
 
-    private Response doCreatePatientWithAllInfo(Patient patient){ return given().body(patient).when().post("/patients/patient"); }
-
     private Response doUpdatePatient(Patient patientUpdated, UUID patientCreatedId)  { return given().body(patientUpdated).when().put("/patients/" + patientCreatedId); }
 
     private Response doDeletePatient(UUID patientCreatedId){ return given().when().delete("/patients/" + patientCreatedId); }
@@ -39,22 +37,16 @@ public class PatientResourceTest extends RESTResourceTest {
     private Patient getPatientData(String name, String surname, String email, String medicalNumber, LocalDate dob, String street, String city, String zip) {
         Patient patient = new Patient();
 
-        patient.setName(name); //cannot be NULL
-        patient.setSurname(surname); //cannot be NULL
-        patient.setEmail(email); //can be NULL
-        if (medicalNumber != null)
-            patient.setMedicalNumber(medicalNumber); //can be NULL
-        if (dob != null)
-            patient.setDob(dob); //can be NULL
-        if (street != null) {
-            patient.setAddress(new Address());
-            patient.getAddress().setStreet(street);
-        }//can be NULL
-            if (city != null)
-                patient.getAddress().setCity(city); //can be NULL
-            if (zip != null)
-                patient.getAddress().setZip(zip); //can be NULL
-            return patient;
+        patient.setName(name);
+        patient.setSurname(surname);
+        patient.setEmail(email);
+        patient.setMedicalNumber(medicalNumber);
+        patient.setDob(dob);
+        patient.setAddress(new Address());
+        patient.getAddress().setStreet(street);
+        patient.getAddress().setCity(city);
+        patient.getAddress().setZip(zip);
+        return patient;
     }
 
     private void checkPatientData(Patient expected, Patient actual){
@@ -112,7 +104,7 @@ public class PatientResourceTest extends RESTResourceTest {
         String expectedZip = "28084";
         Patient patient = getPatientData(expectedName, expectedSurname, expectedEmail, expectedMedNumber, expectedDob, expectedStreet, expectedCity, expectedZip);
 
-        Response response = doCreatePatientWithAllInfo(patient);
+        Response response = doCreatePatient(patient);
         Patient patientCreated = response.then().extract().as(Patient.class);
         int status = response.then().extract().statusCode();
         TestUtil.checkField("Status Code", 200, status);
@@ -155,7 +147,6 @@ public class PatientResourceTest extends RESTResourceTest {
         testCreateInvalidPatient(getPatientData(tooLongString, "Jameson", "jj@test.com", "123",null, null,null,null));
         testCreateInvalidPatient(getPatientData("John", tooLongString, "jj@test.com", "123",null, null,null,null));
         testCreateInvalidPatient(getPatientData("John", "Jameson", "jj@test.com", tooLongString,null, null,null,null));
-        // use it in email field too?
     }
 
     @Attachment(value = "Patients Database")
@@ -238,8 +229,6 @@ public class PatientResourceTest extends RESTResourceTest {
         byte[] res = response.then().extract().asByteArray();
         String contentType = response.then().extract().contentType();
         TestUtil.checkTrue("Received file (more than 0-byte)", res.length > 0);
-
-        // System.out.println("Excel file size: " + res.length);
         TestUtil.checkTrue("Is an Excel file", contentType.contains("officedocument.spreadsheetml"));
     }
 
