@@ -217,18 +217,33 @@ public class PatientResourceTest extends RESTResourceTest {
             checkPatientData(patientCreated, patientRetrieved);
     }
 
+     @Description("Get an invalid Excel file with patients")
+    @Test
+    public void testGetPatientsInvalidExcel() {
 
+    int statusCode = given()
+        .when().post("/patients/report")
+        .then()
+        .extract().statusCode();
+        TestUtil.checkField("Status Code", 400, statusCode);
+    }
 
     @Description("Get an Excel file with patients")
     @Test
     public void testGetPatientsExcel() {
         Response response = given().accept("*/*")
-                .when().get("/patients/report");
-
+            .when().get("/patients/report");
         int status = response.then().extract().statusCode();
         TestUtil.checkANumber("Status Code",200,status);
+        byte[] res = response.then().extract().asByteArray();
+        String contentType = response.then().extract().contentType();
+        TestUtil.checkTrue("Received file (more than 0-byte)", res.length > 0);
 
+        // System.out.println("Excel file size: " + res.length);
+        TestUtil.checkTrue("Is an Excel file", contentType.contains("officedocument.spreadsheetml"));
     }
+
+
 
     @Description("Get a patient with an non-existing id")
     @Test
