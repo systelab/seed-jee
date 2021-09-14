@@ -2,6 +2,7 @@ package com.systelab.seed.patientallergy;
 
 import com.systelab.seed.RESTResourceTest;
 import com.systelab.seed.allergy.entity.Allergy;
+import com.systelab.seed.patient.entity.Address;
 import com.systelab.seed.patient.entity.Patient;
 import com.systelab.seed.patientallergy.entity.PatientAllergy;
 import com.systelab.seed.patientallergy.entity.PatientAllergySet;
@@ -11,34 +12,54 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
 import java.util.Iterator;
 import java.util.Set;
 
 import static io.restassured.RestAssured.given;
+import io.restassured.response.Response;
 
 @TmsLink("TC0003_PatientAllergyManagement_IntegrationTest")
 @Feature("Patient Allergy Test Suite.\n\nGoal:\nThe goal of this TC is to verify that the allergies for a patient management actions (CRUD) behave as expected according the specifications and the input values.\n\nEnvironment:\n...\nPreconditions:\nN/A.")
 public class PatientAllergyResourceTest extends RESTResourceTest {
 
-    private Allergy getAllergyData(String name, String signs) {
+    private Response doCreatePatient(Patient patient){ return given().body(patient).when().post("/patients/patient"); }
+
+    private Allergy getAllergyData(String name, String signs, String symptoms) {
         Allergy allergy = new Allergy();
         allergy.setName(name);
         allergy.setSigns(signs);
+        if (symptoms != null)
+            allergy.setSymptoms(symptoms); //can be NULL
         return allergy;
     }
 
-    private Patient getPatientData(String name, String surname) {
+    private Patient getPatientData(String name, String surname, String email, String medicalNumber, LocalDate dob, String street, String city, String zip) {
         Patient patient = new Patient();
+
         patient.setName(name);
         patient.setSurname(surname);
+        patient.setEmail(email);
+        patient.setMedicalNumber(medicalNumber);
+        patient.setDob(dob);
+        patient.setAddress(new Address());
+        patient.getAddress().setStreet(street);
+        patient.getAddress().setCity(city);
+        patient.getAddress().setZip(zip);
         return patient;
     }
 
     private Patient createAPatient() {
         String expectedName = "Jane";
         String expectedSurname = "Senfield";
-
-        Patient patient = getPatientData(expectedName, expectedSurname);
+        String expectedEmail = "jsenfield@example.com";
+        String expectedMedNumber = "123123";
+        LocalDate expectedDob = LocalDate.of(1948, 8, 12);
+        String expectedStreet = "5 Elm St.";
+        String expectedCity = "Madrid";
+        String expectedZip = "28084";
+        Patient patient = getPatientData(expectedName, expectedSurname, expectedEmail, expectedMedNumber, expectedDob, expectedStreet, expectedCity, expectedZip);
+        Response response = doCreatePatient(patient);
         return given().body(patient)
                 .when().post("/patients/patient")
                 .then().assertThat().statusCode(200)
@@ -56,7 +77,7 @@ public class PatientAllergyResourceTest extends RESTResourceTest {
         String expectedAllergyName = "Some Allergy";
         String expectedAllergySigns = "Some signs";
 
-        Allergy allergy = getAllergyData(expectedAllergyName, expectedAllergySigns);
+        Allergy allergy = getAllergyData(expectedAllergyName, expectedAllergySigns, null);
         return given().body(allergy)
                 .when().post("/allergies/allergy")
                 .then().assertThat().statusCode(200)
