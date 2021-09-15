@@ -69,7 +69,7 @@ public class UserResourceTest extends RESTResourceTest {
         TestUtil.checkField("Role", expected.getRole().name(), actual.getRole().name());
     }
 
-    @Attachment(value = "Users Database")
+    @Attachment(value = "Users Database") //NOT USED, DELETE? //TODO
     private String saveUsersDatabase(List<User> users) {
         return users.stream().map((user) -> user.getName() + "\t" + user.getSurname() + "\t" + user.getLogin()).collect(joining("\n"));
     }
@@ -113,12 +113,6 @@ public class UserResourceTest extends RESTResourceTest {
     @Description("Create a User with name, login and password")
     @Test
     public void testCreateUser() {
-/*        User user = new User();
-        user.setLogin("test3");
-        user.setPassword("test3");
-        user.setName("test3");
-        user.setSurname("test3");
-        user.setRole(UserRole.USER);*/
         String expectedName = "test3";
         String expectedSurname = "test3";
         String expectedLogin = "test3";

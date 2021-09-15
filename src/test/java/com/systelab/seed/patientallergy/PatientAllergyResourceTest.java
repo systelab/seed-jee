@@ -25,6 +25,23 @@ public class PatientAllergyResourceTest extends RESTResourceTest {
 
     private Response doCreatePatient(Patient patient){ return given().body(patient).when().post("/patients/patient"); }
 
+    private Response doCreateAllergy(Allergy allergy){
+        return given().body(allergy).when().post("/allergies/allergy");
+    }
+
+    private Response updateAnAllergyToAPatient(Patient patient, PatientAllergy patientAllergy) {
+        return given().body(patientAllergy).when().put("/patients/" + patient.getId() + "/allergies/" + patientAllergy.getAllergy().getId());}
+
+    private Response removeAnAllergyFromAPatient(Patient patient, Allergy allergy) {
+        return given().when().delete("/patients/" + patient.getId() + "/allergies/" + allergy.getId());}
+
+    private Response addAnAllergyToAPatient(Patient patient, PatientAllergy patientAllergy) {
+        return given().body(patientAllergy)
+            .when().post("/patients/" + patient.getId() + "/allergies/allergy");}
+
+    private Response getPatientAllergies(Patient patient) {
+        return given().when().get("/patients/" + patient.getId() + "/allergies");}
+
     private Allergy getAllergyData(String name, String signs, String symptoms) {
         Allergy allergy = new Allergy();
         allergy.setName(name);
@@ -60,48 +77,22 @@ public class PatientAllergyResourceTest extends RESTResourceTest {
         String expectedZip = "28084";
         Patient patient = getPatientData(expectedName, expectedSurname, expectedEmail, expectedMedNumber, expectedDob, expectedStreet, expectedCity, expectedZip);
         Response response = doCreatePatient(patient);
-        return given().body(patient)
-                .when().post("/patients/patient")
-                .then().assertThat().statusCode(200)
-                .extract().as(Patient.class);
-    }
-
-    private Set<PatientAllergy> getPatientAllergies(Patient patient) {
-        return given()
-                .when().get("/patients/" + patient.getId() + "/allergies")
-                .then().assertThat().statusCode(200)
-                .extract().as(PatientAllergySet.class);
+        return response.then().assertThat().statusCode(200).extract().as(Patient.class);
     }
 
     private Allergy createAnAllergy() {
         String expectedAllergyName = "Some Allergy";
         String expectedAllergySigns = "Some signs";
-
         Allergy allergy = getAllergyData(expectedAllergyName, expectedAllergySigns, null);
-        return given().body(allergy)
-                .when().post("/allergies/allergy")
-                .then().assertThat().statusCode(200)
-                .extract().as(Allergy.class);
+        Response response = doCreateAllergy(allergy);
+        return response.then().assertThat().statusCode(200).extract().as(Allergy.class);
     }
 
-    private PatientAllergy addAnAllergyToAPatient(Patient patient, PatientAllergy patientAllergy) {
-        return given().body(patientAllergy)
-                .when().post("/patients/" + patient.getId() + "/allergies/allergy")
-                .then().assertThat().statusCode(200)
-                .extract().as(PatientAllergy.class);
-    }
-
-    private PatientAllergy updateAnAllergyToAPatient(Patient patient, PatientAllergy patientAllergy) {
-        return given().body(patientAllergy)
-                .when().put("/patients/" + patient.getId() + "/allergies/" + patientAllergy.getAllergy().getId())
-                .then().assertThat().statusCode(200)
-                .extract().as(PatientAllergy.class);
-    }
-
-    private void removeAnAllergyFromAPatient(Patient patient, Allergy allergy) {
-        given()
-                .when().delete("/patients/" + patient.getId() + "/allergies/" + allergy.getId())
-                .then().assertThat().statusCode(200);
+    private void checkPatientAllergyData(PatientAllergy expected, PatientAllergy actual){  //Not used //TODO
+        TestUtil.checkObjectIsNotNull("PatientAllergy", actual);
+/*        TestUtil.checkField("Patient", expected.getPatient(), actual.getPatient());
+        TestUtil.checkField("Allergy", expected.getAllergy(), actual.getAllergy());*/
+        TestUtil.checkField("Note", expected.getNote(), actual.getNote());
     }
 
     @Description("Get the allergies of a new patient")
@@ -109,7 +100,9 @@ public class PatientAllergyResourceTest extends RESTResourceTest {
     public void testGetTheAllergiesOfANewPatient() {
 
         Patient patientCreated = createAPatient();
-        Set<PatientAllergy> allergies = getPatientAllergies(patientCreated);
+        Response response = getPatientAllergies(patientCreated);
+        Set<PatientAllergy> allergies = response.then().assertThat().statusCode(200)
+            .extract().as(PatientAllergySet.class);
         TestUtil.checkANumber("Expect non allergies", 0, allergies.size());
     }
 
@@ -119,13 +112,20 @@ public class PatientAllergyResourceTest extends RESTResourceTest {
 
         Patient patientCreated = createAPatient();
         Allergy allergyCreated = createAnAllergy();
-
         PatientAllergy patientAllergy = new PatientAllergy(patientCreated, allergyCreated);
         patientAllergy.setNote("A note");
         addAnAllergyToAPatient(patientCreated, patientAllergy);
 
-        Set<PatientAllergy> allergies = getPatientAllergies(patientCreated);
+        //PUT, DELETE, UPDATE, POST: Do they need checkPatientAllergyData as an extra verification for all tests? As the example: //TODO
+/*        Response responseAdd = addAnAllergyToAPatient(patientCreated, patientAllergy); //If redundant, previous was just: addAnAllergyToAPatient(patientCreated, patientAllergy);
+        PatientAllergy patientAllergyCreated = responseAdd.then().assertThat().statusCode(200)
+            .extract().as(PatientAllergy.class);
+        checkPatientAllergyData(patientAllergy, patientAllergyCreated); //end redundant*/
 
+        addAnAllergyToAPatient(patientCreated, patientAllergy);
+        Response responseGet = getPatientAllergies(patientCreated);
+        Set<PatientAllergy> allergies = responseGet.then().assertThat().statusCode(200)
+            .extract().as(PatientAllergySet.class);
         TestUtil.checkANumber("Expect 1 allergy", 1, allergies.size());
     }
 
@@ -135,14 +135,10 @@ public class PatientAllergyResourceTest extends RESTResourceTest {
 
         Patient patientCreated = createAPatient();
         Allergy allergyCreated = createAnAllergy();
-
         PatientAllergy patientAllergy = new PatientAllergy(patientCreated, allergyCreated);
 
-        int code = given().body(patientAllergy)
-                .when().post("/patients/" + patientCreated.getId() + "/allergies/allergy")
-                .then().assertThat()
-                .extract().statusCode();
-
+        Response response = addAnAllergyToAPatient(patientCreated, patientAllergy); //Does it need a check or is it redundant?
+        int code = response.then().assertThat().extract().statusCode();
         TestUtil.checkANumber("Expect an error 400", 400, code);
     }
 
@@ -154,17 +150,17 @@ public class PatientAllergyResourceTest extends RESTResourceTest {
         Allergy allergyCreated1 = createAnAllergy();
         Allergy allergyCreated2 = createAnAllergy();
 
-
         PatientAllergy patientAllergy1 = new PatientAllergy(patientCreated, allergyCreated1);
         patientAllergy1.setNote("A note");
-        addAnAllergyToAPatient(patientCreated, patientAllergy1);
+        addAnAllergyToAPatient(patientCreated, patientAllergy1); //Does it need a check or is it redundant?
 
         PatientAllergy patientAllergy2 = new PatientAllergy(patientCreated, allergyCreated2);
         patientAllergy2.setNote("A note");
-        addAnAllergyToAPatient(patientCreated, patientAllergy2);
+        addAnAllergyToAPatient(patientCreated, patientAllergy2); //Does it need a check or is it redundant?
 
-        Set<PatientAllergy> allergies = getPatientAllergies(patientCreated);
-
+        Response response = getPatientAllergies(patientCreated);
+        Set<PatientAllergy> allergies = response.then().assertThat().statusCode(200)
+            .extract().as(PatientAllergySet.class);
         TestUtil.checkANumber("Expect 2 allergy", 2, allergies.size());
     }
 
@@ -177,15 +173,11 @@ public class PatientAllergyResourceTest extends RESTResourceTest {
 
         PatientAllergy patientAllergy = new PatientAllergy(patientCreated, allergyCreated);
         patientAllergy.setNote("A note");
-        addAnAllergyToAPatient(patientCreated, patientAllergy);
-
-
+        addAnAllergyToAPatient(patientCreated, patientAllergy); //Does it need a check or is it redundant?
         patientAllergy.setNote(noteToBeModified);
 
-        int code = given().body(patientAllergy)
-                .when().post("/patients/" + patientCreated.getId() + "/allergies/allergy")
-                .then()
-                .extract().statusCode();
+        Response response = addAnAllergyToAPatient(patientCreated, patientAllergy); //Does it need a check or is it redundant?
+        int code = response.then().assertThat().extract().statusCode();
         TestUtil.checkANumber("Expect an error 404", 404, code);
     }
 
@@ -198,16 +190,15 @@ public class PatientAllergyResourceTest extends RESTResourceTest {
 
         PatientAllergy patientAllergy = new PatientAllergy(patientCreated, allergyCreated);
         patientAllergy.setNote("A note");
-        addAnAllergyToAPatient(patientCreated, patientAllergy);
-
+        addAnAllergyToAPatient(patientCreated, patientAllergy); //Does it need a check or is it redundant?
         patientAllergy.setNote(noteToBeModified);
         updateAnAllergyToAPatient(patientCreated, patientAllergy);
 
-        Set<PatientAllergy> allergies = getPatientAllergies(patientCreated);
-
+        Response response = getPatientAllergies(patientCreated);
+        Set<PatientAllergy> allergies = response.then().assertThat().statusCode(200)
+            .extract().as(PatientAllergySet.class);
         Iterator<PatientAllergy> iterator = allergies.iterator();
         PatientAllergy first = iterator.next();
-
         TestUtil.checkANumber("Expect 1 allergy", 1, allergies.size());
         TestUtil.checkField("Note", noteToBeModified, first.getNote());
     }
@@ -218,16 +209,13 @@ public class PatientAllergyResourceTest extends RESTResourceTest {
 
         Patient patientCreated = createAPatient();
         Allergy allergyCreated = createAnAllergy();
-
         PatientAllergy patientAllergy = new PatientAllergy(patientCreated, allergyCreated);
         patientAllergy.setNote("Some notes");
 
-        given().body(patientAllergy)
-                .when().put("/patients/" + patientCreated.getId() + "/allergies/"+allergyCreated.getId())
-                .then().assertThat().statusCode(200);
-
-        Set<PatientAllergy> allergies = getPatientAllergies(patientCreated);
-
+        updateAnAllergyToAPatient(patientCreated, patientAllergy);
+        Response response = getPatientAllergies(patientCreated);
+        Set<PatientAllergy> allergies = response.then().assertThat().statusCode(200)
+            .extract().as(PatientAllergySet.class);
         TestUtil.checkANumber("Expect 1 allergy", 1, allergies.size());
     }
 
@@ -237,15 +225,14 @@ public class PatientAllergyResourceTest extends RESTResourceTest {
 
         Patient patientCreated = createAPatient();
         Allergy allergyCreated = createAnAllergy();
-
         PatientAllergy patientAllergy = new PatientAllergy(patientCreated, allergyCreated);
         patientAllergy.setNote("A note");
-        addAnAllergyToAPatient(patientCreated, patientAllergy);
+        addAnAllergyToAPatient(patientCreated, patientAllergy); //Does it need a check or is it redundant?
 
         removeAnAllergyFromAPatient(patientCreated, allergyCreated);
-
-        Set<PatientAllergy> allergies = getPatientAllergies(patientCreated);
-
+        Response response = getPatientAllergies(patientCreated);
+        Set<PatientAllergy> allergies = response.then().assertThat().statusCode(200)
+            .extract().as(PatientAllergySet.class);
         TestUtil.checkANumber("Expect 1 allergy", 0, allergies.size());
     }
 
@@ -257,9 +244,9 @@ public class PatientAllergyResourceTest extends RESTResourceTest {
         Allergy allergyCreated = createAnAllergy();
 
         removeAnAllergyFromAPatient(patientCreated, allergyCreated);
-
-        Set<PatientAllergy> allergies = getPatientAllergies(patientCreated);
-
+        Response response = getPatientAllergies(patientCreated);
+        Set<PatientAllergy> allergies = response.then().assertThat().statusCode(200)
+            .extract().as(PatientAllergySet.class);
         TestUtil.checkANumber("Expect 0 allergy", 0, allergies.size());
     }
 }
