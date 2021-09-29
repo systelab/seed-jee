@@ -47,7 +47,7 @@ public class PatientAllergyResourceTest extends RESTResourceTest {
         allergy.setName(name);
         allergy.setSigns(signs);
         if (symptoms != null)
-            allergy.setSymptoms(symptoms); //can be NULL
+            allergy.setSymptoms(symptoms);
         return allergy;
     }
 
@@ -88,10 +88,8 @@ public class PatientAllergyResourceTest extends RESTResourceTest {
         return response.then().assertThat().statusCode(200).extract().as(Allergy.class);
     }
 
-    private void checkPatientAllergyData(PatientAllergy expected, PatientAllergy actual){  //Not used //TODO
+    private void checkPatientAllergyData(PatientAllergy expected, PatientAllergy actual){
         TestUtil.checkObjectIsNotNull("PatientAllergy", actual);
-/*        TestUtil.checkField("Patient", expected.getPatient(), actual.getPatient());
-        TestUtil.checkField("Allergy", expected.getAllergy(), actual.getAllergy());*/
         TestUtil.checkField("Note", expected.getNote(), actual.getNote());
     }
 
@@ -115,13 +113,6 @@ public class PatientAllergyResourceTest extends RESTResourceTest {
         PatientAllergy patientAllergy = new PatientAllergy(patientCreated, allergyCreated);
         patientAllergy.setNote("A note");
         addAnAllergyToAPatient(patientCreated, patientAllergy);
-
-        //PUT, DELETE, UPDATE, POST: Do they need checkPatientAllergyData as an extra verification for all tests? As the example: //TODO
-/*        Response responseAdd = addAnAllergyToAPatient(patientCreated, patientAllergy); //If redundant, previous was just: addAnAllergyToAPatient(patientCreated, patientAllergy);
-        PatientAllergy patientAllergyCreated = responseAdd.then().assertThat().statusCode(200)
-            .extract().as(PatientAllergy.class);
-        checkPatientAllergyData(patientAllergy, patientAllergyCreated); //end redundant*/
-
         addAnAllergyToAPatient(patientCreated, patientAllergy);
         Response responseGet = getPatientAllergies(patientCreated);
         Set<PatientAllergy> allergies = responseGet.then().assertThat().statusCode(200)
@@ -137,7 +128,7 @@ public class PatientAllergyResourceTest extends RESTResourceTest {
         Allergy allergyCreated = createAnAllergy();
         PatientAllergy patientAllergy = new PatientAllergy(patientCreated, allergyCreated);
 
-        Response response = addAnAllergyToAPatient(patientCreated, patientAllergy); //Does it need a check or is it redundant?
+        Response response = addAnAllergyToAPatient(patientCreated, patientAllergy);
         int code = response.then().assertThat().extract().statusCode();
         TestUtil.checkANumber("Expect an error 400", 400, code);
     }
@@ -152,11 +143,11 @@ public class PatientAllergyResourceTest extends RESTResourceTest {
 
         PatientAllergy patientAllergy1 = new PatientAllergy(patientCreated, allergyCreated1);
         patientAllergy1.setNote("A note");
-        addAnAllergyToAPatient(patientCreated, patientAllergy1); //Does it need a check or is it redundant?
+        addAnAllergyToAPatient(patientCreated, patientAllergy1);
 
         PatientAllergy patientAllergy2 = new PatientAllergy(patientCreated, allergyCreated2);
         patientAllergy2.setNote("A note");
-        addAnAllergyToAPatient(patientCreated, patientAllergy2); //Does it need a check or is it redundant?
+        addAnAllergyToAPatient(patientCreated, patientAllergy2);
 
         Response response = getPatientAllergies(patientCreated);
         Set<PatientAllergy> allergies = response.then().assertThat().statusCode(200)
@@ -173,10 +164,10 @@ public class PatientAllergyResourceTest extends RESTResourceTest {
 
         PatientAllergy patientAllergy = new PatientAllergy(patientCreated, allergyCreated);
         patientAllergy.setNote("A note");
-        addAnAllergyToAPatient(patientCreated, patientAllergy); //Does it need a check or is it redundant?
+        addAnAllergyToAPatient(patientCreated, patientAllergy);
         patientAllergy.setNote(noteToBeModified);
 
-        Response response = addAnAllergyToAPatient(patientCreated, patientAllergy); //Does it need a check or is it redundant?
+        Response response = addAnAllergyToAPatient(patientCreated, patientAllergy);
         int code = response.then().assertThat().extract().statusCode();
         TestUtil.checkANumber("Expect an error 404", 404, code);
     }
@@ -190,7 +181,7 @@ public class PatientAllergyResourceTest extends RESTResourceTest {
 
         PatientAllergy patientAllergy = new PatientAllergy(patientCreated, allergyCreated);
         patientAllergy.setNote("A note");
-        addAnAllergyToAPatient(patientCreated, patientAllergy); //Does it need a check or is it redundant?
+        addAnAllergyToAPatient(patientCreated, patientAllergy);
         patientAllergy.setNote(noteToBeModified);
         updateAnAllergyToAPatient(patientCreated, patientAllergy);
 
@@ -227,7 +218,7 @@ public class PatientAllergyResourceTest extends RESTResourceTest {
         Allergy allergyCreated = createAnAllergy();
         PatientAllergy patientAllergy = new PatientAllergy(patientCreated, allergyCreated);
         patientAllergy.setNote("A note");
-        addAnAllergyToAPatient(patientCreated, patientAllergy); //Does it need a check or is it redundant?
+        addAnAllergyToAPatient(patientCreated, patientAllergy);
 
         removeAnAllergyFromAPatient(patientCreated, allergyCreated);
         Response response = getPatientAllergies(patientCreated);

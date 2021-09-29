@@ -32,19 +32,19 @@ import static java.util.stream.Collectors.joining;
 public class UserResourceTest extends RESTResourceTest {
     private static final Logger logger = LoggerFactory.getLogger(UserResourceTest.class.getName());
 
-    //doGetUser
+
     private Response doGetUser(UUID id){
         return given().when().get("/users/" + id);
     }
-    //doDeleteUser
+
     private Response doDeleteUser(UUID userCreatedId){ return given().when().delete("/users/" + userCreatedId); }
-    //doCreateUser
+
     private Response doCreateUser(User user){ return given().body(user).when().post("/users/user"); }
-    //doGetAllUsers
+
     private Response doGetUserList(){
         return given().when().get("/users");
     }
-    //doUserLogin
+
     private Response doUserLogin(String login, String password){
         return given().contentType("application/x-www-form-urlencoded").formParam("login", login).formParam("password", password).
             when().post("/users/login");
@@ -65,11 +65,10 @@ public class UserResourceTest extends RESTResourceTest {
         TestUtil.checkField("Name", expected.getName(), actual.getName());
         TestUtil.checkField("Surname", expected.getSurname(), actual.getSurname());
         TestUtil.checkField("Login", expected.getLogin(), actual.getLogin());
-        //TestUtil.checkField("Password", expected.getPassword(), actual.getPassword()); //Al crear user genenera PASS random que no se puede obtener
         TestUtil.checkField("Role", expected.getRole().name(), actual.getRole().name());
     }
 
-    @Attachment(value = "Users Database") //NOT USED, DELETE? //TODO
+    @Attachment(value = "Users Database")
     private String saveUsersDatabase(List<User> users) {
         return users.stream().map((user) -> user.getName() + "\t" + user.getSurname() + "\t" + user.getLogin()).collect(joining("\n"));
     }
@@ -94,19 +93,16 @@ public class UserResourceTest extends RESTResourceTest {
         UsersPage users = response.then().assertThat().statusCode(200)
                 .extract().as(UsersPage.class);
 
-        //Delete these lines and Use the same method as testGetAllergyList??? //TODO
         users.getContent().stream().forEach((user) -> logger.info(user.getSurname()));
         TestUtil.checkObjectIsNotNull("Users", users);
 
-        long initialSize = users.getTotalElements(); //Need to use also?? saveUsersDatabase(users.getContent()); //TODO
-        //saveUsersDatabase(users.getContent());
-        createSomeUsers(numberOfUsers); //This will create many users if run many times, is it a problem? //TODO
+        long initialSize = users.getTotalElements();
+        createSomeUsers(numberOfUsers);
 
         Response responseAfter = doGetUserList();
         UsersPage usersFinal = responseAfter.then().assertThat().statusCode(200)
             .extract().as(UsersPage.class);
         long finalSize = usersFinal.getTotalElements();
-        //saveUsersDatabase(usersFinal.getContent());
         TestUtil.checkANumber("List size", initialSize + numberOfUsers, finalSize);
     }
 
@@ -121,12 +117,11 @@ public class UserResourceTest extends RESTResourceTest {
 
         User user = getUserData(expectedName, expectedSurname, expectedLogin, expectedPassword, expectedRole);
         Response response = doCreateUser(user);
-        User userCreated = response.then().assertThat().statusCode(200).extract().as(User.class); //Da 400 Status Code si no borramos user
+        User userCreated = response.then().assertThat().statusCode(200).extract().as(User.class);
         int status = response.then().extract().statusCode();
         TestUtil.checkField("Status Code", 200, status);
-        checkUserData(user, userCreated); // falla el check de password, porque genera pass automáticamente
+        checkUserData(user, userCreated);
 
-        //User needs to be deleted for future tests:
         UUID userCreatedId = userCreated.getId();
         Response responseDel = doDeleteUser(userCreatedId);
         int statusCodeDeleted = responseDel.then().extract().statusCode();
@@ -143,7 +138,6 @@ public class UserResourceTest extends RESTResourceTest {
         String expectedRole = "USER";
 
         User user = getUserData(expectedName, expectedSurname, expectedLogin, expectedPassword, expectedRole);
-        //User user = getUserData("TestUserName", "TestUserSurname", "testUser", "testUser", "USER");
         Response response = doCreateUser(user);
         User userCreated = response.then().assertThat().statusCode(200).extract().as(User.class);
         Assertions.assertNotNull(userCreated, "User not created");
@@ -200,16 +194,15 @@ public class UserResourceTest extends RESTResourceTest {
         User user = getUserData(expectedName, expectedSurname, expectedLogin, expectedPassword, expectedRole);
 
         Response response = doCreateUser(user);
-        User userCreated = response.then().assertThat().statusCode(200).extract().as(User.class); //Da Status Code 500 en la próxima ejecución si no borramos user al final
+        User userCreated = response.then().assertThat().statusCode(200).extract().as(User.class);
         UUID userCreatedId = userCreated.getId();
         TestUtil.checkObjectIsNotNull("User ID " + userCreatedId, userCreatedId);
         Response responseGet = doGetUser(userCreatedId);
         User userRetrieved = responseGet.then().assertThat().statusCode(200)
             .extract().as(User.class);
         Assertions.assertNotNull(userRetrieved, "User not retrieved");
-        checkUserData(user, userRetrieved); //Falla en el check de password, porque al crear user genera pass random
+        checkUserData(user, userRetrieved);
 
-        //User needs to be deleted for future tests:
         Response responseDel = doDeleteUser(userCreatedId);
         int statusCodeDeleted = responseDel.then().extract().statusCode();
         TestUtil.checkField("Status Code after a GET", 200, statusCodeDeleted);
