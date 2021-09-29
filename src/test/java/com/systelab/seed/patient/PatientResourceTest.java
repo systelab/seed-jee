@@ -211,12 +211,9 @@ public class PatientResourceTest extends RESTResourceTest {
      @Description("Get an invalid Excel file with patients")
     @Test
     public void testGetPatientsInvalidExcel() {
-
-    int statusCode = given()
-        .when().post("/patients/report")
-        .then()
-        .extract().statusCode();
-        TestUtil.checkField("Status Code", 400, statusCode);
+    Response response = given().when().get("/patients/report");
+    int status = response.then().extract().statusCode();
+    TestUtil.checkField("Status Code", 500, status);
     }
 
     @Description("Get an Excel file with patients")
@@ -288,7 +285,7 @@ public class PatientResourceTest extends RESTResourceTest {
         patientCreated.setEmail("new@emailchanged.com");
         UUID patientCreatedId = patientCreated.getId();
 
-        Response responseUpdated = doUpdatePatient(patient, patientCreatedId);
+        Response responseUpdated = doUpdatePatient(patientCreated, patientCreatedId);
         Patient finalCheck = responseUpdated.then().assertThat().statusCode(200)
             .extract().as(Patient.class);
         Assertions.assertNotNull(responseUpdated, "Patient not updated");
