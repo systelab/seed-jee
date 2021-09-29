@@ -49,6 +49,7 @@ public class Patient extends BaseEntity {
     @Size(max = 255)
     private String medicalNumber;
 
+    @NotNull
     @Email
     private String email;
 
