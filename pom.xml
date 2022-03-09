@@ -394,7 +394,7 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-entitymanager</artifactId>
-			<version>5.3.6.Final</version>
+			<version>5.4.24.Final</version>
 			<scope>provided</scope>
 		</dependency>
 		<!-- it will pull in the logback-core and slf4j-api -->
