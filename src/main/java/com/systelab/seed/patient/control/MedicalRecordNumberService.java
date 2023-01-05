@@ -12,10 +12,12 @@ import org.slf4j.Logger;
 interface IdentityClient {
 
     @RequestLine("GET /identity/v1/medical-record-number")
-    public String getMedicalRecordNumber();
+    String getMedicalRecordNumber();
 }
 
 public class MedicalRecordNumberService {
+
+    private  static final String UNDEFINED = "UNDEFINED";
 
     @Inject
     private Logger logger;
@@ -26,14 +28,15 @@ public class MedicalRecordNumberService {
 
     public String getMedicalRecordNumber() {
 
-        logger.info(String.format("medicalRecordNumberServiceUrl: %s", medicalRecordNumberServiceUrl));
-
+        if (logger.isInfoEnabled()){
+            logger.info(String.format("medicalRecordNumberServiceUrl: %s", medicalRecordNumberServiceUrl));
+        }
         IdentityClient client = HystrixFeign.builder().target(IdentityClient.class, medicalRecordNumberServiceUrl, MedicalRecordNumberService::defaultMedicalRecordNumber);
         return client.getMedicalRecordNumber();
     }
 
     private static String defaultMedicalRecordNumber() {
-        return "UNDEFINED";
+        return UNDEFINED;
     }
 
 }

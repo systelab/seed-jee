@@ -2,6 +2,8 @@ package com.systelab.seed.infraestructure.auth;
 
 import com.systelab.seed.infrastructure.auth.implementation.JWTAuthenticationTokenGenerator;
 import io.jsonwebtoken.MalformedJwtException;
+import lombok.SneakyThrows;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,7 +14,7 @@ import java.security.SecureRandom;
 /**
  * Unit Test Class to check the expected behavior for {@link JWTAuthenticationTokenGenerator}
  */
-public class TokenGeneratorTest {
+class TokenGeneratorTest {
 
     private JWTAuthenticationTokenGenerator jwtTokenGenerator;
 
@@ -22,32 +24,33 @@ public class TokenGeneratorTest {
     }
 
     @Test
-    public void whenKeyIsGeneratedThenAlgorithmIsDES() {
+    void whenKeyIsGeneratedThenAlgorithmIsDES() {
         Key key = jwtTokenGenerator.generateKey();
         Assertions.assertEquals("DES", key.getAlgorithm(), "Unexpected Key SignAlgorithm");
     }
 
     @Test
-    public void whenKeyIsGeneratedThenFormatIsDES() {
+    void whenKeyIsGeneratedThenFormatIsDES() {
         Key key = jwtTokenGenerator.generateKey();
         Assertions.assertEquals("RAW", key.getFormat(), "Unexpected Key Format");
     }
 
     @Test
-    public void givenARandomTokenWhenIsInvalidThenExceptionThrown() {
+    void givenARandomTokenWhenIsInvalidThenExceptionThrown() {
+        String token = generateRandomToken();
         Assertions.assertThrows(MalformedJwtException.class, () -> {
-            jwtTokenGenerator.getRoleFromToken(generateRandomToken());
+            jwtTokenGenerator.getRoleFromToken(token);
         });
     }
 
     @Test
-    public void givenUserRoleUriWhenIsValidThenExceptionThrown() {
+    void givenUserRoleUriWhenIsValidThenExceptionThrown() {
         String token = jwtTokenGenerator.issueToken("Systelab", "ADMIN", "http://127.0.0.1:13080/seed/v1/");
         Assertions.assertNotNull(token);
     }
 
     @Test
-    public void givenUserRoleUriWhenTokenGeneratedThenValidated() throws Exception {
+    void givenUserRoleUriWhenTokenGeneratedThenValidated() throws Exception {
         String token = jwtTokenGenerator.issueToken("Systelab", "ADMIN", "http://127.0.0.1:13080/seed/v1/");
         String role = jwtTokenGenerator.getRoleFromToken(token);
 
@@ -55,7 +58,7 @@ public class TokenGeneratorTest {
     }
 
     @Test
-    public void givenIncorrectDataWhenTokenGeneratedThenValidated() throws Exception {
+    void givenIncorrectDataWhenTokenGeneratedThenValidated() throws Exception {
         String token = jwtTokenGenerator.issueToken("Systelab", "USER", "http://127.0.0.1:13080/seed/v1/");
         String role = jwtTokenGenerator.getRoleFromToken(token);
 

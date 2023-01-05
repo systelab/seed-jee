@@ -51,7 +51,7 @@ public class RealtimePatientTracking {
         try (JsonGenerator generator = Json.createGenerator(writer)) {
             generator.writeStartObject().write("patientid", patient.getId().toString()).write("patientname", patient.getName()).writeEnd();
         }
-        sessions.forEach((session) -> sendMessageToSession(session, writer.toString()));
+        sessions.forEach(session -> sendMessageToSession(session, writer.toString()));
     }
 
     private void sendMessageToSession(Session session, String json) {

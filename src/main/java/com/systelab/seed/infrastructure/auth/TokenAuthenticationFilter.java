@@ -40,7 +40,9 @@ public class TokenAuthenticationFilter implements ContainerRequestFilter {
     public void filter(ContainerRequestContext requestContext) {
 
         try {
-            logger.info(requestContext.getUriInfo().getRequestUri().toString());
+            if (logger.isInfoEnabled()){
+                logger.info(requestContext.getUriInfo().getRequestUri().toString());
+            }
             String userRole = tokenGenerator.getRoleFromToken(getTokenFromHeader(requestContext));
             if (!methodIsAllowed(resourceInfo.getResourceMethod(), userRole)) {
                 requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());

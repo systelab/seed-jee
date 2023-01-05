@@ -16,9 +16,9 @@ import java.util.UUID;
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @Table(name = "SeedUser")
-@NamedQueries({@NamedQuery(name = User.FIND_ALL, query = "SELECT u FROM User u ORDER BY u.surname DESC"), @NamedQuery(name = User.FIND_BY_LOGIN_PASSWORD, query = "SELECT u FROM User u WHERE u.login = :login AND u.password = :password"),
-        @NamedQuery(name = User.ALL_COUNT, query = "SELECT COUNT(u.id) FROM User u")})
-
+@NamedQuery(name = User.FIND_ALL, query = "SELECT u FROM User u ORDER BY u.surname DESC")
+@NamedQuery(name = User.FIND_BY_LOGIN_PASSWORD, query = "SELECT u FROM User u WHERE u.login = :login AND u.password = :password")
+@NamedQuery(name = User.ALL_COUNT, query = "SELECT COUNT(u.id) FROM User u")
 @XmlRootElement
 public class User extends BaseEntity {
     public static final String FIND_ALL = "User.findAll";

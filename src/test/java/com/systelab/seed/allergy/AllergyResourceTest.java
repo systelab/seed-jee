@@ -19,7 +19,7 @@ import static java.util.stream.Collectors.joining;
 
 @TmsLink("TC0002_AllergyManagement_IntegrationTest")
 @Feature("Allergy Test Suite.\n\nGoal:\nThe goal of this TC is to verify that the Allergies management actions (CRUD) behave as expected according the specifications and the input values.\n\nEnvironment:\n...\nPreconditions:\nN/A.")
-public class AllergyResourceTest extends RESTResourceTest {
+class AllergyResourceTest extends RESTResourceTest {
 
     private Response doCreateAllergy(Allergy allergy){
         return given().body(allergy).when().post("/allergies/allergy");
@@ -61,7 +61,7 @@ public class AllergyResourceTest extends RESTResourceTest {
 
     @Description("Create a new allergy with name, sign and symptoms")
     @Test
-    public void testCreateAllergy() {
+    void testCreateAllergy() {
         String expectedName = "Tree pollen";
         String expectedSigns = "Watering eyes";
 
@@ -75,7 +75,7 @@ public class AllergyResourceTest extends RESTResourceTest {
 
     @Description("Create a new allergy with all information")
     @Test
-    public void testCreateAllergyAllInfo() {
+    void testCreateAllergyAllInfo() {
         String expectedName = "Tree pollen";
         String expectedSigns = "Watering eyes";
         String expectedSymptoms = "Sneezing";
@@ -98,7 +98,7 @@ public class AllergyResourceTest extends RESTResourceTest {
 
     @Description("Create a Allergy with invalid data: mandatory fields empty (name, signs)")
     @Test
-    public void testCreateInvalidAllergyMandatoryFieldsEmpty() {
+    void testCreateInvalidAllergyMandatoryFieldsEmpty() {
         testCreateInvalidAllergy(getAllergyData("", "", "Sneezing"));
         testCreateInvalidAllergy(getAllergyData("", "Sneezing", "Sneezing"));
         testCreateInvalidAllergy(getAllergyData("Pollen", "", "Sneezing"));
@@ -106,7 +106,7 @@ public class AllergyResourceTest extends RESTResourceTest {
 
     @Description("Create a Allergy with invalid data: name, signs or symptoms field too long")
     @Test
-    public void testCreateInvalidAllergyTooLongText() {
+    void testCreateInvalidAllergyTooLongText() {
         String tooLongString = "thisStringIsIntendedToCauseAnExceptionBecauseOfItsExcessiveLengthTheMostLongStringAllowedMustHaveLessThanTeoHundredAndFiftyFiveCharactersThisShouldBeVerifiedInEveryTextFieldToEnsureTheLimitationIsWorkingProperlyThisStringOnlyHasEnglishLettersButMoreScenarios";
         testCreateInvalidAllergy(getAllergyData(tooLongString, "Watering eyes", "Sneezing"));
         testCreateInvalidAllergy(getAllergyData("Tree pollen", tooLongString, "Sneezing"));
@@ -134,7 +134,7 @@ public class AllergyResourceTest extends RESTResourceTest {
 
     @Description("Get a list of allergies")
     @Test
-    public void testGetAllergyList() {
+    void testGetAllergyList() {
         int numberOfAllergies = 5;
 
         Response responseBefore = doGetAllergyList();
@@ -156,7 +156,7 @@ public class AllergyResourceTest extends RESTResourceTest {
 
     @Description("Get a Allergy by id")
     @Test
-    public void testGetAllergy() {
+    void testGetAllergy() {
         Allergy allergy = getAllergyData("Tree pollen", "Watering eyes", "Dry, red and cracked skin");
         Response responseCre = doCreateAllergy(allergy);
         Allergy allergyCreated = responseCre.then().assertThat().statusCode(200)
@@ -174,7 +174,7 @@ public class AllergyResourceTest extends RESTResourceTest {
 
     @Description("Get a allergy with an non-existing id")
     @Test
-    public void testGetUnexistingAllergy() {
+    void testGetUnexistingAllergy() {
         int statusCode = given()
                 .when().get("/allergies/38400000-8cf0-11bd-b23e-10b96e4ef00d")
                 .then()
@@ -184,7 +184,7 @@ public class AllergyResourceTest extends RESTResourceTest {
 
     @Description("Delete a allergy by id")
     @Test
-    public void testDeleteAllergy() {
+    void testDeleteAllergy() {
         Allergy allergy = getAllergyData("Tree pollen", "Watering eyes", "Dry, red and cracked skin");
         Response responseCre = doCreateAllergy(allergy);
         Allergy allergyCreated = responseCre.then().assertThat().statusCode(200)
@@ -205,7 +205,7 @@ public class AllergyResourceTest extends RESTResourceTest {
 
     @Description("Delete non-existing Allergy")
     @Test
-    public void testDeleteUnexistingAllergy() {
+    void testDeleteUnexistingAllergy() {
         int statusCode = given()
                 .when().delete("/allergies/38400000-8cf0-11bd-b23e-10b96e4ef00d")
                 .then()
@@ -215,7 +215,7 @@ public class AllergyResourceTest extends RESTResourceTest {
 
     @Description("Update a allergy by id")
     @Test
-    public void testUpdateAllergy() {
+    void testUpdateAllergy() {
         Allergy allergy = getAllergyData("Tree pollen", "Watering eyes", "Dry, red and cracked skin");
         Response responseCre = doCreateAllergy(allergy);
         Allergy allergyCreated = responseCre.then().assertThat().statusCode(200)
@@ -234,7 +234,7 @@ public class AllergyResourceTest extends RESTResourceTest {
 
     @Description("Update non-existent allergy, that is Create new Allergy")
     @Test
-    public void testUpdateUnexistingAllergy() {
+    void testUpdateUnexistingAllergy() {
         Allergy allergy = getAllergyData("Tree pollen", "Watering eyes", "Dry, red and cracked skin");
         Allergy allergyCreated = given().body(allergy)
                 .when().put("/allergies/38400000-8cf0-11bd-b23e-10b96e4ef00d")

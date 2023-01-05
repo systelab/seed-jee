@@ -29,7 +29,7 @@ import static java.util.stream.Collectors.joining;
 
 @TmsLink("TC0002_LoginManagement_IntegrationTest")
 @Feature("User Test Suite.\n\nGoal:\nThis test case is intended to verify the correct ....\n\nEnvironment:\n...\nPreconditions:\nN/A.")
-public class UserResourceTest extends RESTResourceTest {
+class UserResourceTest extends RESTResourceTest {
     private static final Logger logger = LoggerFactory.getLogger(UserResourceTest.class.getName());
 
 
@@ -87,7 +87,7 @@ public class UserResourceTest extends RESTResourceTest {
 
     @Description("Get the User list")
     @Test
-    public void testGetUserList() {
+    void testGetUserList() {
         int numberOfUsers = 1;
         Response response = doGetUserList();
         UsersPage users = response.then().assertThat().statusCode(200)
@@ -108,7 +108,7 @@ public class UserResourceTest extends RESTResourceTest {
 
     @Description("Create a User with name, login and password")
     @Test
-    public void testCreateUser() {
+    void testCreateUser() {
         String expectedName = "test3";
         String expectedSurname = "test3";
         String expectedLogin = "test3";
@@ -130,7 +130,7 @@ public class UserResourceTest extends RESTResourceTest {
 
     @Description("Delete a User by id")
     @Test
-    public void testDeleteUser() {
+    void testDeleteUser() {
         String expectedName = "TestUserName2";
         String expectedSurname = "TestUserSurname2";
         String expectedLogin = "testUser2";
@@ -164,7 +164,7 @@ public class UserResourceTest extends RESTResourceTest {
 
     @Description("Create a user with invalid data: empty mandatory fields (name, surname, login, password)")
     @Test
-    public void testCreateInvalidUserEmptyMandatoryFields() {
+    void testCreateInvalidUserEmptyMandatoryFields() {
         testCreateInvalidUser(getUserData("", "Jones", "jjones", "passJJones", "USER"));
         testCreateInvalidUser(getUserData("Jude", "", "jjones", "passJJones", "USER"));
         testCreateInvalidUser(getUserData("Jude", "Jones", "", "passJJones", "USER"));
@@ -173,7 +173,7 @@ public class UserResourceTest extends RESTResourceTest {
 
     @Description("Create a user with invalid data: text fields too long (name, surname, login, password)")
     @Test
-    public void testCreateInvalidUserTooLongText() {
+    void testCreateInvalidUserTooLongText() {
         String tooLongString = "thisStringIsIntendedToCauseAnExceptionBecauseOfItsExcessiveLengthTheMostLongStringAllowedMustHaveLessThanTeoHundredAndFiftyFiveCharactersThisShouldBeVerifiedInEveryTextFieldToEnsureTheLimitationIsWorkingProperlyThisStringOnlyHasEnglishLettersButMoreScenarios";
         String tooLongLogin = "12345678901";
 
@@ -185,7 +185,7 @@ public class UserResourceTest extends RESTResourceTest {
 
     @Description("Get User by id")
     @Test
-    public void testGetUser() {
+    void testGetUser() {
         String expectedName = "GetUserName2";
         String expectedSurname = "GetUserSurname2";
         String expectedLogin = "GetUser2";
@@ -210,7 +210,7 @@ public class UserResourceTest extends RESTResourceTest {
 
     @Description("Login - Successful")
     @Test
-    public void testLoginOK() {
+    void testLoginOK() {
         String login = "Systelab";
         String password = "Systelab";
         Response response = doUserLogin(login, password);
@@ -220,7 +220,7 @@ public class UserResourceTest extends RESTResourceTest {
 
     @Description("Login - Unsuccessful")
     @Test
-    public void testLoginKO() {
+    void testLoginKO() {
         String login = "fakeUser";
         String password = "noPass";
         Response response = doUserLogin(login, password);

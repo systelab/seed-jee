@@ -74,10 +74,7 @@ public class PatientAllergyResource {
         } catch (PatientNotFoundException ex) {
             logger.error(PatientAllergyResource.INVALID_PATIENT_ERROR_MESSAGE, ex);
             return Response.status(Status.NOT_FOUND).build();
-        } catch (AllergyNotFoundException ex) {
-            logger.error(PatientAllergyResource.INVALID_ALLERGY_ERROR_MESSAGE, ex);
-            return Response.status(Status.NOT_FOUND).build();
-        } catch (AllergyAlreadyExistException ex) {
+        } catch (AllergyNotFoundException | AllergyAlreadyExistException ex) {
             logger.error(PatientAllergyResource.INVALID_ALLERGY_ERROR_MESSAGE, ex);
             return Response.status(Status.NOT_FOUND).build();
         }
