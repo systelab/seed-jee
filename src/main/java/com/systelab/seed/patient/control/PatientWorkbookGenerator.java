@@ -25,7 +25,7 @@ public class PatientWorkbookGenerator {
         Row row = sheet.createRow(rowIndex);
         createCell(row, colNum++, patient.getName());
         createCell(row, colNum++, patient.getSurname());
-        createCell(row, colNum++, patient.getEmail());
+        createCell(row, colNum, patient.getEmail());
     }
 
     private void createCell(Row row, int colIndex, String value) {

@@ -23,11 +23,11 @@ public class PatientMaintenanceServiceHealthCheck implements HealthCheck {
         return working ? builder.up().build() : builder.down().build();
     }
 
-    public void setWorking(boolean working) {
-        this.working = working;
+    public synchronized void setWorking(boolean working) {
+        PatientMaintenanceServiceHealthCheck.working = working;
     }
 
-    public void setLastExecution(LocalDateTime lastExecution) {
-        this.lastExecution = lastExecution;
+    public synchronized void setLastExecution(LocalDateTime lastExecution) {
+        PatientMaintenanceServiceHealthCheck.lastExecution = lastExecution;
     }
 }

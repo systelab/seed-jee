@@ -20,7 +20,7 @@ public class DeleteOldPatientsTimerBean {
     private Logger logger;
 
     @Inject
-    PatientMaintenanceServiceHealthCheck healthCheck;
+    private PatientMaintenanceServiceHealthCheck healthCheck;
 
     @EJB
     private PatientService patientService;
@@ -54,7 +54,7 @@ public class DeleteOldPatientsTimerBean {
     }
 
     private void cancelAnyRunningTimer() {
-        timerService.getTimers().stream().forEach((timer) -> {
+        timerService.getTimers().stream().forEach(timer -> {
             logger.info("Found running timer with info: {}, cancelling it", timer.getInfo());
             timer.cancel();
         });

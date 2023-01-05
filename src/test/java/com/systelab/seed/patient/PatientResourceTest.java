@@ -19,7 +19,7 @@ import io.restassured.response.Response;
 
 @TmsLink("TC0001_PatientManagement_IntegrationTest")
 @Feature("Patient Test Suite.\n\nGoal:\nThe goal of this TC is to verify that the Patient management actions (CRUD) behave as expected according the specifications and the input values.\n\nEnvironment:\n...\nPreconditions:\nN/A.")
-public class PatientResourceTest extends RESTResourceTest {
+class PatientResourceTest extends RESTResourceTest {
 
     private Response doCreatePatient(Patient patient){ return given().body(patient).when().post("/patients/patient"); }
 
@@ -72,7 +72,7 @@ public class PatientResourceTest extends RESTResourceTest {
 
     @Description("Create a new patient with name, surname, email and medical number")
     @Test
-    public void testCreatePatient() {
+    void testCreatePatient() {
         String expectedName = "John";
         String expectedSurname = "Burrows";
         String expectedEmail = "jburrows@werfen.com";
@@ -93,7 +93,7 @@ public class PatientResourceTest extends RESTResourceTest {
 
     @Description("Create a new patient with name, surname, email, medical number, dob, and complete address")
     @Test
-    public void testCreatePatientWithAllInfo() {
+    void testCreatePatientWithAllInfo() {
         String expectedName = "Jane";
         String expectedSurname = "Senfield";
         String expectedEmail = "jsenfield@example.com";
@@ -122,7 +122,7 @@ public class PatientResourceTest extends RESTResourceTest {
 
     @Description("Create a Patient with invalid data: mandatory fields empty (name, surname)")
     @Test
-    public void testCreateInvalidPatientMandatoryFieldsEmpty() {
+    void testCreateInvalidPatientMandatoryFieldsEmpty() {
         testCreateInvalidPatient(getPatientData("", "", "", "", null, null,null,null));
         testCreateInvalidPatient(getPatientData("", "Jameson", "jj@.", "333",null, null,null,null));
         testCreateInvalidPatient(getPatientData("John", "", "jburrows@test,com", "222",null, null,null,null));
@@ -130,7 +130,7 @@ public class PatientResourceTest extends RESTResourceTest {
 
     @Description("Create a Patient with invalid data: email format")
     @Test
-    public void testCreateInvalidPatientEmailFormat() {
+    void testCreateInvalidPatientEmailFormat() {
         testCreateInvalidPatient(getPatientData("John", "Jameson", "@test.com", "222",null, null,null,null));
         testCreateInvalidPatient(getPatientData("John", "Jameson", "user@", "222",null, null,null,null));
         testCreateInvalidPatient(getPatientData("John", "Jameson", "@.com", "222",null, null,null,null));
@@ -141,7 +141,7 @@ public class PatientResourceTest extends RESTResourceTest {
 
     @Description("Create a Patient with invalid data: name, surname or medicalNumber field too long")
     @Test
-    public void testCreateInvalidPatientTooLongText() {
+    void testCreateInvalidPatientTooLongText() {
         String tooLongString = "thisStringIsIntendedToCauseAnExceptionBecauseOfItsExcessiveLengthTheMostLongStringAllowedMustHaveLessThanTeoHundredAndFiftyFiveCharactersThisShouldBeVerifiedInEveryTextFieldToEnsureTheLimitationIsWorkingProperlyThisStringOnlyHasEnglishLettersButMoreScenarios";
 
         testCreateInvalidPatient(getPatientData(tooLongString, "Jameson", "jj@test.com", "123",null, null,null,null));
@@ -168,7 +168,7 @@ public class PatientResourceTest extends RESTResourceTest {
 
     @Description("Get a list of patients")
     @Test
-    public void testGetPatientList() {
+    void testGetPatientList() {
 
         int numberOfPatients = 5;
 
@@ -191,7 +191,7 @@ public class PatientResourceTest extends RESTResourceTest {
 
     @Description("Get a Patient by id")
     @Test
-    public void testGetPatient() {
+    void testGetPatient() {
 
         Patient patient = getPatientData("John", "Burrows", "jburrows@werfen.com","123456", null,null,null, null);
         Response responseCre = doCreatePatient(patient);
@@ -210,7 +210,7 @@ public class PatientResourceTest extends RESTResourceTest {
 
      @Description("Get an invalid Excel file with patients")
     @Test
-    public void testGetPatientsInvalidExcel() {
+    void testGetPatientsInvalidExcel() {
     Response response = given().when().get("/patients/report");
     int status = response.then().extract().statusCode();
     TestUtil.checkField("Status Code", 500, status);
@@ -218,7 +218,7 @@ public class PatientResourceTest extends RESTResourceTest {
 
     @Description("Get an Excel file with patients")
     @Test
-    public void testGetPatientsExcel() {
+    void testGetPatientsExcel() {
         Response response = given().accept("*/*")
             .when().get("/patients/report");
         int status = response.then().extract().statusCode();
@@ -233,7 +233,7 @@ public class PatientResourceTest extends RESTResourceTest {
 
     @Description("Get a patient with an non-existing id")
     @Test
-    public void testGetUnexistingPatient() {
+    void testGetUnexistingPatient() {
         int statusCode = given()
                 .when().get("/patients/38400000-8cf0-11bd-b23e-10b96e4ef00d")
                 .then()
@@ -243,7 +243,7 @@ public class PatientResourceTest extends RESTResourceTest {
 
     @Description("Delete a patient by id")
     @Test
-    public void testDeletePatient() {
+    void testDeletePatient() {
         Patient patient = getPatientData("John", "Burrows", "jburrows@werfen.com", null,null, null,null,null);
 
         Response response = doCreatePatient(patient);
@@ -265,7 +265,7 @@ public class PatientResourceTest extends RESTResourceTest {
 
     @Description("Delete non-existing Patient")
     @Test
-    public void testDeleteUnexistingPatient() {
+    void testDeleteUnexistingPatient() {
         int statusCode = given()
                 .when().delete("/patients/38400000-8cf0-11bd-b23e-10b96e4ef00d")
                 .then()
@@ -275,7 +275,7 @@ public class PatientResourceTest extends RESTResourceTest {
 
     @Description("Update a patient by id")
     @Test
-    public void testUpdatePatient()
+    void testUpdatePatient()
     {
         Patient patient = getPatientData("John", "Burrows", "jburrows@werfen.com", null,null, null,null,null);
         Response response = doCreatePatient(patient);
@@ -294,7 +294,7 @@ public class PatientResourceTest extends RESTResourceTest {
 
     @Description("Update non-existent patient, that is Create new Patient")
     @Test
-    public void testUpdateUnexistingPatient()
+    void testUpdateUnexistingPatient()
     {
         Patient patient = getPatientData("John", "Burrows", "jburrows@werfen.com",null,null, null,null,null);
         Patient patientCreated = given().body(patient)

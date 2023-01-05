@@ -21,7 +21,7 @@ import io.restassured.response.Response;
 
 @TmsLink("TC0003_PatientAllergyManagement_IntegrationTest")
 @Feature("Patient Allergy Test Suite.\n\nGoal:\nThe goal of this TC is to verify that the allergies for a patient management actions (CRUD) behave as expected according the specifications and the input values.\n\nEnvironment:\n...\nPreconditions:\nN/A.")
-public class PatientAllergyResourceTest extends RESTResourceTest {
+class PatientAllergyResourceTest extends RESTResourceTest {
 
     private Response doCreatePatient(Patient patient){ return given().body(patient).when().post("/patients/patient"); }
 
@@ -95,7 +95,7 @@ public class PatientAllergyResourceTest extends RESTResourceTest {
 
     @Description("Get the allergies of a new patient")
     @Test
-    public void testGetTheAllergiesOfANewPatient() {
+    void testGetTheAllergiesOfANewPatient() {
 
         Patient patientCreated = createAPatient();
         Response response = getPatientAllergies(patientCreated);
@@ -106,7 +106,7 @@ public class PatientAllergyResourceTest extends RESTResourceTest {
 
     @Description("Add an allergy to a patient")
     @Test
-    public void testAddAnAllergyToAPatient() {
+    void testAddAnAllergyToAPatient() {
 
         Patient patientCreated = createAPatient();
         Allergy allergyCreated = createAnAllergy();
@@ -122,7 +122,7 @@ public class PatientAllergyResourceTest extends RESTResourceTest {
 
     @Description("Add an allergy to a patient without notes")
     @Test
-    public void testAddAnAllergyWithoutNotesToAPatient() {
+    void testAddAnAllergyWithoutNotesToAPatient() {
 
         Patient patientCreated = createAPatient();
         Allergy allergyCreated = createAnAllergy();
@@ -135,7 +135,7 @@ public class PatientAllergyResourceTest extends RESTResourceTest {
 
     @Description("Add more than one allergy to a patient")
     @Test
-    public void testAddMoreThanOneAllergyToAPatient() {
+    void testAddMoreThanOneAllergyToAPatient() {
 
         Patient patientCreated = createAPatient();
         Allergy allergyCreated1 = createAnAllergy();
@@ -157,7 +157,7 @@ public class PatientAllergyResourceTest extends RESTResourceTest {
 
     @Description("Add the same allergy twice")
     @Test
-    public void testAddAnAllergyTwiceToAPatient() {
+    void testAddAnAllergyTwiceToAPatient() {
         String noteToBeModified = "A second note";
         Patient patientCreated = createAPatient();
         Allergy allergyCreated = createAnAllergy();
@@ -174,7 +174,7 @@ public class PatientAllergyResourceTest extends RESTResourceTest {
 
     @Description("Update an allergy from a patient")
     @Test
-    public void testUpdateAnAllergyToAPatient() {
+    void testUpdateAnAllergyToAPatient() {
         String noteToBeModified = "A second note";
         Patient patientCreated = createAPatient();
         Allergy allergyCreated = createAnAllergy();
@@ -196,7 +196,7 @@ public class PatientAllergyResourceTest extends RESTResourceTest {
 
     @Description("Update an allergy to a new patient (Update is idempotent)")
     @Test
-    public void testAddAnAllergyToANewPatient() {
+    void testAddAnAllergyToANewPatient() {
 
         Patient patientCreated = createAPatient();
         Allergy allergyCreated = createAnAllergy();
@@ -212,7 +212,7 @@ public class PatientAllergyResourceTest extends RESTResourceTest {
 
     @Description("Delete an allergy from a patient")
     @Test
-    public void testDeleteAnAllergyFromAPatient() {
+    void testDeleteAnAllergyFromAPatient() {
 
         Patient patientCreated = createAPatient();
         Allergy allergyCreated = createAnAllergy();
@@ -229,7 +229,7 @@ public class PatientAllergyResourceTest extends RESTResourceTest {
 
     @Description("Delete an unexisting allergy from a patient")
     @Test
-    public void testDeleteAnUnexistingAllergyFromAPatient() {
+    void testDeleteAnUnexistingAllergyFromAPatient() {
 
         Patient patientCreated = createAPatient();
         Allergy allergyCreated = createAnAllergy();

@@ -77,7 +77,7 @@ public class RequestRateLimiterFilter implements ContainerRequestFilter {
 
   private void logLimitExceeded(UriInfo uriInfo, String byAddress) {
     String path = uriInfo.getAbsolutePath().getPath();
-    logger.warn("Overloaded {0} request {1}; discarding it", new Object[]{byAddress, path});
+    logger.warn("Overloaded {} request {}; discarding it", byAddress, path);
   }
 
   private String getRateExceededMessage(AtomicRateLimiter rateLimiter) {

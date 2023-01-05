@@ -11,7 +11,7 @@ import java.util.Properties;
 
 import static io.restassured.RestAssured.given;
 
-public class RESTResourceTest {
+public abstract class RESTResourceTest {
 
     protected static final String AUTHORIZATION_HEADER = "Authorization";
 

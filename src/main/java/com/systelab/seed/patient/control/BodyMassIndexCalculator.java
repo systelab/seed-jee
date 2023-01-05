@@ -2,6 +2,10 @@ package com.systelab.seed.patient.control;
 
 public class BodyMassIndexCalculator {
 
+    private BodyMassIndexCalculator()
+    {
+    }
+
     private static boolean isValidWeight(Double value) {
         return value != null && Double.isFinite(value) && value > 1;
     }
